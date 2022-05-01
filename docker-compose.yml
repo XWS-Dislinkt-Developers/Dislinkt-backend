@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+
+  authentication_service:
+    image: authentication_service
+    container_name: authentication_service
+    build:
+      context: .
+      dockerfile: ./authentication_service/Dockerfile
+    restart: on-failure
+    environment:
+      AUTHENTICATION_DB_HOST: ${AUTHENTICATION_DB_HOST}
+      AUTHENTICATION_DB_PORT: ${AUTHENTICATION_DB_PORT}
+      AUTHENTICATION_DB_USER: ${AUTHENTICATION_DB_USER}
+      AUTHENTICATION_DB_PASS: ${AUTHENTICATION_DB_PASS}
+      AUTHENTICATION_DB_NAME: ${AUTHENTICATION_DB_NAME}
+      AUTHENTICATION_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      NATS_HOST: ${NATS_HOST}
+      NATS_PORT: ${NATS_PORT}
+      NATS_USER: ${NATS_USER}
+      NATS_PASS: ${NATS_PASS}
+      CREATE_ORDER_COMMAND_SUBJECT: ${CREATE_ORDER_COMMAND_SUBJECT}
+      CREATE_ORDER_REPLY_SUBJECT: ${CREATE_ORDER_REPLY_SUBJECT}
+    depends_on:
+      - authentication_db
+    networks:
+      - network
+
+  api_gateway:
+    image: api_gateway
+    container_name: api_gateway
+    build:
+      context: .
+      dockerfile: ./api_gateway/Dockerfile
+    restart: on-failure
+    ports:
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
+    environment:
+      GATEWAY_PORT: ${GATEWAY_PORT}
+      AUTHENTICATION_HOST: ${INVENTORY_SERVICE_HOST}
+      AUTHENTICATION_SERVICE_PORT: ${INVENTORY_SERVICE_PORT}
+    networks:
+      - network
+
+  authentication_db:
+    image: postgres
+    container_name: authentication_db
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${AUTHENTICATION_DB_USER}
+      POSTGRES_PASSWORD: ${AUTHENTICATION_DB_PASS}
+      POSTGRES_DB: ${AUTHENTICATION_DB_NAME}
+    networks:
+      - network
+
+  nats:
+    image: nats
+    container_name: nats
+    restart: on-failure
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

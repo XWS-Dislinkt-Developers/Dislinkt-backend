@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/authentication";
+
+package authentication;
+
+import "google/api/annotations.proto";
+
+service AuthenticationService{
+        rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+        	option (google.api.http) = {
+			get: "/users"
+		};
+        }
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+        repeated User users = 1;
+}
+
+message User {
+        string id = 1;
+        string name = 2;
+        string username = 3;
+        string password = 4;
+        string email = 5;
+        string address = 6;
+        string gender = 7;
+}
