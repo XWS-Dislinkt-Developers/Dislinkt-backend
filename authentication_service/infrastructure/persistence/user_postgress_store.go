@@ -1,8 +1,6 @@
 package persistence
 
 import (
-	"errors"
-	
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"gorm.io/gorm"
 )
@@ -11,7 +9,7 @@ type UserPostgresStore struct {
 	db *gorm.DB
 }
 
-func NewProductPostgresStore(db *gorm.DB) (domain.UserStore, error) {
+func NewUserPostgresStore(db *gorm.DB) (domain.UserStore, error) {
 	err := db.AutoMigrate(&domain.User{})
 	if err != nil {
 		return nil, err

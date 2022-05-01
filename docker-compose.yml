@@ -8,7 +8,7 @@ services:
     build:
       context: .
       dockerfile: ./authentication_service/Dockerfile
-    restart: on-failure
+    restart: always
     environment:
       AUTHENTICATION_DB_HOST: ${AUTHENTICATION_DB_HOST}
       AUTHENTICATION_DB_PORT: ${AUTHENTICATION_DB_PORT}
@@ -38,15 +38,15 @@ services:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
     environment:
       GATEWAY_PORT: ${GATEWAY_PORT}
-      AUTHENTICATION_HOST: ${INVENTORY_SERVICE_HOST}
-      AUTHENTICATION_SERVICE_PORT: ${INVENTORY_SERVICE_PORT}
+      AUTHENTICATION_HOST: ${AUTHENTICATION_SERVICE_HOST}
+      AUTHENTICATION_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
     networks:
       - network
 
   authentication_db:
     image: postgres
     container_name: authentication_db
-    restart: on-failure
+    restart: always
     environment:
       POSTGRES_USER: ${AUTHENTICATION_DB_USER}
       POSTGRES_PASSWORD: ${AUTHENTICATION_DB_PASS}

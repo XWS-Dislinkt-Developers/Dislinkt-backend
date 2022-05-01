@@ -9,7 +9,7 @@ import (
 
 type UserHandler struct {
 	service *application.UserService
-	pb.UnimplementedUserServiceServer
+	pb.UnimplementedAuthenticationServiceServer
 }
 
 func NewUserHandler(service *application.UserService) *UserHandler {

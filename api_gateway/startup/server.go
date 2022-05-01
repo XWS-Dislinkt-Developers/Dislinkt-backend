@@ -8,6 +8,7 @@ import (
 
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	inventoryGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -31,10 +32,10 @@ func (server *Server) initHandlers() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	authenticationEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
-	err = inventoryGw.RegisterInventoryServiceHandlerFromEndpoint(context.TODO(), server.mux, authenticationEndpoint, opts)
-	if err != nil {
-		panic(err)
-	}
+	inventoryGw.RegisterAuthenticationServiceHandlerFromEndpoint(context.TODO(), server.mux, authenticationEndpoint, opts)
+	// if err != nil {
+	// 	panic(err)
+	// }err =
 }
 
 func (server *Server) initCustomHandlers() {
