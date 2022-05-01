@@ -6,7 +6,7 @@ import (
 	"net"
 
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/config"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
