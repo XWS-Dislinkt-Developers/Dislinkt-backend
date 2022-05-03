@@ -39,7 +39,7 @@ func (store *UserPostgresStore) Get(id string) (*domain.User, error) {
 func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, error) {
 	var foundUser *domain.User
 
-	// result := store.db.Where("username = ?", username).First(foundUser)
+	//result := store.db.Where("username = ?", username).First(foundUser)
 	// ftm.Println("[UserPostgresStore]:username ", username)
 	// ftm.Println("[UserPostgresStore]:result found ", result.RowsAffected)
 	//var users []domain.User

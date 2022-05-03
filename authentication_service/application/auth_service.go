@@ -35,13 +35,13 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(8)).Unix(),
-			Issuer:    service.Issuer,
+			//Issuer:    service.Issuer,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	signedToken, err = token.SignedString([]byte(service.SecretKey))
+	signedToken, err = token.SignedString([]byte("Key"))
 
 	if err != nil {
 		return "", err
@@ -55,7 +55,7 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 		signedToken,
 		&domain.JwtClaims{},
 		func(token *jwt.Token) (interface{}, error) {
-			return []byte(service.SecretKey), nil
+			return []byte("Key"), nil
 		},
 	)
 

@@ -54,6 +54,7 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := handler.service.GetByUsername(req.UserData.Username)
+	println("Here111111111111111111")
 	if err != nil {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
