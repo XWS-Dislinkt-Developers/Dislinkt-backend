@@ -12,6 +12,22 @@ func NewUserService(store domain.UserStore) *UserService {
 	}
 }
 
+func (service *UserService) Create(user *domain.User) {
+	err := service.store.Insert(user)
+	if err != nil {
+		println("Errror in create method")
+	}
+
+}
+
+func (service *UserService) Get(id string) (*domain.User, error) {
+	return service.store.Get(id)
+}
+
+func (service *UserService) GetByUsername(username string) (*domain.User, error) {
+	return service.store.GetByUsername(username)
+}
+
 func (service *UserService) GetAll() (*[]domain.User, error) {
 	return service.store.GetAll()
 }
