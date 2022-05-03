@@ -15,7 +15,7 @@ func NewUserService(store domain.UserStore) *UserService {
 func (service *UserService) Create(user *domain.User) {
 	err := service.store.Insert(user)
 	if err != nil {
-		println("Errror in create method")
+		println("Error in create method")
 	}
 
 }

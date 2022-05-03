@@ -17,66 +17,52 @@ func NewUserPostgresStore(db *gorm.DB) (domain.UserStore, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &UserPostgresStore{
-		db: db,
-	}, nil
+	return &UserPostgresStore{db: db}, nil
 }
 
-func (store *UserPostgresStore) Get(id string) (*domain.User, error) {
-
+func (store *UserPostgresStore) Get(id string) (*domain.User, error) { // TODO: why not integer (id)??
 	var foundUser *domain.User
-
 	store.db.Where("ID = ?", id).First(foundUser)
-
 	if foundUser == nil {
-		ftm.Println("[UserPostgresStore]:cant find user")
-		return nil, errors.New("cant find user")
+		ftm.Println("[UserPostgresStore-Get(id)]: Can't find user")
+		return nil, errors.New("ERR-[UserPostgresStore-Get(id)]: Can't find user ")
 	}
-
 	return foundUser, nil
 }
 
 func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, error) {
 	var foundUser *domain.User
-
 	//result := store.db.Where("username = ?", username).First(foundUser)
 	// ftm.Println("[UserPostgresStore]:username ", username)
 	// ftm.Println("[UserPostgresStore]:result found ", result.RowsAffected)
 	//var users []domain.User
 	users, err := store.GetAll()
 	if err != nil {
-		return nil, errors.New("[UserPostgresStore]GBU:nousers")
+		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
 	}
-
 	for _, user := range *users {
 		if user.Username == username {
 			return &user, nil
-			break
 		}
 	}
-
 	if foundUser == nil {
-		ftm.Println("[UserPostgresStore]GBU:cant find user with username " + username)
-		return nil, errors.New("cant find user")
+		ftm.Println("[UserPostgresStore-GetByUsername(username)]: Can't find user with this username: " + username)
+		return nil, errors.New("ERR - [UserPostgresStore-GetByUsername(username)]: Can't find user with this username: " + username)
 	}
-
 	return foundUser, nil
 }
 
 func (store *UserPostgresStore) Insert(user *domain.User) error {
-
-	user, err := store.GetByUsername(user.Username)
+	_, err := store.GetByUsername(user.Username)
 	if err == nil {
-		ftm.Println("[UserPostgresStore]:User is already registered: " + user.Username)
-		return errors.New("user is already registered")
+		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
+		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 	}
-
 	result := store.db.Create(user)
 	if result.Error != nil {
-		ftm.Println("[UserPostgresStore]Insert:cant insert user")
-		return errors.New("cant insert user")
+		ftm.Println("[UserPostgresStore-Insert(user)]: Can't insert user.")
+		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. ")
 	}
-
 	return nil
 }
 
