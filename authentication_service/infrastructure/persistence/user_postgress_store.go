@@ -39,10 +39,24 @@ func (store *UserPostgresStore) Get(id string) (*domain.User, error) {
 func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, error) {
 	var foundUser *domain.User
 
-	store.db.Where("username = ?", username).First(foundUser)
+	// result := store.db.Where("username = ?", username).First(foundUser)
+	// ftm.Println("[UserPostgresStore]:username ", username)
+	// ftm.Println("[UserPostgresStore]:result found ", result.RowsAffected)
+	//var users []domain.User
+	users, err := store.GetAll()
+	if err != nil {
+		return nil, errors.New("[UserPostgresStore]GBU:nousers")
+	}
+
+	for _, user := range *users {
+		if user.Username == username {
+			return &user, nil
+			break
+		}
+	}
 
 	if foundUser == nil {
-		ftm.Println("[UserPostgresStore]:cant find user with username " + username)
+		ftm.Println("[UserPostgresStore]GBU:cant find user with username " + username)
 		return nil, errors.New("cant find user")
 	}
 
