@@ -2,14 +2,18 @@ package startup
 
 import (
 	"fmt"
-	ordering "github.com/tamararankovic/microservices_demo/common/proto/ordering_service"
-	saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
-	"github.com/tamararankovic/microservices_demo/common/saga/messaging/nats"
-	"github.com/tamararankovic/microservices_demo/ordering_service/application"
-	"github.com/tamararankovic/microservices_demo/ordering_service/domain"
-	"github.com/tamararankovic/microservices_demo/ordering_service/infrastructure/api"
-	"github.com/tamararankovic/microservices_demo/ordering_service/infrastructure/persistence"
-	"github.com/tamararankovic/microservices_demo/ordering_service/startup/config"
+	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
+
+	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
+	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
+
+	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
+	// "github.com/tamararankovic/microservices_demo/common/saga/messaging/nats"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/api"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/persistence"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"log"
@@ -27,41 +31,41 @@ func NewServer(config *config.Config) *Server {
 }
 
 const (
-	QueueGroup = "order_service"
+	QueueGroup = "user_post_service"
 )
 
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
-	orderStore := server.initOrderStore(mongoClient)
+	userPostStore := server.initUserPostStore(mongoClient)
 
-	commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
-	replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
-	createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
+	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
+	//replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
+	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
 
-	orderService := server.initOrderService(orderStore, createOrderOrchestrator)
+	userPostService := server.initUserPostService(userPostStore)
 
-	commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
-	replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
-	server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
+	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
+	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
+	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
-	orderHandler := server.initOrderHandler(orderService)
+	userPostHandler := server.initUserPostHandler(userPostService)
 
-	server.startGrpcServer(orderHandler)
+	server.startGrpcServer(userPostHandler)
 }
 
 func (server *Server) initMongoClient() *mongo.Client {
-	client, err := persistence.GetClient(server.config.OrderingDBHost, server.config.OrderingDBPort)
+	client, err := persistence.GetClient(server.config.UserPostDBHost, server.config.UserPostDBPort)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return client
 }
 
-func (server *Server) initOrderStore(client *mongo.Client) domain.OrderStore {
-	store := persistence.NewOrderMongoDBStore(client)
+func (server *Server) initUserPostStore(client *mongo.Client) domain.UserPostStore {
+	store := persistence.NewUserPostMongoDBStore(client)
 	store.DeleteAll()
-	for _, order := range orders {
-		err := store.Insert(order)
+	for _, userPost := range userPosts {
+		err := store.Insert(userPost)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -69,6 +73,7 @@ func (server *Server) initOrderStore(client *mongo.Client) domain.OrderStore {
 	return store
 }
 
+/*
 func (server *Server) initPublisher(subject string) saga.Publisher {
 	publisher, err := nats.NewNATSPublisher(
 		server.config.NatsHost, server.config.NatsPort,
@@ -96,29 +101,30 @@ func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subs
 	}
 	return orchestrator
 }
-
-func (server *Server) initOrderService(store domain.OrderStore, orchestrator *application.CreateOrderOrchestrator) *application.OrderService {
-	return application.NewOrderService(store, orchestrator)
+*/
+func (server *Server) initUserPostService(store domain.UserPostStore) *application.UserPostService {
+	return application.NewUserPostService(store)
 }
 
-func (server *Server) initCreateOrderHandler(service *application.OrderService, publisher saga.Publisher, subscriber saga.Subscriber) {
-	_, err := api.NewCreateOrderCommandHandler(service, publisher, subscriber)
+/*
+func (server *Server) initCreateUserPostHandler(service *application.UserPostService) {
+	_, err := api.NewCreateUserPostHandler(service)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
-
-func (server *Server) initOrderHandler(service *application.OrderService) *api.OrderHandler {
-	return api.NewOrderHandler(service)
+*/
+func (server *Server) initUserPostHandler(service *application.UserPostService) *api.UserPostHandler {
+	return api.NewUserPostHandler(service)
 }
 
-func (server *Server) startGrpcServer(orderHandler *api.OrderHandler) {
+func (server *Server) startGrpcServer(userPostHandler *api.UserPostHandler) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", server.config.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	ordering.RegisterOrderingServiceServer(grpcServer, orderHandler)
+	posting.RegisterUserPostServiceServer(grpcServer, userPostHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
