@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/user_post_service";
+
+package user_post_service;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service UserPostService{
+  rpc Get(GetRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      get: "/userPost/{id}"
+    };
+  }
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/userPost"
+    };
+  }
+  rpc CreateUserPost(CreateUserPostRequest) returns(CreateUserPostResponse) {
+    option (google.api.http) = {
+      post: "/userPost"
+      body: "userPost"
+    };
+  }
+}
+
+// TODO: Types are weird...
+// TODO: Case Insensitive?
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  UserPost order = 1;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated UserPost userPosts = 1;
+}
+
+message CreateUserPostRequest {
+  NewUserPost userPost = 1;
+}
+
+message CreateUserPostResponse {
+  UserPost userPost = 1;
+}
+
+message NewUserPost {
+  repeated Reaction reactions = 1;
+  repeated Comment comments = 2;
+}
+
+message UserPost {
+  string id = 1;
+  int64  UserId = 2;
+  google.protobuf.Timestamp createdAt = 3;
+  string text = 4;
+  string imagePath = 5;
+  repeated Reaction reactions = 6;
+  repeated Comment comments = 7;
+}
+
+message Reaction {
+  int64  UserId = 1;
+  bool IsItLike = 2;
+}
+
+message Comment {
+  int64  UserId = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  string text = 3;
+}
