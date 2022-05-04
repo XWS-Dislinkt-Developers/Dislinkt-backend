@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"context"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_servis/domain"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
