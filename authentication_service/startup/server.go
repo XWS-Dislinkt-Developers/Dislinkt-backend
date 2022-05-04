@@ -10,7 +10,7 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
-	inventory "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	authentication "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	"google.golang.org/grpc"
@@ -62,13 +62,13 @@ func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
 	if err != nil {
 		log.Fatal(err)
 	}
-	store.DeleteAll()
-	for _, User := range users {
-		err := store.Insert(User)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	//store.DeleteAll()
+	//for _, User := range users {
+	//	err := store.Insert(User)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//}
 	return store
 }
 
@@ -113,7 +113,7 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	inventory.RegisterAuthenticationServiceServer(grpcServer, userHandler)
+	authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
