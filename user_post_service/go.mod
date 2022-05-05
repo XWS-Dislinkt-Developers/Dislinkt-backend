@@ -3,8 +3,9 @@ module github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service
 go 1.18
 
 require (
-	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220504183419-c8fa569d830b
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505150607-5f759e3589e3
 	go.mongodb.org/mongo-driver v1.9.1
+	google.golang.org/genproto v0.0.0-20220429170224-98d788798c3e
 	google.golang.org/grpc v1.46.0
 	google.golang.org/protobuf v1.28.0
 )
@@ -25,5 +26,4 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20220429170224-98d788798c3e // indirect
 )

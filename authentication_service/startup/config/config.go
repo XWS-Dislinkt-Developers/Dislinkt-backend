@@ -20,7 +20,7 @@ func NewConfig() *Config {
 		UserDBPort: "5432",           //os.Getenv("AUTHENTICATION_DB_PORT"),
 		UserDBName: "authentication", //os.Getenv("AUTHENTICATION_DB_NAME"),
 		UserDBUser: "postgres",       //os.Getenv("AUTHENTICATION_DB_USER"),
-		UserDBPass: "psql",           //,os.Getenv("AUTHENTICATION_DB_PASS"),
+		UserDBPass: "admin",          //,os.Getenv("AUTHENTICATION_DB_PASS"),
 		NatsHost:   "nats",           // os.Getenv("NATS_HOST"),
 		NatsPort:   "4222",           //os.Getenv("NATS_PORT"),
 		NatsUser:   "ruser",          //os.Getenv("NATS_USER"),
