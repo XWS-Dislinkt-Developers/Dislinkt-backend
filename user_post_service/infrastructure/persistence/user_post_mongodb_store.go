@@ -71,7 +71,7 @@ func decode(cursor *mongo.Cursor) (userPosts []*domain.UserPost, err error) {
 		if err != nil {
 			return
 		}
-		userPosts = append(userPosts, &User)
+		userPosts = append(userPosts, &UserPost)
 	}
 	err = cursor.Err()
 	return

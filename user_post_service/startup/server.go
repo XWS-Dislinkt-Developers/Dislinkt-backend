@@ -7,14 +7,15 @@ import (
 	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 
-	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
-	// "github.com/tamararankovic/microservices_demo/common/saga/messaging/nats"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
+	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
+	// "github.com/tamararankovic/microservices_demo/common/saga/messaging/nats"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/grpc"
 	"log"
 	"net" //neki komentar

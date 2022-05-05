@@ -8,8 +8,8 @@ import (
 
 func mapUserPost(userPost *domain.UserPost) *pb.UserPost {
 	userPostPb := &pb.UserPost{
-		Id:        userPost.Id,     // TODO: HEX??? .Hex()
-		UserId:    userPost.UserId, // TODO: HEX???
+		Id:        userPost.Id.Hex(),      // TODO: HEX??? .Hex()
+		UserId:    int64(userPost.UserId), // TODO: HEX???
 		CreatedAt: timestamppb.New(userPost.CreatedAt),
 		Text:      userPost.Text,
 		ImagePath: userPost.ImagePath,
@@ -18,14 +18,14 @@ func mapUserPost(userPost *domain.UserPost) *pb.UserPost {
 	}
 	for _, reaction := range userPost.Reactions {
 		reactionPb := &pb.Reaction{
-			UserId:   reaction.UserId.Hex(), // TODO: HEX ??
+			UserId:   int64(reaction.UserId), // TODO: HEX ??
 			IsItLike: reaction.IsItLike,
 		}
 		userPostPb.Reactions = append(userPostPb.Reactions, reactionPb)
 	}
 	for _, comment := range userPost.Comments {
 		commentPb := &pb.Comment{
-			UserId:    comment.UserId, // TODO: HEX ??
+			UserId:    int64(comment.UserId), // TODO: HEX ??
 			CreatedAt: timestamppb.New(userPost.CreatedAt),
 			Text:      comment.Text,
 		}
@@ -34,7 +34,7 @@ func mapUserPost(userPost *domain.UserPost) *pb.UserPost {
 	return userPostPb
 }
 
-func mapNewUserPost(userPostPb *pb.UserPost) *domain.UserPost {
+func mapNewUserPost(userPostPb *pb.NewUserPost) *domain.UserPost {
 	userPost := &domain.UserPost{
 		// TODO: CreatedAt: Time.Now??
 		Reactions: make([]domain.Reaction, 0),
@@ -42,16 +42,16 @@ func mapNewUserPost(userPostPb *pb.UserPost) *domain.UserPost {
 	}
 	for _, reactionPb := range userPostPb.Reactions {
 		reaction := domain.Reaction{
-			UserId:   reactionPb.UserId,
+			UserId:   int(reactionPb.UserId),
 			IsItLike: reactionPb.IsItLike,
 		}
 		userPost.Reactions = append(userPost.Reactions, reaction)
 	}
 	for _, commentPb := range userPostPb.Comments {
 		comment := domain.Comment{
-			UserId:    commentPb.UserId,
-			CreatedAt: timestamppb.New(comment.CreatedAt),
-			Text:      comment.Text,
+			UserId:    int(commentPb.UserId),
+			CreatedAt: commentPb.CreatedAt.AsTime(),
+			Text:      commentPb.Text,
 		}
 		userPost.Comments = append(userPost.Comments, comment)
 	}

@@ -34,7 +34,7 @@ message GetRequest {
 }
 
 message GetResponse {
-  UserPost order = 1;
+  UserPost userPost = 1;
 }
 
 message GetAllRequest {
