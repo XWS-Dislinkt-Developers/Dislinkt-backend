@@ -15,7 +15,7 @@ service AuthenticationService{
         rpc Register(RegisterRequest) returns (RegisterResponse) {
                 option (google.api.http) = {
                         post: "/register"
-                        body:"user"
+                        body:"userRegisterData"
               };
         }
         rpc Login(LoginRequest) returns (LoginResponse) {
@@ -24,9 +24,37 @@ service AuthenticationService{
                     body: "userData"
                 };
         }
+        rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+                option (google.api.http) = {
+                        post: "/update-user-data"
+                        body: "updateUserData"
+                };
+        }
         rpc Validate(ValidateRequest) returns (ValidateResponse) {}
 }
 
+
+// update user data
+
+
+message UpdateUserData {
+        string username = 1;
+        string token = 2;
+        string newusername = 3;
+        string newname = 4;
+        string newphone = 5;
+        string newbiography = 6;
+
+}
+
+message UpdateUserRequest {
+        UpdateUserData user=1;
+}
+
+message UpdateUserResponse {
+        int64 status = 1;
+        string error = 2;
+}
 
 // Register
 
@@ -35,8 +63,16 @@ message UserData{
         string password = 2;
 }
 
+message UserRegisterData{
+        string username = 1;
+        string name = 2;
+        string email = 3;
+        string gender = 4;
+        string password = 5;
+}
+
 message RegisterRequest {
-        UserData user=1;
+        UserRegisterData user=1;
 }
       
 message RegisterResponse {
