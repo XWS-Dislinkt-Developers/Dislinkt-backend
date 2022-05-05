@@ -2,11 +2,14 @@ package api
 
 import (
 	"context"
-	"net/http"
-
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+	"net/http"
+	"strings"
 )
 
 type UserHandler struct {
@@ -22,6 +25,13 @@ func NewUserHandler(service *application.UserService) *UserHandler {
 }
 
 func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je :", claims.Id)
+
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {
 		return nil, err
@@ -98,6 +108,12 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 
 func (handler *UserHandler) UpdateUser(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
 
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je :", claims.Id)
+
 	return nil, nil
 }
 
@@ -123,4 +139,22 @@ func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateReques
 		Status: http.StatusOK,
 		UserId: int64(user.ID),
 	}, nil
+}
+
+func extractHeader(ctx context.Context, header string) (string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no headers in request")
+	}
+
+	authHeaders, ok := md[header]
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no header in request")
+	}
+
+	if len(authHeaders) != 1 {
+		return "", status.Error(codes.Unauthenticated, "more than 1 header in request")
+	}
+
+	return authHeaders[0], nil
 }

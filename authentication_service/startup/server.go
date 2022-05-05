@@ -64,7 +64,7 @@ func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
 	if err != nil {
 		log.Fatal(err)
 	}
-	store.DeleteAll()
+	//store.DeleteAll()
 	//for _, User := range users {
 	//	err := store.Insert(User)
 	//	if err != nil {
