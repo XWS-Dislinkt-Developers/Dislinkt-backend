@@ -10,7 +10,7 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/interceptors"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/intercept"
 	authentication "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
@@ -117,7 +117,7 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
 			grpc_middleware.ChainUnaryServer(
-				interceptors.InterceptToken,
+				intercept.InterceptToken,
 			),
 		),
 	)

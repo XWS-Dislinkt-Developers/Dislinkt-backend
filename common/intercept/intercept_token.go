@@ -13,7 +13,13 @@ import (
 	"strings"
 )
 
-func NewAuthenticationClient(address string) authentication.AuthServiceClient {
+var nonAuthMethods map[string]bool = map[string]bool{
+	"/authentication.AuthenticationService/GetAll":   true,
+	"/authentication.AuthenticationService/Register": true,
+	"/authentication.AuthenticationService/Login":    true,
+}
+
+func NewAuthenticationClient(address string) authentication.AuthenticationServiceClient {
 	conn, err := getConnection(address)
 	if err != nil {
 		fmt.Println("Gateway faild to start", "Failed to start")
@@ -27,6 +33,12 @@ func getConnection(address string) (*grpc.ClientConn, error) {
 }
 
 func InterceptToken(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+
+	method, _ := grpc.Method(ctx)
+	println(method)
+	if nonAuthMethods[method] == true {
+		return handler(ctx, req)
+	}
 
 	auth, err := extractHeader(ctx, "authorization")
 	if err != nil {

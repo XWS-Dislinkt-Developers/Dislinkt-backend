@@ -5,8 +5,9 @@ go 1.18
 replace github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common => ../common
 
 require (
-	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-00010101000000-000000000000
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505161530-51fbdf50c0c8
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 	google.golang.org/grpc v1.46.0
 	gorm.io/driver/postgres v1.3.5
