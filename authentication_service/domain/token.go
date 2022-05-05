@@ -5,7 +5,7 @@ import (
 )
 
 type JwtClaims struct {
-	Id       string
+	Id       int
 	Username string
 	jwt.StandardClaims
 }

@@ -10,9 +10,11 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/interceptors"
 	authentication "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 )
@@ -62,7 +64,7 @@ func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//store.DeleteAll()
+	store.DeleteAll()
 	//for _, User := range users {
 	//	err := store.Insert(User)
 	//	if err != nil {
@@ -112,7 +114,13 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			grpc_middleware.ChainUnaryServer(
+				interceptors.InterceptToken,
+			),
+		),
+	)
 	authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)

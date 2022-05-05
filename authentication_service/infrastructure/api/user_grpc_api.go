@@ -40,9 +40,25 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 
 	var user domain.User
 	user.Username = request.User.Username
+	user.Name = request.User.Name
+	user.Email = request.User.Email
 	user.Password = request.User.Password
+	user.Gender = request.User.Gender
+	if request.User.Password != request.User.ConfirmPassword {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password mismatch",
+		}, nil
+	}
 
 	println("[UserHandler]Register:Username " + request.User.Username)
+	_, err := handler.service.GetByUsername(user.Username)
+	if err == nil {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Username is already taken",
+		}, nil
+	}
 	handler.service.Create(&user)
 
 	return &pb.RegisterResponse{
@@ -54,7 +70,7 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := handler.service.GetByUsername(req.UserData.Username)
-	println("Here111111111111111111")
+	println("[handler *UserHandler]Login")
 	if err != nil {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
@@ -80,6 +96,11 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 	}, nil
 }
 
+func (handler *UserHandler) UpdateUser(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
+
+	return nil, nil
+}
+
 func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
 	claims, err := handler.auth_service.ValidateToken(req.Token)
 
@@ -100,6 +121,6 @@ func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateReques
 
 	return &pb.ValidateResponse{
 		Status: http.StatusOK,
-		UserId: user.ID,
+		UserId: int64(user.ID),
 	}, nil
 }

@@ -20,7 +20,7 @@ func NewUserPostgresStore(db *gorm.DB) (domain.UserStore, error) {
 	return &UserPostgresStore{db: db}, nil
 }
 
-func (store *UserPostgresStore) Get(id string) (*domain.User, error) { // TODO: why not integer (id)??
+func (store *UserPostgresStore) Get(id int) (*domain.User, error) { // TODO: why not integer (id)??
 	var foundUser *domain.User
 	store.db.Where("ID = ?", id).First(foundUser)
 	if foundUser == nil {
@@ -50,6 +50,21 @@ func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, er
 		return nil, errors.New("ERR - [UserPostgresStore-GetByUsername(username)]: Can't find user with this username: " + username)
 	}
 	return foundUser, nil
+}
+
+func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto) (*domain.User, error) {
+	var user *domain.User
+	store.db.First(&user)
+	user.Username = dto.Username
+	user.Name = dto.Name
+	user.Gender = dto.Gender
+	user.Email = dto.Email
+	user.PhoneNumber = dto.PhoneNumber
+	user.Biography = dto.Biography
+	user.DateOfBirth = dto.DateOfBirth
+	store.db.Save(&user)
+	
+	return user, nil
 }
 
 func (store *UserPostgresStore) Insert(user *domain.User) error {

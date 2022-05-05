@@ -4,7 +4,7 @@ import "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_servi
 
 var users = []*domain.User{
 	{
-		ID:       "1",
+		ID:       1,
 		Name:     "Pera",
 		Username: "Pera",
 		Password: "pera",
@@ -13,7 +13,7 @@ var users = []*domain.User{
 		Gender:   "male",
 	},
 	{
-		ID:       "2",
+		ID:       2,
 		Name:     "Joka",
 		Username: "Joka",
 		Password: "joka",
@@ -22,7 +22,7 @@ var users = []*domain.User{
 		Gender:   "female",
 	},
 	{
-		ID:       "3",
+		ID:       3,
 		Name:     "Marko",
 		Username: "Marko",
 		Password: "marko",
@@ -31,7 +31,7 @@ var users = []*domain.User{
 		Gender:   "male",
 	},
 	{
-		ID:       "4",
+		ID:       4,
 		Name:     "Sanja",
 		Username: "Sanja",
 		Password: "sanja",

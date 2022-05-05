@@ -25,6 +25,12 @@ service AuthenticationService{
                 };
         }
         rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+        rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
+                option (google.api.http) = {
+                        post: "/updatePersonalData"
+                        body:"updateUserData"
+                };
+        }
 }
 
 
@@ -35,8 +41,38 @@ message UserData{
         string password = 2;
 }
 
+message UpdateUserData{
+        string username = 1;
+        string name = 2;
+        string phoneNumber = 3;
+        string email = 4;
+        string gender = 5;
+        string dateOfBirth = 6;
+        string biography = 7;
+}
+
+message UpdatePersonalDataRequest {
+        UpdateUserData updateUserData=1;
+}
+
+message UpdatePersonalDataResponse {
+        int64 status = 1;
+        string error = 2;
+}
+
+
+
+message UserRegistrationData{
+        string username = 1;
+        string name = 2;
+        string email = 3;
+        string gender = 4;
+        string password = 5;
+        string confirmPassword = 6;
+}
+
 message RegisterRequest {
-        UserData user=1;
+        UserRegistrationData user=1;
 }
       
 message RegisterResponse {
@@ -66,7 +102,7 @@ message ValidateRequest {
 message ValidateResponse {
         int64 status = 1;
         string error = 2;
-        string userId = 3;
+        int64 userId = 3;
 }
 
 //Test
@@ -78,7 +114,7 @@ message GetAllResponse {
 }
 
 message User {
-        string id = 1;
+        int64 id = 1;
         string name = 2;
         string username = 3;
         string password = 4;
