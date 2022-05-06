@@ -7,7 +7,8 @@ import (
 
 type Reaction struct {
 	UserId   int  `bson:"user_id"`
-	IsItLike bool `bson:"is_it_like"`
+	Liked    bool `bson:"liked"`
+	Disliked bool `bson:"disliked"`
 }
 
 type Comment struct {
@@ -21,7 +22,7 @@ type UserPost struct {
 	UserId    int                `bson:"user_id"`
 	CreatedAt time.Time          `bson:"created_at"`
 	Text      string             `bson:"text"`
-	ImagePath string             `bson:"imagepath"`
+	ImagePath string             `bson:"image_path"`
 	Reactions []Reaction         `bson:"reactions"`
 	Comments  []Comment          `bson:"comments"`
 }

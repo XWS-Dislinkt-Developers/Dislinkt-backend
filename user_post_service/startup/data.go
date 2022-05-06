@@ -8,7 +8,7 @@ import (
 
 var userPosts = []*domain.UserPost{
 	{
-		Id:        getObjectId("623b0cc336a1d6fd8c1cf0f6"),
+		Id:        GetObjectId("623b0cc336a1d6fd8c1cf0f6"),
 		UserId:    1,
 		CreatedAt: time.Now(),
 		Text:      "First post!",
@@ -17,15 +17,18 @@ var userPosts = []*domain.UserPost{
 		Reactions: []domain.Reaction{
 			{
 				UserId:   2,
-				IsItLike: true,
+				Liked:    true,
+				Disliked: false,
 			},
 			{
 				UserId:   3,
-				IsItLike: false,
+				Liked:    false,
+				Disliked: true,
 			},
 			{
 				UserId:   4,
-				IsItLike: true,
+				Liked:    true,
+				Disliked: false,
 			},
 		},
 		Comments: []domain.Comment{
@@ -48,7 +51,7 @@ var userPosts = []*domain.UserPost{
 	},
 }
 
-func getObjectId(id string) primitive.ObjectID {
+func GetObjectId(id string) primitive.ObjectID {
 	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
 		return objectId
 	}
