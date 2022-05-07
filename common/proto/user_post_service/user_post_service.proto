@@ -35,6 +35,7 @@ service UserPostService{
       body: "addReaction"
     };
   }
+
   // TODO: AddCommentToUserPost
   rpc AddComment(AddCommentRequest) returns(GetResponse) {
     option (google.api.http) = {
@@ -43,6 +44,15 @@ service UserPostService{
     };
   }
 
+  rpc GetUserPosts (GetUserPostsRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/getUserPosts/{id}"
+    };
+  }
+}
+
+message GetUserPostsRequest {
+  int64 id = 1;
 }
 
 //TODO: AddCommentToUserPostRequest{...}
@@ -86,7 +96,6 @@ message AddReactionRequest {
 }
 
 //TODO: AddReactionToUserPostResponse{...}
-
 
 /*
  -- Mislim da ovo nece trebati

@@ -12,4 +12,5 @@ type UserPostStore interface {
 	UpdateComments(userPost *UserPost)
 	UpdateReactions(userReaction *Reaction, userPost *UserPost)
 	AddReaction(userPost *UserPost)
+	GetPostsByUserId(idUser int) ([]*UserPost, error)
 }

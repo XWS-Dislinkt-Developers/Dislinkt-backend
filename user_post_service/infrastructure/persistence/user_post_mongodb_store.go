@@ -3,7 +3,6 @@ package persistence
 import (
 	"context"
 
-	"fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -67,62 +66,39 @@ func (store *UserPostMongoDBStore) filterOne(filter interface{}) (UserPost *doma
 }
 
 func (store *UserPostMongoDBStore) UpdateComments(userPost *domain.UserPost) {
-	/*result, _ := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{
-		{
-			"$set", bson.D{{"comments", userPost.Comments}},
-		},
-	}) */
-
-	result, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"comments", userPost.Comments}}}})
+	_, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"comments", userPost.Comments}}}})
 	if err != nil {
 		println("success update ")
 	}
 	println("failed")
-	println(result)
 }
 
 func (store *UserPostMongoDBStore) AddReaction(userPost *domain.UserPost) {
-
-	result, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"reactions", userPost.Reactions}}}})
+	_, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"reactions", userPost.Reactions}}}})
 	if err != nil {
 		println("success reaction update ")
 	}
 	println("failed reaction update")
-	println(result)
 }
-func (store *UserPostMongoDBStore) UpdateReactions(userReaction *domain.Reaction, userPost *domain.UserPost) {
 
-	result, err := store.userPosts.UpdateOne(
+func (store *UserPostMongoDBStore) UpdateReactions(userReaction *domain.Reaction, userPost *domain.UserPost) {
+	_, err := store.userPosts.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": userPost.Id, "reactions.user_id": userReaction.UserId},
 		bson.D{
 			{"$set", bson.M{"reactions.0.liked": userReaction.Liked, "reactions.0.disliked": userReaction.Disliked}},
 		})
 	//0 because that's first structure in array
-	println("***************************")
-	println("USER REACTION LIKE ")
-	println(userReaction.Liked)
-	println("USER REACTION LIKE ")
-	println(userReaction.Disliked)
-	println("***************************")
-	fmt.Printf("result matched", result.MatchedCount)
-	fmt.Printf("result modified ", result.ModifiedCount)
 	if err != nil {
 		println("ima eror")
 	}
 	println("nema eror")
-
 }
 
-/* arrayFilters := bson.A{bson.M{"x.Liked": userReaction.Liked}, bson.M{"y.userReaction": step.Name}}
-filter := bson.M{"_id.reactions": bson.M{"user_id": userReaction.UserId}}
-result, err := store.userPosts.UpdateOne(context.TODO(), filter, bson.D{{"$set", bson.D{{"reactions", userPost.Reactions}}}})
-result, err := store.userPosts.FindOneAndUpdate(context.TODO())
-if err != nil {
-	println("success reaction update ")
+func (store *UserPostMongoDBStore) GetPostsByUserId(userId int) ([]*domain.UserPost, error) {
+	filter := bson.M{"user_id": userId}
+	return store.filter(filter)
 }
-println("failed reaction update")
-println(result) */
 
 func decode(cursor *mongo.Cursor) (userPosts []*domain.UserPost, err error) {
 	for cursor.Next(context.TODO()) {
