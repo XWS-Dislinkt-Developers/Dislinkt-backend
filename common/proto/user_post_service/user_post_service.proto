@@ -8,26 +8,49 @@ import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
 service UserPostService{
+
   rpc Get(GetRequest) returns(GetResponse) {
-    option (google.api.http) = {
-      get: "/userPost/{id}"
-    };
+      option (google.api.http) = {
+        get: "/userPost/{id}"
+      };
   }
+
   rpc GetAll(GetAllRequest) returns(GetAllResponse) {
-    option (google.api.http) = {
-      get: "/userPost"
-    };
+      option (google.api.http) = {
+        get: "/userPosts"
+      };
   }
+
   rpc CreateUserPost(CreateUserPostRequest) returns(CreateUserPostResponse) {
     option (google.api.http) = {
       post: "/userPost"
       body: "userPost"
     };
   }
+
+  // TODO: AddReactionToUserPost
+
+  // TODO: AddCommentToUserPost
+  rpc AddComment(AddCommentRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      post: "/comment"
+      body: "addComment"
+    };
+  }
+
 }
 
-// TODO: Types are weird...
-// TODO: Case Insensitive?
+//TODO: AddCommentToUserPostRequest{...}
+message AddCommentRequest {
+  AddComment addComment = 1;
+}
+
+message AddComment {
+  string idPost = 1;
+  string text = 2;
+}
+
+//TODO: AddCommentToUserPostResponse{...}
 
 message GetRequest {
   string id = 1;
@@ -45,21 +68,28 @@ message GetAllResponse {
 }
 
 message CreateUserPostRequest {
-  NewUserPost userPost = 1;
+  UserPost userPost = 1;
 }
 
 message CreateUserPostResponse {
   UserPost userPost = 1;
 }
 
+//TODO: AddReactionToUserPostRequest{...}
+//TODO: AddReactionToUserPostResponse{...}
+
+/*
+ -- Mislim da ovo nece trebati
+
 message NewUserPost {
   repeated Reaction reactions = 1;
   repeated Comment comments = 2;
 }
+*/
 
 message UserPost {
   string id = 1;
-  int64  UserId = 2;
+  int64  userId = 2;
   google.protobuf.Timestamp createdAt = 3;
   string text = 4;
   string imagePath = 5;
@@ -68,12 +98,13 @@ message UserPost {
 }
 
 message Reaction {
-  int64  UserId = 1;
-  bool IsItLike = 2;
+  int64  userId = 1;
+  bool liked = 2;
+  bool disliked = 3;
 }
 
 message Comment {
-  int64  UserId = 1;
+  int64  userId = 1;
   google.protobuf.Timestamp createdAt = 2;
   string text = 3;
 }

@@ -1,10 +1,10 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220504183419-c8fa569d830b h1:O4YosoGbHFS/w4SgGmuojFYCQQvRyX+1q1wL5q17Vtc=
-github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220504183419-c8fa569d830b/go.mod h1:tGwjnOxtbj1CG3xq/eTdRG0AfcR5HCWL5hdIj7zbIiU=
-github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505150607-5f759e3589e3 h1:pCXmAQUJNbwQ/Fmc/v0q6hYgRcxbzlTORodOQfCAk9c=
-github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505150607-5f759e3589e3/go.mod h1:tGwjnOxtbj1CG3xq/eTdRG0AfcR5HCWL5hdIj7zbIiU=
+github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service v0.0.0-20220505203713-b8b7bb6f5439 h1:nUPhO8PBZ/xdex1rI8z2qftuNc6a04jgTnbCxJwyecc=
+github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service v0.0.0-20220505203713-b8b7bb6f5439/go.mod h1:YCCLRInydwqS8wF+N5gRNI3IlhP3wsFn770V/xXyBXA=
+github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505161530-51fbdf50c0c8 h1:xLSRCUO2SLXcQpZBrSezKS31QYxL71XGu93yt9QZ8Go=
+github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505161530-51fbdf50c0c8/go.mod h1:tGwjnOxtbj1CG3xq/eTdRG0AfcR5HCWL5hdIj7zbIiU=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
@@ -29,6 +29,8 @@ github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
+github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
+github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/glog v1.0.0 h1:nfP3RFugxnNRyKgeWd4oI1nYvXpxrx8ck8ZrcizshdQ=
 github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
@@ -61,8 +63,9 @@ github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0 h1:ESEyqQqXXFIcImj/BE8oKEX37Zsuceb2cZI+EL/zNCY=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0/go.mod h1:XnLCLFp3tjoZJszVKjfpyAK6J8sYIcQXWQxmqLWF21I=
-github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
+github.com/klauspost/compress v1.15.2 h1:3WH+AG7s2+T8o3nrM/8u2rdqUEcQhmga7smjrT41nAw=
+github.com/klauspost/compress v1.15.2/go.mod h1:PhcZ0MbTNciWF3rruxRgKxI5NkcHHrHUDtV4Yw2GlzU=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=

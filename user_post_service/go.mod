@@ -2,8 +2,11 @@ module github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service
 
 go 1.18
 
+replace github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common => ../common
+
 require (
-	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505150607-5f759e3589e3
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service v0.0.0-20220505203713-b8b7bb6f5439
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505161530-51fbdf50c0c8
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/genproto v0.0.0-20220429170224-98d788798c3e
 	google.golang.org/grpc v1.46.0
@@ -12,10 +15,11 @@ require (
 
 require (
 	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
+	github.com/klauspost/compress v1.15.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect

@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
+
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
@@ -48,6 +50,9 @@ func (server *Server) initHandlers() {
 }
 
 func (server *Server) initCustomHandlers() {
+
+	// authEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
+
 	// catalogueEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
 	// orderingEmdpoint := fmt.Sprintf("%s:%s", server.config.OrderingHost, server.config.OrderingPort)
 	// shippingEmdpoint := fmt.Sprintf("%s:%s", server.config.ShippingHost, server.config.ShippingPort)
@@ -81,10 +86,10 @@ func (server *Server) initCustomHandlers() {
 
 func (server *Server) Start() {
 
-	// srv := &http.Server{
-	// 	Addr:    ":8000",
-	// 	Handler: cors(server.mux),
-	// }
-	//log.Fatal(srv.ListenAndServe())
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), server.mux))
+	ch := handlers.CORS(handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
+		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin"}),
+	)
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
 }
