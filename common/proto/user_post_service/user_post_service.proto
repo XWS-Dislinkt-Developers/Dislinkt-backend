@@ -29,7 +29,12 @@ service UserPostService{
   }
 
   // TODO: AddReactionToUserPost
-
+  rpc AddReactionToUserPost(AddReactionRequest) returns(GetResponse) {
+    option (google.api.http) = {
+      post: "/reaction"
+      body: "addReaction"
+    };
+  }
   // TODO: AddCommentToUserPost
   rpc AddComment(AddCommentRequest) returns(GetResponse) {
     option (google.api.http) = {
@@ -76,7 +81,12 @@ message CreateUserPostResponse {
 }
 
 //TODO: AddReactionToUserPostRequest{...}
+message AddReactionRequest {
+  AddReaction addReaction = 1;
+}
+
 //TODO: AddReactionToUserPostResponse{...}
+
 
 /*
  -- Mislim da ovo nece trebati
@@ -99,6 +109,12 @@ message UserPost {
 
 message Reaction {
   int64  userId = 1;
+  bool liked = 2;
+  bool disliked = 3;
+}
+
+message AddReaction {
+  string  postId = 1;
   bool liked = 2;
   bool disliked = 3;
 }

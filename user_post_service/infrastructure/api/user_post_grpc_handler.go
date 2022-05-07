@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
@@ -82,6 +83,27 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 }
 
 // TODO: AddReactionToUserPost()
+func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, request *pb_post.AddReactionRequest) (*pb_post.GetResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je kod metode AddReaction:", claims.Id)
+
+	newReaction := mapNewReactionToUserPost(request, claims.Id)
+	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
+	fmt.Printf("Post Id kod add reaction ", postId.Hex())
+
+	UserPost, _ := handler.post_service.AddReaction(newReaction, postId)
+
+	UserPostPb := mapUserPost(UserPost)
+	response := &pb_post.GetResponse{
+		UserPost: UserPostPb,
+	}
+	return response, nil
+
+}
 
 //TODO:AddCommentToUserPost()
 func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {

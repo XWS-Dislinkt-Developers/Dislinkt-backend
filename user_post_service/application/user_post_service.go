@@ -42,3 +42,26 @@ func (service *UserPostService) AddComment(comment *domain.Comment, idPost primi
 	service.store.UpdateComments(UserPost)
 	return service.store.Get(idPost)
 }
+
+func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost primitive.ObjectID) (*domain.UserPost, error) {
+	UserPost, _ := service.store.Get(idPost)
+	userAlreadyReacted := false
+	for _, r := range UserPost.Reactions {
+		if r.UserId == reaction.UserId {
+			userAlreadyReacted = true
+		}
+	}
+	if userAlreadyReacted {
+		service.UpdateReaction(reaction, UserPost)
+	} else {
+		UserPost.Reactions = append(UserPost.Reactions, *reaction)
+		service.store.UpdateReactions(UserPost)
+	}
+
+	println(UserPost)
+	return service.store.Get(idPost)
+}
+
+func (service *UserPostService) UpdateReaction(reaction *domain.Reaction, userPost *domain.UserPost) {
+
+}

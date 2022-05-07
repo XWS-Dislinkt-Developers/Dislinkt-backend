@@ -25,6 +25,8 @@ type UserPostServiceClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	CreateUserPost(ctx context.Context, in *CreateUserPostRequest, opts ...grpc.CallOption) (*CreateUserPostResponse, error)
+	// TODO: AddReactionToUserPost
+	AddReactionToUserPost(ctx context.Context, in *AddReactionRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	// TODO: AddCommentToUserPost
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error)
 }
@@ -64,6 +66,15 @@ func (c *userPostServiceClient) CreateUserPost(ctx context.Context, in *CreateUs
 	return out, nil
 }
 
+func (c *userPostServiceClient) AddReactionToUserPost(ctx context.Context, in *AddReactionRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/AddReactionToUserPost", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userPostServiceClient) AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error) {
 	out := new(GetResponse)
 	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/AddComment", in, out, opts...)
@@ -80,6 +91,8 @@ type UserPostServiceServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error)
+	// TODO: AddReactionToUserPost
+	AddReactionToUserPost(context.Context, *AddReactionRequest) (*GetResponse, error)
 	// TODO: AddCommentToUserPost
 	AddComment(context.Context, *AddCommentRequest) (*GetResponse, error)
 	mustEmbedUnimplementedUserPostServiceServer()
@@ -97,6 +110,9 @@ func (UnimplementedUserPostServiceServer) GetAll(context.Context, *GetAllRequest
 }
 func (UnimplementedUserPostServiceServer) CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserPost not implemented")
+}
+func (UnimplementedUserPostServiceServer) AddReactionToUserPost(context.Context, *AddReactionRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddReactionToUserPost not implemented")
 }
 func (UnimplementedUserPostServiceServer) AddComment(context.Context, *AddCommentRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
@@ -168,6 +184,24 @@ func _UserPostService_CreateUserPost_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserPostService_AddReactionToUserPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddReactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPostServiceServer).AddReactionToUserPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_post_service.UserPostService/AddReactionToUserPost",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPostServiceServer).AddReactionToUserPost(ctx, req.(*AddReactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserPostService_AddComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddCommentRequest)
 	if err := dec(in); err != nil {
@@ -204,6 +238,10 @@ var UserPostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUserPost",
 			Handler:    _UserPostService_CreateUserPost_Handler,
+		},
+		{
+			MethodName: "AddReactionToUserPost",
+			Handler:    _UserPostService_AddReactionToUserPost_Handler,
 		},
 		{
 			MethodName: "AddComment",

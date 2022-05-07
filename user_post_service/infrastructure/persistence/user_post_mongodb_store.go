@@ -70,12 +70,27 @@ func (store *UserPostMongoDBStore) UpdateComments(userPost *domain.UserPost) {
 			"$set", bson.D{{"comments", userPost.Comments}},
 		},
 	}) */
-	
+
 	result, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"comments", userPost.Comments}}}})
 	if err != nil {
 		println("success update ")
 	}
 	println("failed")
+	println(result)
+}
+
+func (store *UserPostMongoDBStore) UpdateReactions(userPost *domain.UserPost) {
+	/*result, _ := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{
+		{
+			"$set", bson.D{{"comments", userPost.Comments}},
+		},
+	}) */
+
+	result, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"reactions", userPost.Reactions}}}})
+	if err != nil {
+		println("success reaction update ")
+	}
+	println("failed reaction update")
 	println(result)
 }
 
