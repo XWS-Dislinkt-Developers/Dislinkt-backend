@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
@@ -36,6 +37,8 @@ func (service *UserPostService) Create(userPost *domain.UserPost) error {
 func (service *UserPostService) AddComment(comment *domain.Comment, idPost primitive.ObjectID) (*domain.UserPost, error) {
 	UserPost, _ := service.store.Get(idPost)
 	UserPost.Comments = append(UserPost.Comments, *comment)
-	service.store.Update(UserPost)
+	fmt.Printf("Brojim koliko ima komentara ", len(UserPost.Comments))
+	fmt.Printf("U user service sam, citam userpostid ", UserPost.Id.Hex())
+	service.store.UpdateComments(UserPost)
 	return service.store.Get(idPost)
 }

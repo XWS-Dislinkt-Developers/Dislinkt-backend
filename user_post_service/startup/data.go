@@ -49,6 +49,28 @@ var userPosts = []*domain.UserPost{
 			},
 		},
 	},
+	{
+		Id:        GetObjectId("507f1f77bcf86cd799439012"),
+		UserId:    1,
+		CreatedAt: time.Now(),
+		Text:      "Second post!",
+		ImagePath: "imagepath..",
+
+		Reactions: []domain.Reaction{
+			{
+				UserId:   2,
+				Liked:    true,
+				Disliked: false,
+			},
+		},
+		Comments: []domain.Comment{
+			{
+				UserId:    3,
+				CreatedAt: time.Now(),
+				Text:      "Cao!",
+			},
+		},
+	},
 }
 
 func GetObjectId(id string) primitive.ObjectID {

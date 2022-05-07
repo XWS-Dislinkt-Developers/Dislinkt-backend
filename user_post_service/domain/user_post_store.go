@@ -9,5 +9,5 @@ type UserPostStore interface {
 	GetAll() ([]*UserPost, error)
 	Insert(userPost *UserPost) error
 	DeleteAll()
-	Update(userPost *UserPost)
+	UpdateComments(userPost *UserPost)
 }

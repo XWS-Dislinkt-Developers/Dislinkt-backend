@@ -99,6 +99,8 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 	println(request.AddComment.IdPost)
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
+	println("Id posta nakon primitive object u hAndleru 102 linija:")
+	println(postId.Hex())
 	UserPost, _ := handler.post_service.AddComment(newComment, postId)
 
 	UserPostPb := mapUserPost(UserPost)
