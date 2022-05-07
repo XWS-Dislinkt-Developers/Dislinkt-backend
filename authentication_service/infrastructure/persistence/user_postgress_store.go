@@ -3,7 +3,6 @@ package persistence
 import (
 	"errors"
 	ftm "fmt"
-
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"gorm.io/gorm"
 )
@@ -63,7 +62,7 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto) (*domain.Us
 	user.Biography = dto.Biography
 	user.DateOfBirth = dto.DateOfBirth
 	store.db.Save(&user)
-	
+
 	return user, nil
 }
 

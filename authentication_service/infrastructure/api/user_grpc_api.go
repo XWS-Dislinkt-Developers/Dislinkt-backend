@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type UserHandler struct {
@@ -26,11 +27,11 @@ func NewUserHandler(service *application.UserService) *UserHandler {
 
 func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 
-	header, _ := extractHeader(ctx, "authorization")
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
-	println("id je :", claims.Id)
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
+	//println("id je :", claims.Id)
 
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {
@@ -49,11 +50,43 @@ func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
+
 	user.Username = request.User.Username
 	user.Name = request.User.Name
 	user.Email = request.User.Email
 	user.Password = request.User.Password
 	user.Gender = request.User.Gender
+	user.IsPrivateProfile = false
+	if len(strings.TrimSpace(user.Username)) == 0 {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Username can't be empty.",
+		}, nil
+	}
+	if len(strings.TrimSpace(user.Name)) == 0 {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Name can't be empty.",
+		}, nil
+	}
+	if len(strings.TrimSpace(user.Email)) == 0 {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Email can't be empty.",
+		}, nil
+	}
+	if len(strings.TrimSpace(user.Password)) == 0 {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password can't be empty.",
+		}, nil
+	}
+	if len(strings.TrimSpace(user.Gender)) == 0 {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Gender can't be empty.",
+		}, nil
+	}
 	if request.User.Password != request.User.ConfirmPassword {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
@@ -106,15 +139,40 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 	}, nil
 }
 
-func (handler *UserHandler) UpdateUser(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
+func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
 
+	print("ucitava se sendler")
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
 	println("id je :", claims.Id)
 
-	return nil, nil
+	var dto domain.UpdateUserDto
+	dto.Username = request.UpdateUserData.Username
+	dto.Email = request.UpdateUserData.Email
+	dto.Gender = request.UpdateUserData.Gender
+	dto.Biography = request.UpdateUserData.Biography
+	dto.PhoneNumber = request.UpdateUserData.Biography
+	dto.Name = request.UpdateUserData.Name
+	//dto.DateOfBirth = request.UpdateUserData.DateOfBirth
+	myDate, err := time.Parse("2006-01-02", request.UpdateUserData.DateOfBirth)
+	if err == nil {
+		dto.DateOfBirth = myDate
+	}
+
+	_, err = handler.service.UpdateUser(dto, claims.Id)
+	if err != nil {
+		return &pb.UpdatePersonalDataResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	return &pb.UpdatePersonalDataResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
 }
 
 func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {

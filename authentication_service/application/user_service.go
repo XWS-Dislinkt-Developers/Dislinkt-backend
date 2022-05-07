@@ -1,6 +1,9 @@
 package application
 
-import "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+import (
+	"errors"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+)
 
 type UserService struct {
 	store domain.UserStore
@@ -28,7 +31,12 @@ func (service *UserService) GetByUsername(username string) (*domain.User, error)
 	return service.store.GetByUsername(username)
 }
 
-func (service *UserService) UpdateUser(dto domain.UpdateUserDto) (*domain.User, error) {
+func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
+	foundUser, _ := service.GetByUsername(dto.Username)
+	if foundUser != nil && foundUser.ID != userID {
+		return nil, errors.New("Username is already taken")
+	}
+
 	return service.store.UpdateUser(dto)
 }
 
