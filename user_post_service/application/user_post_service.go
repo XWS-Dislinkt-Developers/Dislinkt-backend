@@ -49,13 +49,16 @@ func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost pr
 	for _, r := range UserPost.Reactions {
 		if r.UserId == reaction.UserId {
 			userAlreadyReacted = true
+			println(userAlreadyReacted)
+
 		}
 	}
 	if userAlreadyReacted {
+		println("NASAO SAM USEERA KOJI JE REAGOVAO")
 		service.UpdateReaction(reaction, UserPost)
 	} else {
 		UserPost.Reactions = append(UserPost.Reactions, *reaction)
-		service.store.UpdateReactions(UserPost)
+		service.store.AddReaction(UserPost)
 	}
 
 	println(UserPost)
@@ -63,5 +66,39 @@ func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost pr
 }
 
 func (service *UserPostService) UpdateReaction(reaction *domain.Reaction, userPost *domain.UserPost) {
+	var updatedReaction *domain.Reaction
+	for _, r := range userPost.Reactions {
+		if r.UserId == reaction.UserId {
+			if r.Liked && !r.Disliked && reaction.Liked && !reaction.Disliked {
+				r.Liked = false
+				updatedReaction = &r
+				break
+			}
+			if !r.Liked && r.Disliked && !reaction.Liked && reaction.Disliked {
+				r.Disliked = false
+				updatedReaction = &r
+				break
+			}
+			if !r.Liked && !r.Disliked && reaction.Liked && !reaction.Disliked {
+				r.Liked = true
+				updatedReaction = &r
+				break
+			}
+			if !r.Liked && !r.Disliked && !reaction.Liked && reaction.Disliked {
+				r.Disliked = true
+				updatedReaction = &r
+				break
+			}
+			if !reaction.Liked && !reaction.Disliked {
+				updatedReaction = &r
+				break
+			}
+			if reaction.Liked && reaction.Disliked {
+				updatedReaction = &r
+				break
+			}
+		}
 
+	}
+	service.store.UpdateReactions(updatedReaction, userPost)
 }

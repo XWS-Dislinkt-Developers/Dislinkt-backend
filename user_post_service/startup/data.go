@@ -58,7 +58,7 @@ var userPosts = []*domain.UserPost{
 
 		Reactions: []domain.Reaction{
 			{
-				UserId:   2,
+				UserId:   1,
 				Liked:    true,
 				Disliked: false,
 			},
