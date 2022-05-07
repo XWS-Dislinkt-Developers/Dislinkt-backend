@@ -35,7 +35,6 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	println("id je :", claims.Id)
 	//var creatorUserId = claims.Id
 
 	userPost := mapNewUserPost(request.UserPost, claims.Id)

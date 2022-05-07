@@ -64,11 +64,11 @@ var userPosts = []*domain.UserPost{
 			},
 		},
 		Comments: []domain.Comment{
-			{
+			/*{
 				UserId:    3,
 				CreatedAt: time.Now(),
 				Text:      "Cao!",
-			},
+			},*/
 		},
 	},
 	{

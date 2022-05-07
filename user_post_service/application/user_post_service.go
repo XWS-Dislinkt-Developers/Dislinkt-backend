@@ -35,8 +35,10 @@ func (service *UserPostService) Create(userPost *domain.UserPost) error {
 
 func (service *UserPostService) AddComment(comment *domain.Comment, idPost primitive.ObjectID) (*domain.UserPost, error) {
 	UserPost, _ := service.store.Get(idPost)
-	UserPost.Comments = append(UserPost.Comments, *comment)
-	service.store.UpdateComments(UserPost)
+	if comment.Text != "" {
+		UserPost.Comments = append(UserPost.Comments, *comment)
+		service.store.UpdateComments(UserPost)
+	}
 	return service.store.Get(idPost)
 }
 
@@ -46,8 +48,6 @@ func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost pr
 	for _, r := range UserPost.Reactions {
 		if r.UserId == reaction.UserId {
 			userAlreadyReacted = true
-			println(userAlreadyReacted)
-
 		}
 	}
 	if userAlreadyReacted {
