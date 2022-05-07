@@ -35,7 +35,7 @@ func (store *UserPostMongoDBStore) GetAll() ([]*domain.UserPost, error) {
 }
 
 func (store *UserPostMongoDBStore) Insert(userPost *domain.UserPost) error {
-	userPost.Id = primitive.NewObjectID()
+	//userPost.Id = primitive.NewObjectID()
 	result, err := store.userPosts.InsertOne(context.TODO(), userPost)
 	if err != nil {
 		return err
@@ -62,6 +62,15 @@ func (store *UserPostMongoDBStore) filterOne(filter interface{}) (UserPost *doma
 	result := store.userPosts.FindOne(context.TODO(), filter)
 	err = result.Decode(&UserPost)
 	return
+}
+
+func (store *UserPostMongoDBStore) Update(userPost *domain.UserPost) {
+	result, _ := store.userPosts.UpdateOne(context.TODO(), bson.M{"id": userPost.Id}, bson.D{
+		{
+			"$set", bson.D{{"comments", userPost.Comments}},
+		},
+	})
+	println(result.MatchedCount)
 }
 
 func decode(cursor *mongo.Cursor) (userPosts []*domain.UserPost, err error) {

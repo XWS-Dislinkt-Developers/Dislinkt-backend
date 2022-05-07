@@ -81,7 +81,33 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 	return response, nil
 }
 
-// TODO: AddReactionToUserPost(), AddCommentToUserPost()
+// TODO: AddReactionToUserPost()
+
+//TODO:AddCommentToUserPost()
+func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {
+
+	println("U metodici sam!!")
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je kod metode AddComment:", claims.Id)
+
+	newComment := mapNewCommentToUserPost(request, claims.Id)
+	println(newComment.Text)
+	println("Id posta:")
+	println(request.AddComment.IdPost)
+
+	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
+	UserPost, _ := handler.post_service.AddComment(newComment, postId)
+
+	UserPostPb := mapUserPost(UserPost)
+	response := &pb_post.GetResponse{
+		UserPost: UserPostPb,
+	}
+	return response, nil
+
+}
 
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)

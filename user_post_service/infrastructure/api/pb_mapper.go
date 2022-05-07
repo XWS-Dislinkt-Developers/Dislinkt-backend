@@ -72,6 +72,14 @@ func mapNewUserPost(userPostPb *pb_post.UserPost, userId int) *domain.UserPost {
 
 // Lale: Mislim da potrebno napraviti mapNewReactionToUserPost, mapNewCommentToUserPost
 //TODO: mapNewReactionToUserPost(), mapNewCommentToUserPost()
+func mapNewCommentToUserPost(userCommentPb *pb_post.AddCommentRequest, userId int) *domain.Comment {
+	comment := &domain.Comment{
+		UserId:    userId,
+		CreatedAt: timestamppb.Now().AsTime(),
+		Text:      userCommentPb.AddComment.Text,
+	}
+	return comment
+}
 
 func GetObjectId(id string) primitive.ObjectID {
 	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {

@@ -32,3 +32,10 @@ func (service *UserPostService) Create(userPost *domain.UserPost) error {
 	}
 	return nil
 }
+
+func (service *UserPostService) AddComment(comment *domain.Comment, idPost primitive.ObjectID) (*domain.UserPost, error) {
+	UserPost, _ := service.store.Get(idPost)
+	UserPost.Comments = append(UserPost.Comments, *comment)
+	service.store.Update(UserPost)
+	return service.store.Get(idPost)
+}

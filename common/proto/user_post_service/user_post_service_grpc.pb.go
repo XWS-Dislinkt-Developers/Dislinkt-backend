@@ -25,6 +25,8 @@ type UserPostServiceClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	CreateUserPost(ctx context.Context, in *CreateUserPostRequest, opts ...grpc.CallOption) (*CreateUserPostResponse, error)
+	// TODO: AddCommentToUserPost
+	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error)
 }
 
 type userPostServiceClient struct {
@@ -62,6 +64,15 @@ func (c *userPostServiceClient) CreateUserPost(ctx context.Context, in *CreateUs
 	return out, nil
 }
 
+func (c *userPostServiceClient) AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+	out := new(GetResponse)
+	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/AddComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserPostServiceServer is the server API for UserPostService service.
 // All implementations must embed UnimplementedUserPostServiceServer
 // for forward compatibility
@@ -69,6 +80,8 @@ type UserPostServiceServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error)
+	// TODO: AddCommentToUserPost
+	AddComment(context.Context, *AddCommentRequest) (*GetResponse, error)
 	mustEmbedUnimplementedUserPostServiceServer()
 }
 
@@ -84,6 +97,9 @@ func (UnimplementedUserPostServiceServer) GetAll(context.Context, *GetAllRequest
 }
 func (UnimplementedUserPostServiceServer) CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserPost not implemented")
+}
+func (UnimplementedUserPostServiceServer) AddComment(context.Context, *AddCommentRequest) (*GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
 }
 func (UnimplementedUserPostServiceServer) mustEmbedUnimplementedUserPostServiceServer() {}
 
@@ -152,6 +168,24 @@ func _UserPostService_CreateUserPost_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserPostService_AddComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPostServiceServer).AddComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_post_service.UserPostService/AddComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPostServiceServer).AddComment(ctx, req.(*AddCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserPostService_ServiceDesc is the grpc.ServiceDesc for UserPostService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +204,10 @@ var UserPostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUserPost",
 			Handler:    _UserPostService_CreateUserPost_Handler,
+		},
+		{
+			MethodName: "AddComment",
+			Handler:    _UserPostService_AddComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

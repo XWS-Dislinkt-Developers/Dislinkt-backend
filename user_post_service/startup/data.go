@@ -8,7 +8,7 @@ import (
 
 var userPosts = []*domain.UserPost{
 	{
-		Id:        GetObjectId("623b0cc336a1d6fd8c1cf0f6"),
+		Id:        GetObjectId("507f1f77bcf86cd799439011"),
 		UserId:    1,
 		CreatedAt: time.Now(),
 		Text:      "First post!",
@@ -53,6 +53,7 @@ var userPosts = []*domain.UserPost{
 
 func GetObjectId(id string) primitive.ObjectID {
 	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
+		println(err)
 		return objectId
 	}
 	return primitive.NewObjectID()
