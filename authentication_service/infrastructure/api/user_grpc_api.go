@@ -175,6 +175,48 @@ func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.
 	}, nil
 }
 
+func (handler *UserHandler) UpdateUserWorkEducation(ctx context.Context, request *pb.UpdateUserWAERequest) (*pb.UpdateUserWAEResponse, error) {
+
+	print("ucitava se sendler")
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je :", claims.Id)
+
+	var dto domain.UpdateUserWAEDto
+	dto.Work = request.UpdateUserData.Work
+	dto.Education = request.UpdateUserData.Education
+
+	handler.service.UpdateUserWAE(dto, claims.Id)
+
+	return &pb.UpdateUserWAEResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
+func (handler *UserHandler) UpdateUserSkillsInterests(ctx context.Context, request *pb.UpdateUserSAIRequest) (*pb.UpdateUserSAIResponse, error) {
+
+	print("ucitava se sendler")
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	println("id je :", claims.Id)
+
+	var dto domain.UpdateUserSAIDto
+	dto.Skills = request.UpdateUserData.Skills
+	dto.Interests = request.UpdateUserData.Interests
+
+	handler.service.UpdateUserSAI(dto, claims.Id)
+
+	return &pb.UpdateUserSAIResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
 func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
 	claims, err := handler.auth_service.ValidateToken(req.Token)
 

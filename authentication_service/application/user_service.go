@@ -40,6 +40,13 @@ func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*d
 	return service.store.UpdateUser(dto)
 }
 
+func (service *UserService) UpdateUserWAE(dto domain.UpdateUserWAEDto, userID int) (*domain.User, error) {
+	return service.store.UpdateUserWorkAndEducation(dto, userID)
+}
+func (service *UserService) UpdateUserSAI(dto domain.UpdateUserSAIDto, userID int) (*domain.User, error) {
+	return service.store.UpdateUserSkillsAndInterests(dto, userID)
+}
+
 func (service *UserService) GetAll() (*[]domain.User, error) {
 	return service.store.GetAll()
 }

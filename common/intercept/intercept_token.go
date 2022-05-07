@@ -14,10 +14,12 @@ import (
 )
 
 var nonAuthMethods map[string]bool = map[string]bool{
-	"/authentication.AuthenticationService/UpdatePersonalData": true,
-	"/authentication.AuthenticationService/GetAll":             true,
-	"/authentication.AuthenticationService/Register":           true,
-	"/authentication.AuthenticationService/Login":              true,
+	"/authentication.AuthenticationService/UpdateUserWorkEducation":   true,
+	"/authentication.AuthenticationService/UpdateUserSkillsInterests": true,
+	"/authentication.AuthenticationService/UpdatePersonalData":        true,
+	"/authentication.AuthenticationService/GetAll":                    true,
+	"/authentication.AuthenticationService/Register":                  true,
+	"/authentication.AuthenticationService/Login":                     true,
 }
 
 func NewAuthenticationClient(address string) authentication.AuthenticationServiceClient {

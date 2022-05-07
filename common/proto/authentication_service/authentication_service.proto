@@ -31,6 +31,18 @@ service AuthenticationService{
                         body:"updateUserData"
                 };
         }
+        rpc UpdateUserWorkEducation(UpdateUserWAERequest) returns (UpdateUserWAEResponse) {
+                option (google.api.http) = {
+                        post: "/updateWorkAndEducation"
+                        body:"updateUserData"
+                };
+        }
+        rpc UpdateUserSkillsInterests(UpdateUserSAIRequest) returns (UpdateUserSAIResponse) {
+                option (google.api.http) = {
+                        post: "/updateSkillsInterests"
+                        body:"updateUserData"
+                };
+        }
 }
 
 
@@ -49,6 +61,34 @@ message UpdateUserData{
         string gender = 5;
         string dateOfBirth = 6;
         string biography = 7;
+}
+
+message UpdateUserSAI{
+        string skills = 1;
+        string interests = 2;
+}
+
+message UpdateUserWAE{
+        string work = 1;
+        string education = 2;
+}
+
+message UpdateUserSAIRequest {
+        UpdateUserSAI updateUserData=1;
+}
+
+message UpdateUserSAIResponse {
+        int64 status = 1;
+        string error = 2;
+}
+
+message UpdateUserWAERequest {
+        UpdateUserWAE updateUserData=1;
+}
+
+message UpdateUserWAEResponse {
+        int64 status = 1;
+        string error = 2;
 }
 
 message UpdatePersonalDataRequest {

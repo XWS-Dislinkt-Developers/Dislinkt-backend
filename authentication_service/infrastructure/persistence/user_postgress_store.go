@@ -66,6 +66,24 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto) (*domain.Us
 	return user, nil
 }
 
+func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUserWAEDto, userId int) (*domain.User, error) {
+	var user domain.User
+	user.ID = userId
+	store.db.First(&user)
+	user.Work = dto.Work
+	user.Education = dto.Education
+	store.db.Save(&user)
+	return nil, nil
+}
+func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUserSAIDto, userId int) (*domain.User, error) {
+	var user domain.User
+	user.ID = userId
+	store.db.First(&user)
+	user.Skills = dto.Skills
+	user.Interests = dto.Interests
+	store.db.Save(&user)
+	return nil, nil
+}
 func (store *UserPostgresStore) Insert(user *domain.User) error {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {

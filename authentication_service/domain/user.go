@@ -11,9 +11,13 @@ type User struct {
 	Address          string    `json:"address"`
 	Gender           string    `json:"gender"`
 	DateOfBirth      time.Time `json:"dateOfBirth"`
-	Biography        string    `json:"BateOfBirth"`
+	Biography        string    `json:"biography"`
 	PhoneNumber      string    `json:"phoneNumber"`
 	IsPrivateProfile bool      `json:"isPrivateProfile"`
+	Work             string    `json:"work"`
+	Education        string    `json:"education"`
+	Interests        string    `json:"interests"`
+	Skills           string    `json:"skills"`
 }
 
 type UpdateUserDto struct {
@@ -24,4 +28,14 @@ type UpdateUserDto struct {
 	Gender      string    `json:"gender"`
 	DateOfBirth time.Time `json:"dateOfBirth"`
 	Biography   string    `json:"BateOfBirth"`
+}
+
+type UpdateUserSAIDto struct {
+	Skills    string `json:"skills"`
+	Interests string `json:"interests"`
+}
+
+type UpdateUserWAEDto struct {
+	Work      string `json:"work"`
+	Education string `json:"education"`
 }
