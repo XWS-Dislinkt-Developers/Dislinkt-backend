@@ -65,12 +65,12 @@ func (store *UserPostMongoDBStore) filterOne(filter interface{}) (UserPost *doma
 }
 
 func (store *UserPostMongoDBStore) UpdateComments(userPost *domain.UserPost) {
-	/*result, _ := store.userPosts.UpdateOne(context.TODO(),, bson.D{
+	/*result, _ := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{
 		{
 			"$set", bson.D{{"comments", userPost.Comments}},
 		},
 	}) */
-	println("u metodi za update sam")
+	
 	result, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"comments", userPost.Comments}}}})
 	if err != nil {
 		println("success update ")
