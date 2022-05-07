@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
 
@@ -36,7 +35,6 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	println("id je :", claims.Id)
 	//var creatorUserId = claims.Id
 
 	userPost := mapNewUserPost(request.UserPost, claims.Id)
@@ -81,26 +79,38 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 	return response, nil
 }
 
-// TODO: AddReactionToUserPost()
+// TODO:AddReactionToUserPost
+func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, request *pb_post.AddReactionRequest) (*pb_post.GetResponse, error) {
 
-//TODO:AddCommentToUserPost()
-func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {
-
-	println("U metodici sam!!")
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	println("id je kod metode AddComment:", claims.Id)
+
+	newReaction := mapNewReactionToUserPost(request, claims.Id)
+	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
+
+	UserPost, _ := handler.post_service.AddReaction(newReaction, postId)
+
+	UserPostPb := mapUserPost(UserPost)
+	response := &pb_post.GetResponse{
+		UserPost: UserPostPb,
+	}
+	return response, nil
+
+}
+
+//TODO:AddCommentToUserPost()
+func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
 
 	newComment := mapNewCommentToUserPost(request, claims.Id)
-	println(newComment.Text)
-	println("Id posta:")
-	println(request.AddComment.IdPost)
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
-	println("Id posta nakon primitive object u hAndleru 102 linija:")
-	println(postId.Hex())
 	UserPost, _ := handler.post_service.AddComment(newComment, postId)
 
 	UserPostPb := mapUserPost(UserPost)
@@ -109,6 +119,22 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 	}
 	return response, nil
 
+}
+
+func (handler *UserPostHandler) GetUserPosts(ctx context.Context, request *pb_post.GetUserPostsRequest) (*pb_post.GetAllResponse, error) {
+	id := int(request.Id)
+	userPosts, err := handler.post_service.GetUserPosts(id)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb_post.GetAllResponse{
+		UserPosts: []*pb_post.UserPost{},
+	}
+	for _, UserPost := range userPosts {
+		current := mapUserPost(UserPost)
+		response.UserPosts = append(response.UserPosts, current)
+	}
+	return response, nil
 }
 
 func extractHeader(ctx context.Context, header string) (string, error) {

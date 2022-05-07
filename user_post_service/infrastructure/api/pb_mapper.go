@@ -81,6 +81,15 @@ func mapNewCommentToUserPost(userCommentPb *pb_post.AddCommentRequest, userId in
 	return comment
 }
 
+func mapNewReactionToUserPost(userReactionPb *pb_post.AddReactionRequest, userId int) *domain.Reaction {
+	reaction := &domain.Reaction{
+		UserId:   userId,
+		Liked:    userReactionPb.AddReaction.Liked,
+		Disliked: userReactionPb.AddReaction.Disliked,
+	}
+	return reaction
+}
+
 func GetObjectId(id string) primitive.ObjectID {
 	if objectId, err := primitive.ObjectIDFromHex(id); err == nil {
 		return objectId

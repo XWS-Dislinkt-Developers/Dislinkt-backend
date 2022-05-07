@@ -58,7 +58,39 @@ var userPosts = []*domain.UserPost{
 
 		Reactions: []domain.Reaction{
 			{
-				UserId:   2,
+				UserId:   1,
+				Liked:    true,
+				Disliked: false,
+			},
+		},
+		Comments: []domain.Comment{
+			/*{
+				UserId:    3,
+				CreatedAt: time.Now(),
+				Text:      "Cao!",
+			},*/
+		},
+	},
+	{
+		Id:        GetObjectId("6276eb70d31c8f2272d2fbe5"),
+		UserId:    2,
+		CreatedAt: time.Now(),
+		Text:      "New post!",
+		ImagePath: "imagepath..",
+
+		Reactions: []domain.Reaction{
+			{
+				UserId:   1,
+				Liked:    true,
+				Disliked: false,
+			},
+			{
+				UserId:   3,
+				Liked:    false,
+				Disliked: true,
+			},
+			{
+				UserId:   4,
 				Liked:    true,
 				Disliked: false,
 			},
@@ -67,7 +99,17 @@ var userPosts = []*domain.UserPost{
 			{
 				UserId:    3,
 				CreatedAt: time.Now(),
-				Text:      "Cao!",
+				Text:      "First comment!",
+			},
+			{
+				UserId:    3,
+				CreatedAt: time.Now(),
+				Text:      "Me again!",
+			},
+			{
+				UserId:    1,
+				CreatedAt: time.Now(),
+				Text:      "I can comment on my own post!!",
 			},
 		},
 	},

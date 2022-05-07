@@ -10,4 +10,7 @@ type UserPostStore interface {
 	Insert(userPost *UserPost) error
 	DeleteAll()
 	UpdateComments(userPost *UserPost)
+	UpdateReactions(userReaction *Reaction, userPost *UserPost)
+	AddReaction(userPost *UserPost)
+	GetPostsByUserId(idUser int) ([]*UserPost, error)
 }
