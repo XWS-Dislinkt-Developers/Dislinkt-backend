@@ -2,11 +2,13 @@ package api
 
 import (
 	"context"
-	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
-	pb_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
-
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
+	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	pb_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
+	pb_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
+	app_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
 	app_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
@@ -21,6 +23,9 @@ type UserPostHandler struct {
 
 	pb_post.UnimplementedUserPostServiceServer
 	post_service *app_post.UserPostService
+
+	pb_conn.UnimplementedUserConnectionServiceServer
+	conn_service *app_conn.UserConnectionService
 }
 
 func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler {
@@ -63,7 +68,29 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	}
 	return response, nil
 }
+func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetAllResponse, error) {
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
 
+	IdLoggedUser := claims.Id
+
+	println(IdLoggedUser)
+	//conestions := handler.conn_service.GetConnectionsByUserId(IdLoggedUser)
+	//println(conestions)
+	userPosts := make([]*domain.UserPost, 0)
+
+	response := &pb_post.GetAllResponse{
+		UserPosts: []*pb_post.UserPost{},
+	}
+	for _, UserPost := range userPosts {
+		current := mapUserPost(UserPost)
+		response.UserPosts = append(response.UserPosts, current)
+	}
+	return response, nil
+
+}
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {

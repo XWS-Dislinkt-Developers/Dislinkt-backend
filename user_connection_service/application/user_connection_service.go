@@ -18,6 +18,10 @@ func (service *UserConnectionService) GetAll() ([]*domain.UserConnection, error)
 	return service.store.GetAll()
 }
 
+func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.UserConnection, error) {
+	return service.store.GetByUserId(idUser)
+}
+
 //user je korisnik sa kojim ulogovani korisnik zeli da ostvari konekciju
 func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
