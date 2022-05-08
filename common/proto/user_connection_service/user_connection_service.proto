@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/user_connection_service";
+
+package user_connection_service;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service UserConnectionService {
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/userConnections"
+    };
+  }
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated UserConnection userConnections = 1;
+}
+
+message UserConnection {
+  int64 userId = 1;
+  repeated int64 connections = 2;
+}

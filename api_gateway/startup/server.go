@@ -10,6 +10,7 @@ import (
 
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -46,6 +47,12 @@ func (server *Server) initHandlers() {
 	err2 := userPostGw.RegisterUserPostServiceHandlerFromEndpoint(context.TODO(), server.mux, userPostEndpoint, opts)
 	if err2 != nil {
 		panic(err2)
+	}
+
+	userConnectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	err3 := userConnectionGw.RegisterUserConnectionServiceHandlerFromEndpoint(context.TODO(), server.mux, userConnectionEndpoint, opts)
+	if err3 != nil {
+		panic(err3)
 	}
 }
 
