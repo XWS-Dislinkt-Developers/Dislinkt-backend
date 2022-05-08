@@ -14,10 +14,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+
 	"google.golang.org/grpc/status"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -81,7 +83,7 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 	IdLoggedUser := claims.Id
 
-	AllUserConnections := make([]int, 0)
+	//AllUserConnections := make([]int, 0)
 	feedPosts := make([]*domain.UserPost, 0)
 	resp, err := http.Get("http://localhost:8000/userConnections")
 	if err != nil {
@@ -99,24 +101,40 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 		fmt.Printf("There was an error decoding the json. err = %s", err)
 	}
 	//var temp Connection
-	//for _, p := range responsenew.UserConnections {
+	var temp string
+	for _, p := range responsenew.UserConnections {
+
+		id, _ := strconv.Atoi(p.UserId)
+		if IdLoggedUser == id {
+
+			for _, k := range p.Connections {
+				err = json.Unmarshal(k, &temp)
+				if err == nil {
+					id2, _ := strconv.Atoi(temp)
+					Posts, _ := handler.post_service.GetUserPosts(id2)
+					for _, c := range Posts {
+						feedPosts = append(feedPosts, c)
+					}
+				}
+			}
+
+		}
+
+	}
+	//AllConnections, _ := handler.conn_service.GetAll()
 	//
-	//
+	//for _, userConnection := range AllConnections {
+	//	if userConnection.UserId == IdLoggedUser {
+	//		AllUserConnections = userConnection.Connections
+	//	}
 	//}
-	AllConnections, _ := handler.conn_service.GetAll()
 
-	for _, userConnection := range AllConnections {
-		if userConnection.UserId == IdLoggedUser {
-			AllUserConnections = userConnection.Connections
-		}
-	}
-
-	for _, idConnection := range AllUserConnections {
-		Posts, _ := handler.post_service.GetUserPosts(idConnection)
-		for _, c := range Posts {
-			feedPosts = append(feedPosts, c)
-		}
-	}
+	//for _, idConnection := range AllUserConnections {
+	//	Posts, _ := handler.post_service.GetUserPosts(idConnection)
+	//	for _, c := range Posts {
+	//		feedPosts = append(feedPosts, c)
+	//	}
+	//}
 
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
