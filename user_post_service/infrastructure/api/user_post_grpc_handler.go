@@ -77,8 +77,8 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	IdLoggedUser := claims.Id
 
 	println(IdLoggedUser)
-	conestions := handler.conn_service.GetConnectionsByUserId(IdLoggedUser)
-	println(conestions)
+	//conestions := handler.conn_service.GetConnectionsByUserId(IdLoggedUser)
+	//println(conestions)
 	userPosts := make([]*domain.UserPost, 0)
 
 	response := &pb_post.GetAllResponse{
