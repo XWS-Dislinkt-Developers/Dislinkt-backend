@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserPostServiceClient interface {
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetPostsForFeed(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	CreateUserPost(ctx context.Context, in *CreateUserPostRequest, opts ...grpc.CallOption) (*CreateUserPostResponse, error)
 	// TODO: AddReactionToUserPost
 	AddReactionToUserPost(ctx context.Context, in *AddReactionRequest, opts ...grpc.CallOption) (*GetResponse, error)
@@ -52,6 +53,15 @@ func (c *userPostServiceClient) Get(ctx context.Context, in *GetRequest, opts ..
 func (c *userPostServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
 	out := new(GetAllResponse)
 	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/GetAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userPostServiceClient) GetPostsForFeed(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+	out := new(GetAllResponse)
+	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/GetPostsForFeed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,6 +110,7 @@ func (c *userPostServiceClient) GetUserPosts(ctx context.Context, in *GetUserPos
 type UserPostServiceServer interface {
 	Get(context.Context, *GetRequest) (*GetResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	GetPostsForFeed(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error)
 	// TODO: AddReactionToUserPost
 	AddReactionToUserPost(context.Context, *AddReactionRequest) (*GetResponse, error)
@@ -118,6 +129,9 @@ func (UnimplementedUserPostServiceServer) Get(context.Context, *GetRequest) (*Ge
 }
 func (UnimplementedUserPostServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedUserPostServiceServer) GetPostsForFeed(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPostsForFeed not implemented")
 }
 func (UnimplementedUserPostServiceServer) CreateUserPost(context.Context, *CreateUserPostRequest) (*CreateUserPostResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserPost not implemented")
@@ -176,6 +190,24 @@ func _UserPostService_GetAll_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserPostServiceServer).GetAll(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserPostService_GetPostsForFeed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPostServiceServer).GetPostsForFeed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_post_service.UserPostService/GetPostsForFeed",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPostServiceServer).GetPostsForFeed(ctx, req.(*GetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -266,6 +298,10 @@ var UserPostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _UserPostService_GetAll_Handler,
+		},
+		{
+			MethodName: "GetPostsForFeed",
+			Handler:    _UserPostService_GetPostsForFeed_Handler,
 		},
 		{
 			MethodName: "CreateUserPost",

@@ -41,6 +41,10 @@ func (handler *UserConnectionHandler) GetAll(ctx context.Context, request *pb_co
 	}
 	return response, nil
 }
+func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context, id int) (connections []int) {
+	UserConnection, _ := handler.connection_service.GetConnectionsById(id)
+	return UserConnection.Connections
+}
 
 func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
 

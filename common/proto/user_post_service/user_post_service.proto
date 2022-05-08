@@ -21,6 +21,12 @@ service UserPostService{
       };
   }
 
+  rpc GetPostsForFeed(GetAllRequest)  returns(GetAllResponse){
+    option (google.api.http) = {
+      get: "/feed"
+    };
+  }
+
   rpc CreateUserPost(CreateUserPostRequest) returns(CreateUserPostResponse) {
     option (google.api.http) = {
       post: "/userPost"
