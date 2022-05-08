@@ -66,6 +66,30 @@ func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_co
 	return response, nil
 }
 
+func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+
+	handler.connection_service.Unfollow(claims.Id, int(request.IdUser))
+
+	//Ovo je trenutno da nam vrati sve iz baze nakon unfollow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
+	UserConnections, err := handler.connection_service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	response := &pb_connection.FollowResponse{
+		UserConnections: []*pb_connection.UserConnection{},
+	}
+	for _, UserConnection := range UserConnections {
+		current := mapUserConnection(UserConnection)
+		response.UserConnections = append(response.UserConnections, current)
+	}
+	return response, nil
+}
+
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

@@ -18,6 +18,11 @@ service UserConnectionService {
       put: "/follow/{idUser}"
     };
   };
+  rpc Unfollow(FollowRequest) returns (FollowResponse){
+    option (google.api.http) = {
+      put: "/unfollow/{idUser}"
+    };
+  };
 }
 
 message FollowRequest{

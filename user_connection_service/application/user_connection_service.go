@@ -52,3 +52,23 @@ func (service *UserConnectionService) requestDoesntExist(LoggedUserConnection *d
 	}
 	return true
 }
+
+func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
+	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	UserConnection, _ := service.store.GetByUserId(idUser)
+
+	UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
+	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
+	service.store.AddConnections(UserConnection, LoggedUserConnection)
+}
+
+func findAndDelete(s []int, item int) []int {
+	index := 0
+	for _, i := range s {
+		if i != item {
+			s[index] = i
+			index++
+		}
+	}
+	return s[:index]
+}
