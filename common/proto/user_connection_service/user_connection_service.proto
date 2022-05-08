@@ -23,6 +23,20 @@ service UserConnectionService {
       put: "/unfollow/{idUser}"
     };
   };
+
+  //TODO: acceptConnectionRequest(izbrise iz liste request-ova, i doda u obe liste connection-a)
+  rpc AcceptConnectionRequest(FollowRequest) returns (FollowResponse){
+    option (google.api.http) = {
+      put: "/accept/{idUser}"
+    };
+  };
+
+  //TODO: declineConnectionRequest(izbrise iz liste request-ova)
+  rpc DeclineConnectionRequest(FollowRequest) returns (FollowResponse){
+    option (google.api.http) = {
+      put: "/decline/{idUser}"
+    };
+  };
 }
 
 message FollowRequest{

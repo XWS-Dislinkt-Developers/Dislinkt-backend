@@ -26,7 +26,7 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	if service.connectionDoesntExist(LoggedUserConnection, UserConnection) && service.requestDoesntExist(LoggedUserConnection, UserConnection) {
 		if UserConnection.Private {
 			UserConnection.Requests = append(UserConnection.Requests, idLoggedUser)
-			service.store.AddRequestConnection(UserConnection)
+			service.store.UpdateRequestConnection(UserConnection)
 		} else {
 			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
@@ -60,6 +60,25 @@ func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
 	UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
 	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
 	service.store.AddConnections(UserConnection, LoggedUserConnection)
+}
+
+func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, idUser int) {
+	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	UserConnection, _ := service.store.GetByUserId(idUser)
+
+	LoggedUserConnection.Requests = findAndDelete(LoggedUserConnection.Requests, idUser)
+	service.store.UpdateRequestConnection(LoggedUserConnection)
+
+	UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
+	LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
+	service.store.AddConnections(UserConnection, LoggedUserConnection)
+}
+
+func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
+	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+
+	LoggedUserConnection.Requests = findAndDelete(LoggedUserConnection.Requests, idUser)
+	service.store.UpdateRequestConnection(LoggedUserConnection)
 }
 
 func findAndDelete(s []int, item int) []int {

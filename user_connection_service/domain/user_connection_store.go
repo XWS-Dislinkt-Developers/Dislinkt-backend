@@ -5,6 +5,6 @@ type UserConnectionStore interface {
 	GetAll() ([]*UserConnection, error)
 	Insert(userConnection *UserConnection) error
 	DeleteAll()
-	AddRequestConnection(userConnection *UserConnection)
+	UpdateRequestConnection(userConnection *UserConnection)
 	AddConnections(userConnection *UserConnection, loggedUserConnection *UserConnection)
 }
