@@ -37,7 +37,7 @@ func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*d
 		return nil, errors.New("Username is already taken")
 	}
 
-	return service.store.UpdateUser(dto)
+	return service.store.UpdateUser(dto, userID)
 }
 
 func (service *UserService) UpdateUserWAE(dto domain.UpdateUserWAEDto, userID int) (*domain.User, error) {

@@ -142,10 +142,22 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
 
 	print("ucitava se sendler")
-	header, _ := extractHeader(ctx, "authorization")
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb.UpdatePersonalDataResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	claims, err := handler.auth_service.ValidateToken(token)
+	if err != nil {
+		return &pb.UpdatePersonalDataResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	println("id je :", claims.Id)
 
 	var dto domain.UpdateUserDto
@@ -178,10 +190,22 @@ func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.
 func (handler *UserHandler) UpdateUserWorkEducation(ctx context.Context, request *pb.UpdateUserWAERequest) (*pb.UpdateUserWAEResponse, error) {
 
 	print("ucitava se sendler")
-	header, _ := extractHeader(ctx, "authorization")
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb.UpdateUserWAEResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	claims, err := handler.auth_service.ValidateToken(token)
+	if err != nil {
+		return &pb.UpdateUserWAEResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	println("id je :", claims.Id)
 
 	var dto domain.UpdateUserWAEDto
@@ -199,10 +223,22 @@ func (handler *UserHandler) UpdateUserWorkEducation(ctx context.Context, request
 func (handler *UserHandler) UpdateUserSkillsInterests(ctx context.Context, request *pb.UpdateUserSAIRequest) (*pb.UpdateUserSAIResponse, error) {
 
 	print("ucitava se sendler")
-	header, _ := extractHeader(ctx, "authorization")
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb.UpdateUserSAIResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	claims, err := handler.auth_service.ValidateToken(token)
+	if err != nil {
+		return &pb.UpdateUserSAIResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
 	println("id je :", claims.Id)
 
 	var dto domain.UpdateUserSAIDto

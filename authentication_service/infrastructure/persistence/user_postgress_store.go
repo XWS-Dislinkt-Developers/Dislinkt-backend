@@ -51,8 +51,9 @@ func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, er
 	return foundUser, nil
 }
 
-func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto) (*domain.User, error) {
-	var user *domain.User
+func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
+	var user domain.User
+	user.ID = userID
 	store.db.First(&user)
 	user.Username = dto.Username
 	user.Name = dto.Name
@@ -63,7 +64,7 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto) (*domain.Us
 	user.DateOfBirth = dto.DateOfBirth
 	store.db.Save(&user)
 
-	return user, nil
+	return nil, nil
 }
 
 func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUserWAEDto, userId int) (*domain.User, error) {
