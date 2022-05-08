@@ -23,12 +23,32 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
 
-	if UserConnection.Private {
-		UserConnection.Requests = append(UserConnection.Requests, idLoggedUser)
-		service.store.AddRequestConnection(UserConnection)
-	} else {
-		UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
-		LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
-		service.store.AddConnections(UserConnection, LoggedUserConnection)
+	if service.connectionDoesntExist(LoggedUserConnection, UserConnection) && service.requestDoesntExist(LoggedUserConnection, UserConnection) {
+		if UserConnection.Private {
+			UserConnection.Requests = append(UserConnection.Requests, idLoggedUser)
+			service.store.AddRequestConnection(UserConnection)
+		} else {
+			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
+			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
+			service.store.AddConnections(UserConnection, LoggedUserConnection)
+		}
 	}
+}
+
+func (service *UserConnectionService) connectionDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range LoggedUserConnection.Connections {
+		if c == UserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
+
+func (service *UserConnectionService) requestDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range UserConnection.Requests {
+		if c == LoggedUserConnection.UserId {
+			return false
+		}
+	}
+	return true
 }
