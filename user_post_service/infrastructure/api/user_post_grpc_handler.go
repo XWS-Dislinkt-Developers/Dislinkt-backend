@@ -28,9 +28,10 @@ type UserPostHandler struct {
 	conn_service *app_conn.UserConnectionService
 }
 
-func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler {
+func NewUserPostHandler(post_service *app_post.UserPostService, con_service *app_conn.UserConnectionService) *UserPostHandler {
 	return &UserPostHandler{
 		post_service: post_service,
+		conn_service: con_service,
 	}
 }
 
@@ -68,7 +69,7 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	}
 	return response, nil
 }
-func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetAllResponse, error) {
+func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
@@ -76,15 +77,28 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 	IdLoggedUser := claims.Id
 
-	println(IdLoggedUser)
-	//conestions := handler.conn_service.GetConnectionsByUserId(IdLoggedUser)
-	//println(conestions)
-	userPosts := make([]*domain.UserPost, 0)
+	AllUserConnections := make([]int, 0)
+	feedPosts := make([]*domain.UserPost, 0)
+
+	AllConnections, _ := handler.conn_service.GetAll()
+
+	for _, userConnection := range AllConnections {
+		if userConnection.UserId == IdLoggedUser {
+			AllUserConnections = userConnection.Connections
+		}
+	}
+
+	for _, idConnection := range AllUserConnections {
+		Posts, _ := handler.post_service.GetUserPosts(idConnection)
+		for _, c := range Posts {
+			feedPosts = append(feedPosts, c)
+		}
+	}
 
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}
-	for _, UserPost := range userPosts {
+	for _, UserPost := range feedPosts {
 		current := mapUserPost(UserPost)
 		response.UserPosts = append(response.UserPosts, current)
 	}
