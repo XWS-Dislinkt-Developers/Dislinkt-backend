@@ -62,6 +62,21 @@ func (store *UserConnectionMongoDBStore) filterOne(filter interface{}) (UserConn
 	return
 }
 
+func (store *UserConnectionMongoDBStore) AddRequestConnection(userConnection *domain.UserConnection) {
+	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"requests", userConnection.Requests}}}})
+	if err != nil {
+		println("Failed update request connection.")
+	}
+}
+
+func (store *UserConnectionMongoDBStore) AddConnections(userConnection *domain.UserConnection, loggedUserConnection *domain.UserConnection) {
+	_, err1 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"connections", userConnection.Connections}}}})
+	_, err2 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": loggedUserConnection.UserId}, bson.D{{"$set", bson.D{{"connections", loggedUserConnection.Connections}}}})
+	if err1 != nil || err2 != nil {
+		println("Failed update connection.")
+	}
+}
+
 func decode(cursor *mongo.Cursor) (userConnections []*domain.UserConnection, err error) {
 	for cursor.Next(context.TODO()) {
 		var UserConnection domain.UserConnection

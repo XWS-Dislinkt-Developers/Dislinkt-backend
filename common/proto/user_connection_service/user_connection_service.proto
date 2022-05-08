@@ -12,7 +12,20 @@ service UserConnectionService {
     option (google.api.http) = {
       get: "/userConnections"
     };
-  }
+  };
+  rpc Follow(FollowRequest) returns (FollowResponse){
+    option (google.api.http) = {
+      put: "/follow/{idUser}"
+    };
+  };
+}
+
+message FollowRequest{
+  int64 idUser = 1;
+}
+
+message FollowResponse{
+  repeated UserConnection userConnections = 1;
 }
 
 message GetAllRequest {
@@ -24,5 +37,7 @@ message GetAllResponse {
 
 message UserConnection {
   int64 userId = 1;
-  repeated int64 connections = 2;
+  bool private = 2;
+  repeated int64 connections = 3;
+  repeated int64 requests = 4;
 }

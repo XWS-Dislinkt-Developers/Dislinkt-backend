@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserConnectionServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
 }
 
 type userConnectionServiceClient struct {
@@ -42,11 +43,21 @@ func (c *userConnectionServiceClient) GetAll(ctx context.Context, in *GetAllRequ
 	return out, nil
 }
 
+func (c *userConnectionServiceClient) Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
+	out := new(FollowResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/Follow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserConnectionServiceServer is the server API for UserConnectionService service.
 // All implementations must embed UnimplementedUserConnectionServiceServer
 // for forward compatibility
 type UserConnectionServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	Follow(context.Context, *FollowRequest) (*FollowResponse, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedUserConnectionServiceServer struct {
 
 func (UnimplementedUserConnectionServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) Follow(context.Context, *FollowRequest) (*FollowResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -88,6 +102,24 @@ func _UserConnectionService_GetAll_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserConnectionService_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).Follow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/Follow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).Follow(ctx, req.(*FollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserConnectionService_ServiceDesc is the grpc.ServiceDesc for UserConnectionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _UserConnectionService_GetAll_Handler,
+		},
+		{
+			MethodName: "Follow",
+			Handler:    _UserConnectionService_Follow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
