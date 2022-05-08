@@ -6,10 +6,10 @@ import (
 
 var userConnections = []*domain.UserConnection{
 	{
-		UserId:  1,
+		UserId:  11,
 		Private: true,
 		Connections: []int{
-			3,
+			9,
 		},
 		Requests: []int{4},
 	},

@@ -9,7 +9,7 @@ import (
 var userPosts = []*domain.UserPost{
 	{
 		Id:        GetObjectId("507f1f77bcf86cd799439011"),
-		UserId:    1,
+		UserId:    9,
 		CreatedAt: time.Now(),
 		Text:      "First post!",
 		ImagePath: "imagepath..",
