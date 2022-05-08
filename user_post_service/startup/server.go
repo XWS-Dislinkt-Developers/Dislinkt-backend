@@ -3,8 +3,6 @@ package startup
 import (
 	"fmt"
 	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
-	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
-	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
@@ -114,8 +112,8 @@ func (server *Server) initCreateUserPostHandler(service *application.UserPostSer
 	}
 }
 */
-func (server *Server) initUserPostHandler(service *application.UserPostService, con *application.UserConnectionService) *api.UserPostHandler {
-	return api.NewUserPostHandler(service, con)
+func (server *Server) initUserPostHandler(service *application.UserPostService) *api.UserPostHandler {
+	return api.NewUserPostHandler(service)
 }
 
 func (server *Server) startGrpcServer(userPostHandler *api.UserPostHandler) {

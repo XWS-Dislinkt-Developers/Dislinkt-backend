@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
@@ -9,11 +11,13 @@ import (
 	app_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
 	app_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"strings"
 )
 
@@ -28,10 +32,10 @@ type UserPostHandler struct {
 	conn_service *app_conn.UserConnectionService
 }
 
-func NewUserPostHandler(post_service *app_post.UserPostService, con_service *app_conn.UserConnectionService) *UserPostHandler {
+func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler {
+
 	return &UserPostHandler{
 		post_service: post_service,
-		conn_service: con_service,
 	}
 }
 
@@ -79,7 +83,26 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 	AllUserConnections := make([]int, 0)
 	feedPosts := make([]*domain.UserPost, 0)
-
+	resp, err := http.Get("http://localhost:8000/userConnections")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	sb := string(body)
+	log.Printf(sb)
+	var responsenew ResponseNew
+	err = json.Unmarshal(body, &responsenew)
+	if err != nil {
+		fmt.Printf("There was an error decoding the json. err = %s", err)
+	}
+	//var temp Connection
+	//for _, p := range responsenew.UserConnections {
+	//
+	//
+	//}
 	AllConnections, _ := handler.conn_service.GetAll()
 
 	for _, userConnection := range AllConnections {
@@ -195,3 +218,24 @@ func extractHeader(ctx context.Context, header string) (string, error) {
 
 	return authHeaders[0], nil
 }
+
+type ResponseNew struct {
+	UserConnections []UserConnection `json:"userConnections"`
+}
+
+//json.RawMessage
+type UserConnection struct {
+	UserId      string            `json:"userId"`
+	Private     bool              `json:"private"`
+	Connections []json.RawMessage `json:"connections"`
+	Requests    []json.RawMessage `json:"requests"`
+}
+
+type Connection struct {
+	con []string
+}
+
+//
+//type Requests struct {
+//	Request string
+//}
