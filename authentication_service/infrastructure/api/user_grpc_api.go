@@ -136,6 +136,8 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		Status:   http.StatusOK,
 		Token:    token,
 		Username: user.Username,
+		Id:       int64(user.ID),
+		Role:     user.Role,
 	}, nil
 }
 

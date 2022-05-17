@@ -33,6 +33,7 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 	claims := &domain.JwtClaims{
 		Id:       user.ID,
 		Username: user.Username,
+		Role:     user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(8)).Unix(),
 			//Issuer:    service.Issuer,

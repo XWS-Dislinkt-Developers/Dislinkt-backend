@@ -131,6 +131,8 @@ message LoginResponse {
         string error = 2;
         string token = 3;
         string username=4;
+        int64 id = 5;
+        string role = 6;
 }
       
 // Validate

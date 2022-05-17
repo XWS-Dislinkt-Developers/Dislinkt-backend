@@ -18,6 +18,7 @@ type User struct {
 	Education        string    `json:"education"`
 	Interests        string    `json:"interests"`
 	Skills           string    `json:"skills"`
+	Role             string    `json:"role"`
 }
 
 type UpdateUserDto struct {
