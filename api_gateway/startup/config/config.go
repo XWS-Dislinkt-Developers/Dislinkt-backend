@@ -1,13 +1,15 @@
 package config
 
 type Config struct {
-	Port               string
-	AuthenticationHost string
-	AuthenticationPort string
-	UserPostHost       string
-	UserPostPort       string
-	UserConnectionHost string
-	UserConnectionPort string
+	Port                   string
+	AuthenticationHost     string
+	AuthenticationPort     string
+	UserPostHost           string
+	UserPostPort           string
+	UserConnectionHost     string
+	UserConnectionPort     string
+	HTTPSServerKey         string
+	HTTPSServerCertificate string
 }
 
 func NewConfig() *Config {
@@ -22,5 +24,8 @@ func NewConfig() *Config {
 
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
+
+		HTTPSServerKey:         "localhost.key",
+		HTTPSServerCertificate: "localhost.crt",
 	}
 }
