@@ -76,3 +76,17 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 	return claims, nil
 
 }
+
+func (service *AuthService) CheckIfAdmin(role string) (retVal bool) {
+	if role == "admin" {
+		return true
+	}
+	return false
+}
+
+func (service *AuthService) CheckIfUser(role string) (retVal bool) {
+	if role == "user" {
+		return true
+	}
+	return false
+}
