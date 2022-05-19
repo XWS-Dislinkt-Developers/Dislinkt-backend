@@ -47,6 +47,22 @@ func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 	return response, nil
 }
 
+func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
+	print("USAO SAM U HENDLER ")
+	print(request.Username)
+	User, err := handler.service.GetByUsername(request.Username)
+	if err != nil || User == nil {
+		return nil, err
+	}
+	UserPb := mapUser(User)
+
+	response := &pb.FindUserResponse{
+		User: UserPb,
+	}
+
+	return response, nil
+}
+
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User

@@ -18,6 +18,12 @@ service AuthenticationService{
                         body:"user"
               };
         }
+        rpc FindUser(FindUserRequest) returns (FindUserResponse) {
+                option (google.api.http) = {
+                        post: "/user"
+                        body:"username"
+                };
+        }
         rpc Login(LoginRequest) returns (LoginResponse) {
                 option (google.api.http) = {
                   post: "/login"
@@ -163,4 +169,12 @@ message User {
         string email = 5;
         string address = 6;
         string gender = 7;
+}
+//findUserByUsername
+message FindUserRequest {
+        string username = 1;
+}
+
+message FindUserResponse {
+        User user = 1;
 }
