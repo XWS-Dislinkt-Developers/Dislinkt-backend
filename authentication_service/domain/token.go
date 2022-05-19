@@ -10,3 +10,8 @@ type JwtClaims struct {
 	Role     string
 	jwt.StandardClaims
 }
+
+type ConfirmationToken struct {
+	UserId            int    `json:"userId" ,gorm:"unique" validate:"required,userId" `
+	ConfirmationToken string `json:"confirmationToken" ,gorm:"unique" validate:"required,confirmationToken" `
+}

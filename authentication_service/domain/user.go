@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type User struct {
-	ID               int       `json:"id" ,gorm:"primaryKey,;autoIncrement:true" `
+	ID               int       `json:"id" ,gorm:"primaryKey,autoIncrement:true" `
 	Name             string    `json:"name" validate:"required,name"`
 	Username         string    `json:"username" ,gorm:"unique" validate:"required,username" `
 	Password         string    `json:"password"`
@@ -19,6 +19,7 @@ type User struct {
 	Interests        string    `json:"interests"`
 	Skills           string    `json:"skills"`
 	Role             string    `json:"role"`
+	IsItConfirmed    bool      `json:"isItConfirmed"`
 }
 
 type UpdateUserDto struct {

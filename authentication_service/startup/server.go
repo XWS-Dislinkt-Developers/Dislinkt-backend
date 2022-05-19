@@ -35,15 +35,18 @@ const (
 
 func (server *Server) Start() {
 	postgresClient := server.initPostgresClient()
-	userStore := server.initUserStore(postgresClient)
 
-	userService := server.initUserService(userStore)
+	userStore := server.initUserStore(postgresClient)
+	conformationTokenStore := server.initTokenConformationStore(postgresClient)
+
+	userService := server.initUserService(userStore, conformationTokenStore)
+	authService := server.initAuthService(userStore, conformationTokenStore)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	//server.initCreateOrderHandler(userService, replyPublisher, commandSubscriber)
 
-	userHandler := server.initUserHandler(userService)
+	userHandler := server.initUserHandler(userService, authService)
 
 	server.startGrpcServer(userHandler)
 }
@@ -74,6 +77,14 @@ func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
 	return store
 }
 
+func (server *Server) initTokenConformationStore(client *gorm.DB) domain.ConfirmationTokenStore {
+	store, err := persistence.NewConfirmationTokenPostgresStore(client)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return store
+}
+
 func (server *Server) initPublisher(subject string) saga.Publisher {
 	publisher, err := nats.NewNATSPublisher(
 		server.config.NatsHost, server.config.NatsPort,
@@ -94,8 +105,12 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	return subscriber
 }
 
-func (server *Server) initUserService(store domain.UserStore) *application.UserService {
-	return application.NewUserService(store)
+func (server *Server) initUserService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore) *application.UserService {
+	return application.NewUserService(store, storeConfToken)
+}
+
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken)
 }
 
 // func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {
@@ -105,8 +120,8 @@ func (server *Server) initUserService(store domain.UserStore) *application.UserS
 // 	}
 // }
 
-func (server *Server) initUserHandler(service *application.UserService) *api.UserHandler {
-	return api.NewUserHandler(service)
+func (server *Server) initUserHandler(service *application.UserService, authService *application.AuthService) *api.UserHandler {
+	return api.NewUserHandler(service, authService)
 }
 
 func (server *Server) startGrpcServer(userHandler *api.UserHandler) {

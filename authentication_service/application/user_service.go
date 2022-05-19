@@ -6,12 +6,14 @@ import (
 )
 
 type UserService struct {
-	store domain.UserStore
+	store                  domain.UserStore
+	conformationTokenStore domain.ConfirmationTokenStore
 }
 
-func NewUserService(store domain.UserStore) *UserService {
+func NewUserService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore) *UserService {
 	return &UserService{
-		store: store,
+		store:                  store,
+		conformationTokenStore: conformationTokenStore,
 	}
 }
 

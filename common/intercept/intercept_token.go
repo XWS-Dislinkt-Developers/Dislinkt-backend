@@ -21,6 +21,7 @@ var nonAuthMethods map[string]bool = map[string]bool{
 	"/authentication.AuthenticationService/Register":                  true,
 	"/authentication.AuthenticationService/Login":                     true,
 	"/authentication.AuthenticationService/FindUser":                  true,
+	"/authentication.AuthenticationService/ConfirmAccount":            true,
 }
 
 func NewAuthenticationClient(address string) authentication.AuthenticationServiceClient {

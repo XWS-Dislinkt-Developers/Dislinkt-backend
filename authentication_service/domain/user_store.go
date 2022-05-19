@@ -9,4 +9,6 @@ type UserStore interface {
 	UpdateUserSkillsAndInterests(dto UpdateUserSAIDto, userId int) (*User, error)
 	GetAll() (*[]User, error)
 	DeleteAll()
+	ConfirmAccount(idUser int) (*User, error)
+	GetById(id int) (*User, error)
 }

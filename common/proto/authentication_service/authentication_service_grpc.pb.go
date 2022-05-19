@@ -30,6 +30,7 @@ type AuthenticationServiceClient interface {
 	UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
+	ConfirmAccount(ctx context.Context, in *ConfirmAccountRequest, opts ...grpc.CallOption) (*ConfirmAccountResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -112,6 +113,15 @@ func (c *authenticationServiceClient) UpdateUserSkillsInterests(ctx context.Cont
 	return out, nil
 }
 
+func (c *authenticationServiceClient) ConfirmAccount(ctx context.Context, in *ConfirmAccountRequest, opts ...grpc.CallOption) (*ConfirmAccountResponse, error) {
+	out := new(ConfirmAccountResponse)
+	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/ConfirmAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
@@ -124,6 +134,7 @@ type AuthenticationServiceServer interface {
 	UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
+	ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -154,6 +165,9 @@ func (UnimplementedAuthenticationServiceServer) UpdateUserWorkEducation(context.
 }
 func (UnimplementedAuthenticationServiceServer) UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserSkillsInterests not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmAccount not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 
@@ -312,6 +326,24 @@ func _AuthenticationService_UpdateUserSkillsInterests_Handler(srv interface{}, c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_ConfirmAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).ConfirmAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authentication.AuthenticationService/ConfirmAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).ConfirmAccount(ctx, req.(*ConfirmAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -350,6 +382,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserSkillsInterests",
 			Handler:    _AuthenticationService_UpdateUserSkillsInterests_Handler,
+		},
+		{
+			MethodName: "ConfirmAccount",
+			Handler:    _AuthenticationService_ConfirmAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

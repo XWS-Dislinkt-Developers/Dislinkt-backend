@@ -29,6 +29,25 @@ func (store *UserPostgresStore) Get(id int) (*domain.User, error) { // TODO: why
 	return foundUser, nil
 }
 
+func (store *UserPostgresStore) GetById(id int) (*domain.User, error) {
+	var foundUser *domain.User
+	users, err := store.GetAll()
+	if err != nil {
+		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
+	}
+	for _, user := range *users {
+		if user.ID == id {
+			return &user, nil
+		}
+	}
+	if foundUser == nil {
+		ftm.Println("[UserPostgresStore-GetById(id)]: Can't find user with this id: " + string(id))
+		return nil, errors.New("ERR - [UserPostgresStore-GetById(id)]: Can't find user with this id: " + string(id))
+	}
+	return foundUser, nil
+
+}
+
 func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, error) {
 	var foundUser *domain.User
 	//result := store.db.Where("username = ?", username).First(foundUser)
@@ -67,6 +86,16 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	return nil, nil
 }
 
+func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error) {
+	var user domain.User
+	user.ID = idUser
+	store.db.First(&user)
+	user.IsItConfirmed = true
+	store.db.Save(&user)
+
+	return nil, nil
+}
+
 func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUserWAEDto, userId int) (*domain.User, error) {
 	var user domain.User
 	user.ID = userId
@@ -91,6 +120,7 @@ func (store *UserPostgresStore) Insert(user *domain.User) error {
 		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 	}
+
 	result := store.db.Create(user)
 	if result.Error != nil {
 		ftm.Println("[UserPostgresStore-Insert(user)]: Can't insert user.")

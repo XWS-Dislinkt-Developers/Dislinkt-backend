@@ -9,8 +9,8 @@ import "google/api/annotations.proto";
 service AuthenticationService{
         rpc GetAll(GetAllRequest) returns(GetAllResponse) {
         	option (google.api.http) = {
-			get: "/users"
-		};
+			          get: "/users"
+          };
         }
         rpc Register(RegisterRequest) returns (RegisterResponse) {
                 option (google.api.http) = {
@@ -49,10 +49,20 @@ service AuthenticationService{
                         body:"updateUserData"
                 };
         }
+        rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
+                option (google.api.http) = {
+                        get: "/confirmAccount/{token}"
+                };
+        }
 }
 
+message  ConfirmAccountRequest {
+        string token = 1;
+}
 
-// Register
+message  ConfirmAccountResponse {
+        string link = 1;
+}
 
 message UserData{
         string username = 1;
@@ -106,8 +116,6 @@ message UpdatePersonalDataResponse {
         string error = 2;
 }
 
-
-
 message UserRegistrationData{
         string username = 1;
         string name = 2;
@@ -127,7 +135,6 @@ message RegisterResponse {
 }
       
 // Login
-      
 message LoginRequest {
         UserData userData = 1;
 }
@@ -142,7 +149,6 @@ message LoginResponse {
 }
       
 // Validate
-      
 message ValidateRequest {
          string token = 1;
 }

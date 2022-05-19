@@ -19,9 +19,10 @@ type UserHandler struct {
 	auth_service *application.AuthService
 }
 
-func NewUserHandler(service *application.UserService) *UserHandler {
+func NewUserHandler(service *application.UserService, auth_service *application.AuthService) *UserHandler {
 	return &UserHandler{
-		service: service,
+		service:      service,
+		auth_service: auth_service,
 	}
 }
 
@@ -70,7 +71,7 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	user.Username = request.User.Username
 	user.Name = request.User.Name
 	user.Email = request.User.Email
-	user.Password = request.User.Password
+	user.Password = handler.auth_service.HashPassword(request.User.Password)
 	user.Gender = request.User.Gender
 	user.IsPrivateProfile = false
 	if len(strings.TrimSpace(user.Username)) == 0 {
@@ -120,16 +121,35 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	}
 	handler.service.Create(&user)
 
+	handler.auth_service.SendEmailForUserAuthentication(&user)
+
 	return &pb.RegisterResponse{
 		Status: http.StatusCreated,
 	}, nil
 
 }
 
+func (handler *UserHandler) ConfirmAccount(ctx context.Context, req *pb.ConfirmAccountRequest) (*pb.ConfirmAccountResponse, error) {
+
+	handler.auth_service.ConfirmAccount(req.Token)
+
+	return &pb.ConfirmAccountResponse{
+		Link: "Posetite nas sajt i ulogujte se: http://localhost:4200",
+	}, nil
+}
+
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := handler.service.GetByUsername(req.UserData.Username)
 	println("[handler *UserHandler]Login")
+
+	if user.IsItConfirmed == false {
+		return &pb.LoginResponse{
+			Status: http.StatusNotFound,
+			Error:  "User's account is not confirmed!",
+		}, nil
+	}
+
 	if err != nil {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
@@ -137,7 +157,7 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		}, nil
 	}
 
-	match := req.UserData.Password == user.Password
+	match := handler.auth_service.CheckPasswordHash(req.UserData.Password, user.Password)
 
 	if !match {
 		return &pb.LoginResponse{
