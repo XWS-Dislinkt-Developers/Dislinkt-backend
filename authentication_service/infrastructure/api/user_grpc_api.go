@@ -50,8 +50,8 @@ func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllReques
 
 func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
 	print("USAO SAM U HENDLER ")
-	print(request.Username)
-	User, err := handler.service.GetByUsername(request.Username)
+	print(request.FindUser.Username)
+	User, err := handler.service.GetByUsername(request.FindUser.Username)
 	if err != nil || User == nil {
 		return nil, err
 	}

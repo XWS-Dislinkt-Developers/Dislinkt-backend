@@ -21,7 +21,7 @@ service AuthenticationService{
         rpc FindUser(FindUserRequest) returns (FindUserResponse) {
                 option (google.api.http) = {
                         post: "/user"
-                        body:"username"
+                        body:"findUser"
                 };
         }
         rpc Login(LoginRequest) returns (LoginResponse) {
@@ -178,6 +178,10 @@ message User {
 }
 //findUserByUsername
 message FindUserRequest {
+        FindUser findUser = 1;
+}
+
+message  FindUser {
         string username = 1;
 }
 
