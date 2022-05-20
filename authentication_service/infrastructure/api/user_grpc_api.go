@@ -201,7 +201,7 @@ func (handler *UserHandler) PasswordlessLoginRequest(ctx context.Context, req *p
 	}
 	return &pb.PasswordRecoveryResponse{
 		Status: http.StatusOK,
-		Error:  "Email sent.",
+		Error:  "Email sent successfully!",
 	}, nil
 }
 

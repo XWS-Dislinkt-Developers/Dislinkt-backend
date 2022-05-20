@@ -232,7 +232,7 @@ func (service *AuthService) PasswordlessLogin(code string) (user *domain.User, e
 
 		user, _ = service.store.GetById(passwordlessLogin.UserId)
 		service.passwordlessLoginStore.Delete(passwordlessLogin.UserId)
-		return user, "User is successfully found."
+		return user, "You are now logged in!"
 	}
 	return nil, "Code for login is wrong."
 }
