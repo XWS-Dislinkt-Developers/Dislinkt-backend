@@ -21,6 +21,265 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PasswordRecoveryResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Status int64  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Error  string `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+}
+
+func (x *PasswordRecoveryResponse) Reset() {
+	*x = PasswordRecoveryResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PasswordRecoveryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PasswordRecoveryResponse) ProtoMessage() {}
+
+func (x *PasswordRecoveryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PasswordRecoveryResponse.ProtoReflect.Descriptor instead.
+func (*PasswordRecoveryResponse) Descriptor() ([]byte, []int) {
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PasswordRecoveryResponse) GetStatus() int64 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *PasswordRecoveryResponse) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+type ChangePasswordWithCodeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ChangePassword *ChangePassword `protobuf:"bytes,1,opt,name=changePassword,proto3" json:"changePassword,omitempty"`
+}
+
+func (x *ChangePasswordWithCodeRequest) Reset() {
+	*x = ChangePasswordWithCodeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangePasswordWithCodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePasswordWithCodeRequest) ProtoMessage() {}
+
+func (x *ChangePasswordWithCodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePasswordWithCodeRequest.ProtoReflect.Descriptor instead.
+func (*ChangePasswordWithCodeRequest) Descriptor() ([]byte, []int) {
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChangePasswordWithCodeRequest) GetChangePassword() *ChangePassword {
+	if x != nil {
+		return x.ChangePassword
+	}
+	return nil
+}
+
+type ChangePassword struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code            string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Password        string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	ConfirmPassword string `protobuf:"bytes,3,opt,name=confirmPassword,proto3" json:"confirmPassword,omitempty"`
+}
+
+func (x *ChangePassword) Reset() {
+	*x = ChangePassword{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChangePassword) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangePassword) ProtoMessage() {}
+
+func (x *ChangePassword) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangePassword.ProtoReflect.Descriptor instead.
+func (*ChangePassword) Descriptor() ([]byte, []int) {
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ChangePassword) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *ChangePassword) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *ChangePassword) GetConfirmPassword() string {
+	if x != nil {
+		return x.ConfirmPassword
+	}
+	return ""
+}
+
+type PasswordRecoveryReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email *PasswordRecovery `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+}
+
+func (x *PasswordRecoveryReq) Reset() {
+	*x = PasswordRecoveryReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PasswordRecoveryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PasswordRecoveryReq) ProtoMessage() {}
+
+func (x *PasswordRecoveryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PasswordRecoveryReq.ProtoReflect.Descriptor instead.
+func (*PasswordRecoveryReq) Descriptor() ([]byte, []int) {
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PasswordRecoveryReq) GetEmail() *PasswordRecovery {
+	if x != nil {
+		return x.Email
+	}
+	return nil
+}
+
+type PasswordRecovery struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Email string `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+}
+
+func (x *PasswordRecovery) Reset() {
+	*x = PasswordRecovery{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PasswordRecovery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PasswordRecovery) ProtoMessage() {}
+
+func (x *PasswordRecovery) ProtoReflect() protoreflect.Message {
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PasswordRecovery.ProtoReflect.Descriptor instead.
+func (*PasswordRecovery) Descriptor() ([]byte, []int) {
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PasswordRecovery) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 type ConfirmAccountRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -32,7 +291,7 @@ type ConfirmAccountRequest struct {
 func (x *ConfirmAccountRequest) Reset() {
 	*x = ConfirmAccountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[0]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -45,7 +304,7 @@ func (x *ConfirmAccountRequest) String() string {
 func (*ConfirmAccountRequest) ProtoMessage() {}
 
 func (x *ConfirmAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[0]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +317,7 @@ func (x *ConfirmAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmAccountRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmAccountRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{0}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ConfirmAccountRequest) GetToken() string {
@@ -73,13 +332,13 @@ type ConfirmAccountResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Link string `protobuf:"bytes,1,opt,name=link,proto3" json:"link,omitempty"`
+	Response string `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
 }
 
 func (x *ConfirmAccountResponse) Reset() {
 	*x = ConfirmAccountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[1]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -92,7 +351,7 @@ func (x *ConfirmAccountResponse) String() string {
 func (*ConfirmAccountResponse) ProtoMessage() {}
 
 func (x *ConfirmAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[1]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -105,12 +364,12 @@ func (x *ConfirmAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmAccountResponse.ProtoReflect.Descriptor instead.
 func (*ConfirmAccountResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{1}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ConfirmAccountResponse) GetLink() string {
+func (x *ConfirmAccountResponse) GetResponse() string {
 	if x != nil {
-		return x.Link
+		return x.Response
 	}
 	return ""
 }
@@ -127,7 +386,7 @@ type UserData struct {
 func (x *UserData) Reset() {
 	*x = UserData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[2]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -140,7 +399,7 @@ func (x *UserData) String() string {
 func (*UserData) ProtoMessage() {}
 
 func (x *UserData) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[2]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -153,7 +412,7 @@ func (x *UserData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserData.ProtoReflect.Descriptor instead.
 func (*UserData) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{2}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UserData) GetUsername() string {
@@ -187,7 +446,7 @@ type UpdateUserData struct {
 func (x *UpdateUserData) Reset() {
 	*x = UpdateUserData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[3]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -200,7 +459,7 @@ func (x *UpdateUserData) String() string {
 func (*UpdateUserData) ProtoMessage() {}
 
 func (x *UpdateUserData) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[3]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -213,7 +472,7 @@ func (x *UpdateUserData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserData.ProtoReflect.Descriptor instead.
 func (*UpdateUserData) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{3}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateUserData) GetUsername() string {
@@ -277,7 +536,7 @@ type UpdateUserSAI struct {
 func (x *UpdateUserSAI) Reset() {
 	*x = UpdateUserSAI{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[4]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -290,7 +549,7 @@ func (x *UpdateUserSAI) String() string {
 func (*UpdateUserSAI) ProtoMessage() {}
 
 func (x *UpdateUserSAI) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[4]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -303,7 +562,7 @@ func (x *UpdateUserSAI) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserSAI.ProtoReflect.Descriptor instead.
 func (*UpdateUserSAI) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{4}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *UpdateUserSAI) GetSkills() string {
@@ -332,7 +591,7 @@ type UpdateUserWAE struct {
 func (x *UpdateUserWAE) Reset() {
 	*x = UpdateUserWAE{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[5]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -345,7 +604,7 @@ func (x *UpdateUserWAE) String() string {
 func (*UpdateUserWAE) ProtoMessage() {}
 
 func (x *UpdateUserWAE) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[5]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -358,7 +617,7 @@ func (x *UpdateUserWAE) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserWAE.ProtoReflect.Descriptor instead.
 func (*UpdateUserWAE) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{5}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateUserWAE) GetWork() string {
@@ -386,7 +645,7 @@ type UpdateUserSAIRequest struct {
 func (x *UpdateUserSAIRequest) Reset() {
 	*x = UpdateUserSAIRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[6]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -399,7 +658,7 @@ func (x *UpdateUserSAIRequest) String() string {
 func (*UpdateUserSAIRequest) ProtoMessage() {}
 
 func (x *UpdateUserSAIRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[6]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -412,7 +671,7 @@ func (x *UpdateUserSAIRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserSAIRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserSAIRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{6}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UpdateUserSAIRequest) GetUpdateUserData() *UpdateUserSAI {
@@ -434,7 +693,7 @@ type UpdateUserSAIResponse struct {
 func (x *UpdateUserSAIResponse) Reset() {
 	*x = UpdateUserSAIResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[7]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -447,7 +706,7 @@ func (x *UpdateUserSAIResponse) String() string {
 func (*UpdateUserSAIResponse) ProtoMessage() {}
 
 func (x *UpdateUserSAIResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[7]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -460,7 +719,7 @@ func (x *UpdateUserSAIResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserSAIResponse.ProtoReflect.Descriptor instead.
 func (*UpdateUserSAIResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{7}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdateUserSAIResponse) GetStatus() int64 {
@@ -488,7 +747,7 @@ type UpdateUserWAERequest struct {
 func (x *UpdateUserWAERequest) Reset() {
 	*x = UpdateUserWAERequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[8]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -501,7 +760,7 @@ func (x *UpdateUserWAERequest) String() string {
 func (*UpdateUserWAERequest) ProtoMessage() {}
 
 func (x *UpdateUserWAERequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[8]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -514,7 +773,7 @@ func (x *UpdateUserWAERequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserWAERequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserWAERequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{8}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UpdateUserWAERequest) GetUpdateUserData() *UpdateUserWAE {
@@ -536,7 +795,7 @@ type UpdateUserWAEResponse struct {
 func (x *UpdateUserWAEResponse) Reset() {
 	*x = UpdateUserWAEResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[9]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -549,7 +808,7 @@ func (x *UpdateUserWAEResponse) String() string {
 func (*UpdateUserWAEResponse) ProtoMessage() {}
 
 func (x *UpdateUserWAEResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[9]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -562,7 +821,7 @@ func (x *UpdateUserWAEResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserWAEResponse.ProtoReflect.Descriptor instead.
 func (*UpdateUserWAEResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{9}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UpdateUserWAEResponse) GetStatus() int64 {
@@ -590,7 +849,7 @@ type UpdatePersonalDataRequest struct {
 func (x *UpdatePersonalDataRequest) Reset() {
 	*x = UpdatePersonalDataRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[10]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -603,7 +862,7 @@ func (x *UpdatePersonalDataRequest) String() string {
 func (*UpdatePersonalDataRequest) ProtoMessage() {}
 
 func (x *UpdatePersonalDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[10]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -616,7 +875,7 @@ func (x *UpdatePersonalDataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalDataRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalDataRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{10}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UpdatePersonalDataRequest) GetUpdateUserData() *UpdateUserData {
@@ -638,7 +897,7 @@ type UpdatePersonalDataResponse struct {
 func (x *UpdatePersonalDataResponse) Reset() {
 	*x = UpdatePersonalDataResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[11]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -651,7 +910,7 @@ func (x *UpdatePersonalDataResponse) String() string {
 func (*UpdatePersonalDataResponse) ProtoMessage() {}
 
 func (x *UpdatePersonalDataResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[11]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -664,7 +923,7 @@ func (x *UpdatePersonalDataResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalDataResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalDataResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{11}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdatePersonalDataResponse) GetStatus() int64 {
@@ -697,7 +956,7 @@ type UserRegistrationData struct {
 func (x *UserRegistrationData) Reset() {
 	*x = UserRegistrationData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[12]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -710,7 +969,7 @@ func (x *UserRegistrationData) String() string {
 func (*UserRegistrationData) ProtoMessage() {}
 
 func (x *UserRegistrationData) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[12]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -723,7 +982,7 @@ func (x *UserRegistrationData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserRegistrationData.ProtoReflect.Descriptor instead.
 func (*UserRegistrationData) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{12}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UserRegistrationData) GetUsername() string {
@@ -779,7 +1038,7 @@ type RegisterRequest struct {
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[13]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -792,7 +1051,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[13]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -805,7 +1064,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{13}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *RegisterRequest) GetUser() *UserRegistrationData {
@@ -827,7 +1086,7 @@ type RegisterResponse struct {
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[14]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -840,7 +1099,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[14]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -853,7 +1112,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{14}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *RegisterResponse) GetStatus() int64 {
@@ -882,7 +1141,7 @@ type LoginRequest struct {
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[15]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -895,7 +1154,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[15]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -908,7 +1167,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{15}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *LoginRequest) GetUserData() *UserData {
@@ -934,7 +1193,7 @@ type LoginResponse struct {
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[16]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -947,7 +1206,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[16]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -960,7 +1219,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{16}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *LoginResponse) GetStatus() int64 {
@@ -1017,7 +1276,7 @@ type ValidateRequest struct {
 func (x *ValidateRequest) Reset() {
 	*x = ValidateRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[17]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1030,7 +1289,7 @@ func (x *ValidateRequest) String() string {
 func (*ValidateRequest) ProtoMessage() {}
 
 func (x *ValidateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[17]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1043,7 +1302,7 @@ func (x *ValidateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateRequest.ProtoReflect.Descriptor instead.
 func (*ValidateRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{17}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ValidateRequest) GetToken() string {
@@ -1066,7 +1325,7 @@ type ValidateResponse struct {
 func (x *ValidateResponse) Reset() {
 	*x = ValidateResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[18]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1079,7 +1338,7 @@ func (x *ValidateResponse) String() string {
 func (*ValidateResponse) ProtoMessage() {}
 
 func (x *ValidateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[18]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1092,7 +1351,7 @@ func (x *ValidateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateResponse.ProtoReflect.Descriptor instead.
 func (*ValidateResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{18}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ValidateResponse) GetStatus() int64 {
@@ -1126,7 +1385,7 @@ type GetAllRequest struct {
 func (x *GetAllRequest) Reset() {
 	*x = GetAllRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[19]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1139,7 +1398,7 @@ func (x *GetAllRequest) String() string {
 func (*GetAllRequest) ProtoMessage() {}
 
 func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[19]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +1411,7 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
 func (*GetAllRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{19}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{24}
 }
 
 type GetAllResponse struct {
@@ -1166,7 +1425,7 @@ type GetAllResponse struct {
 func (x *GetAllResponse) Reset() {
 	*x = GetAllResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[20]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1179,7 +1438,7 @@ func (x *GetAllResponse) String() string {
 func (*GetAllResponse) ProtoMessage() {}
 
 func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[20]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1192,7 +1451,7 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
 func (*GetAllResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{20}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetAllResponse) GetUsers() []*User {
@@ -1219,7 +1478,7 @@ type User struct {
 func (x *User) Reset() {
 	*x = User{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[21]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1232,7 +1491,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[21]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1245,7 +1504,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{21}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *User) GetId() int64 {
@@ -1309,7 +1568,7 @@ type FindUserRequest struct {
 func (x *FindUserRequest) Reset() {
 	*x = FindUserRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[22]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1322,7 +1581,7 @@ func (x *FindUserRequest) String() string {
 func (*FindUserRequest) ProtoMessage() {}
 
 func (x *FindUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[22]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1335,7 +1594,7 @@ func (x *FindUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FindUserRequest.ProtoReflect.Descriptor instead.
 func (*FindUserRequest) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{22}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *FindUserRequest) GetFindUser() *FindUser {
@@ -1356,7 +1615,7 @@ type FindUser struct {
 func (x *FindUser) Reset() {
 	*x = FindUser{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[23]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1369,7 +1628,7 @@ func (x *FindUser) String() string {
 func (*FindUser) ProtoMessage() {}
 
 func (x *FindUser) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[23]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1382,7 +1641,7 @@ func (x *FindUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FindUser.ProtoReflect.Descriptor instead.
 func (*FindUser) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{23}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *FindUser) GetUsername() string {
@@ -1403,7 +1662,7 @@ type FindUserResponse struct {
 func (x *FindUserResponse) Reset() {
 	*x = FindUserResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_authentication_service_authentication_service_proto_msgTypes[24]
+		mi := &file_authentication_service_authentication_service_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1416,7 +1675,7 @@ func (x *FindUserResponse) String() string {
 func (*FindUserResponse) ProtoMessage() {}
 
 func (x *FindUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_authentication_service_authentication_service_proto_msgTypes[24]
+	mi := &file_authentication_service_authentication_service_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1429,7 +1688,7 @@ func (x *FindUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FindUserResponse.ProtoReflect.Descriptor instead.
 func (*FindUserResponse) Descriptor() ([]byte, []int) {
-	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{24}
+	return file_authentication_service_authentication_service_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *FindUserResponse) GetUser() *User {
@@ -1448,12 +1707,38 @@ var file_authentication_service_authentication_service_proto_rawDesc = []byte{
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70,
 	0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x22, 0x2d, 0x0a, 0x15, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63,
-	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05,
-	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b,
-	0x65, 0x6e, 0x22, 0x2c, 0x0a, 0x16, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63, 0x63,
-	0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04,
-	0x6c, 0x69, 0x6e, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6c, 0x69, 0x6e, 0x6b,
+	0x6f, 0x74, 0x6f, 0x22, 0x48, 0x0a, 0x18, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52,
+	0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x22, 0x67, 0x0a,
+	0x1d, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x57,
+	0x69, 0x74, 0x68, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x46,
+	0x0a, 0x0e, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1e, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
+	0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x61,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x0e, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x61,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x6a, 0x0a, 0x0e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65,
+	0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x1a, 0x0a, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x28, 0x0a, 0x0f, 0x63, 0x6f, 0x6e, 0x66,
+	0x69, 0x72, 0x6d, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f,
+	0x72, 0x64, 0x22, 0x4d, 0x0a, 0x13, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65,
+	0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x65, 0x71, 0x12, 0x36, 0x0a, 0x05, 0x65, 0x6d, 0x61,
+	0x69, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65,
+	0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f,
+	0x72, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69,
+	0x6c, 0x22, 0x28, 0x0a, 0x10, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63,
+	0x6f, 0x76, 0x65, 0x72, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x22, 0x2d, 0x0a, 0x15, 0x43,
+	0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x34, 0x0a, 0x16, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x22, 0x42, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1a, 0x0a, 0x08,
 	0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
 	0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73,
@@ -1581,7 +1866,7 @@ var file_authentication_service_authentication_service_proto_rawDesc = []byte{
 	0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x75, 0x73,
 	0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65,
 	0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04,
-	0x75, 0x73, 0x65, 0x72, 0x32, 0xc4, 0x08, 0x0a, 0x15, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
+	0x75, 0x73, 0x65, 0x72, 0x32, 0xf1, 0x0a, 0x0a, 0x15, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
 	0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x57,
 	0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x1d, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65,
 	0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c,
@@ -1649,12 +1934,31 @@ var file_authentication_service_authentication_service_proto_rawDesc = []byte{
 	0x69, 0x6f, 0x6e, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63, 0x63, 0x6f, 0x75,
 	0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1f, 0x82, 0xd3, 0xe4, 0x93,
 	0x02, 0x19, 0x12, 0x17, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x72, 0x6d, 0x41, 0x63, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x2f, 0x7b, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x7d, 0x42, 0x4b, 0x5a, 0x49, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x58, 0x57, 0x53, 0x2d, 0x44, 0x69,
-	0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x44, 0x65, 0x76, 0x65, 0x6c, 0x6f, 0x70, 0x65, 0x72,
-	0x73, 0x2f, 0x44, 0x69, 0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x62, 0x61, 0x63, 0x6b, 0x65,
-	0x6e, 0x64, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e,
-	0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x75, 0x6e, 0x74, 0x2f, 0x7b, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x7d, 0x12, 0x91, 0x01, 0x0a, 0x17,
+	0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x23, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e,
+	0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72,
+	0x64, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x28, 0x2e, 0x61,
+	0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x50, 0x61,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x27, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x21, 0x22, 0x18,
+	0x2f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72,
+	0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x3a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12,
+	0x96, 0x01, 0x0a, 0x10, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63, 0x6f,
+	0x76, 0x65, 0x72, 0x79, 0x12, 0x2d, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x61, 0x73, 0x73,
+	0x77, 0x6f, 0x72, 0x64, 0x57, 0x69, 0x74, 0x68, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x63,
+	0x6f, 0x76, 0x65, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x29, 0x82,
+	0xd3, 0xe4, 0x93, 0x02, 0x23, 0x22, 0x11, 0x2f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
+	0x52, 0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x79, 0x3a, 0x0e, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65,
+	0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x42, 0x4b, 0x5a, 0x49, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x58, 0x57, 0x53, 0x2d, 0x44, 0x69, 0x73, 0x6c, 0x69,
+	0x6e, 0x6b, 0x74, 0x2d, 0x44, 0x65, 0x76, 0x65, 0x6c, 0x6f, 0x70, 0x65, 0x72, 0x73, 0x2f, 0x44,
+	0x69, 0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x62, 0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f,
+	0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1669,66 +1973,77 @@ func file_authentication_service_authentication_service_proto_rawDescGZIP() []by
 	return file_authentication_service_authentication_service_proto_rawDescData
 }
 
-var file_authentication_service_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_authentication_service_authentication_service_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_authentication_service_authentication_service_proto_goTypes = []interface{}{
-	(*ConfirmAccountRequest)(nil),      // 0: authentication.ConfirmAccountRequest
-	(*ConfirmAccountResponse)(nil),     // 1: authentication.ConfirmAccountResponse
-	(*UserData)(nil),                   // 2: authentication.UserData
-	(*UpdateUserData)(nil),             // 3: authentication.UpdateUserData
-	(*UpdateUserSAI)(nil),              // 4: authentication.UpdateUserSAI
-	(*UpdateUserWAE)(nil),              // 5: authentication.UpdateUserWAE
-	(*UpdateUserSAIRequest)(nil),       // 6: authentication.UpdateUserSAIRequest
-	(*UpdateUserSAIResponse)(nil),      // 7: authentication.UpdateUserSAIResponse
-	(*UpdateUserWAERequest)(nil),       // 8: authentication.UpdateUserWAERequest
-	(*UpdateUserWAEResponse)(nil),      // 9: authentication.UpdateUserWAEResponse
-	(*UpdatePersonalDataRequest)(nil),  // 10: authentication.UpdatePersonalDataRequest
-	(*UpdatePersonalDataResponse)(nil), // 11: authentication.UpdatePersonalDataResponse
-	(*UserRegistrationData)(nil),       // 12: authentication.UserRegistrationData
-	(*RegisterRequest)(nil),            // 13: authentication.RegisterRequest
-	(*RegisterResponse)(nil),           // 14: authentication.RegisterResponse
-	(*LoginRequest)(nil),               // 15: authentication.LoginRequest
-	(*LoginResponse)(nil),              // 16: authentication.LoginResponse
-	(*ValidateRequest)(nil),            // 17: authentication.ValidateRequest
-	(*ValidateResponse)(nil),           // 18: authentication.ValidateResponse
-	(*GetAllRequest)(nil),              // 19: authentication.GetAllRequest
-	(*GetAllResponse)(nil),             // 20: authentication.GetAllResponse
-	(*User)(nil),                       // 21: authentication.User
-	(*FindUserRequest)(nil),            // 22: authentication.FindUserRequest
-	(*FindUser)(nil),                   // 23: authentication.FindUser
-	(*FindUserResponse)(nil),           // 24: authentication.FindUserResponse
+	(*PasswordRecoveryResponse)(nil),      // 0: authentication.PasswordRecoveryResponse
+	(*ChangePasswordWithCodeRequest)(nil), // 1: authentication.ChangePasswordWithCodeRequest
+	(*ChangePassword)(nil),                // 2: authentication.ChangePassword
+	(*PasswordRecoveryReq)(nil),           // 3: authentication.PasswordRecoveryReq
+	(*PasswordRecovery)(nil),              // 4: authentication.PasswordRecovery
+	(*ConfirmAccountRequest)(nil),         // 5: authentication.ConfirmAccountRequest
+	(*ConfirmAccountResponse)(nil),        // 6: authentication.ConfirmAccountResponse
+	(*UserData)(nil),                      // 7: authentication.UserData
+	(*UpdateUserData)(nil),                // 8: authentication.UpdateUserData
+	(*UpdateUserSAI)(nil),                 // 9: authentication.UpdateUserSAI
+	(*UpdateUserWAE)(nil),                 // 10: authentication.UpdateUserWAE
+	(*UpdateUserSAIRequest)(nil),          // 11: authentication.UpdateUserSAIRequest
+	(*UpdateUserSAIResponse)(nil),         // 12: authentication.UpdateUserSAIResponse
+	(*UpdateUserWAERequest)(nil),          // 13: authentication.UpdateUserWAERequest
+	(*UpdateUserWAEResponse)(nil),         // 14: authentication.UpdateUserWAEResponse
+	(*UpdatePersonalDataRequest)(nil),     // 15: authentication.UpdatePersonalDataRequest
+	(*UpdatePersonalDataResponse)(nil),    // 16: authentication.UpdatePersonalDataResponse
+	(*UserRegistrationData)(nil),          // 17: authentication.UserRegistrationData
+	(*RegisterRequest)(nil),               // 18: authentication.RegisterRequest
+	(*RegisterResponse)(nil),              // 19: authentication.RegisterResponse
+	(*LoginRequest)(nil),                  // 20: authentication.LoginRequest
+	(*LoginResponse)(nil),                 // 21: authentication.LoginResponse
+	(*ValidateRequest)(nil),               // 22: authentication.ValidateRequest
+	(*ValidateResponse)(nil),              // 23: authentication.ValidateResponse
+	(*GetAllRequest)(nil),                 // 24: authentication.GetAllRequest
+	(*GetAllResponse)(nil),                // 25: authentication.GetAllResponse
+	(*User)(nil),                          // 26: authentication.User
+	(*FindUserRequest)(nil),               // 27: authentication.FindUserRequest
+	(*FindUser)(nil),                      // 28: authentication.FindUser
+	(*FindUserResponse)(nil),              // 29: authentication.FindUserResponse
 }
 var file_authentication_service_authentication_service_proto_depIdxs = []int32{
-	4,  // 0: authentication.UpdateUserSAIRequest.updateUserData:type_name -> authentication.UpdateUserSAI
-	5,  // 1: authentication.UpdateUserWAERequest.updateUserData:type_name -> authentication.UpdateUserWAE
-	3,  // 2: authentication.UpdatePersonalDataRequest.updateUserData:type_name -> authentication.UpdateUserData
-	12, // 3: authentication.RegisterRequest.user:type_name -> authentication.UserRegistrationData
-	2,  // 4: authentication.LoginRequest.userData:type_name -> authentication.UserData
-	21, // 5: authentication.GetAllResponse.users:type_name -> authentication.User
-	23, // 6: authentication.FindUserRequest.findUser:type_name -> authentication.FindUser
-	21, // 7: authentication.FindUserResponse.user:type_name -> authentication.User
-	19, // 8: authentication.AuthenticationService.GetAll:input_type -> authentication.GetAllRequest
-	13, // 9: authentication.AuthenticationService.Register:input_type -> authentication.RegisterRequest
-	22, // 10: authentication.AuthenticationService.FindUser:input_type -> authentication.FindUserRequest
-	15, // 11: authentication.AuthenticationService.Login:input_type -> authentication.LoginRequest
-	17, // 12: authentication.AuthenticationService.Validate:input_type -> authentication.ValidateRequest
-	10, // 13: authentication.AuthenticationService.UpdatePersonalData:input_type -> authentication.UpdatePersonalDataRequest
-	8,  // 14: authentication.AuthenticationService.UpdateUserWorkEducation:input_type -> authentication.UpdateUserWAERequest
-	6,  // 15: authentication.AuthenticationService.UpdateUserSkillsInterests:input_type -> authentication.UpdateUserSAIRequest
-	0,  // 16: authentication.AuthenticationService.ConfirmAccount:input_type -> authentication.ConfirmAccountRequest
-	20, // 17: authentication.AuthenticationService.GetAll:output_type -> authentication.GetAllResponse
-	14, // 18: authentication.AuthenticationService.Register:output_type -> authentication.RegisterResponse
-	24, // 19: authentication.AuthenticationService.FindUser:output_type -> authentication.FindUserResponse
-	16, // 20: authentication.AuthenticationService.Login:output_type -> authentication.LoginResponse
-	18, // 21: authentication.AuthenticationService.Validate:output_type -> authentication.ValidateResponse
-	11, // 22: authentication.AuthenticationService.UpdatePersonalData:output_type -> authentication.UpdatePersonalDataResponse
-	9,  // 23: authentication.AuthenticationService.UpdateUserWorkEducation:output_type -> authentication.UpdateUserWAEResponse
-	7,  // 24: authentication.AuthenticationService.UpdateUserSkillsInterests:output_type -> authentication.UpdateUserSAIResponse
-	1,  // 25: authentication.AuthenticationService.ConfirmAccount:output_type -> authentication.ConfirmAccountResponse
-	17, // [17:26] is the sub-list for method output_type
-	8,  // [8:17] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	2,  // 0: authentication.ChangePasswordWithCodeRequest.changePassword:type_name -> authentication.ChangePassword
+	4,  // 1: authentication.PasswordRecoveryReq.email:type_name -> authentication.PasswordRecovery
+	9,  // 2: authentication.UpdateUserSAIRequest.updateUserData:type_name -> authentication.UpdateUserSAI
+	10, // 3: authentication.UpdateUserWAERequest.updateUserData:type_name -> authentication.UpdateUserWAE
+	8,  // 4: authentication.UpdatePersonalDataRequest.updateUserData:type_name -> authentication.UpdateUserData
+	17, // 5: authentication.RegisterRequest.user:type_name -> authentication.UserRegistrationData
+	7,  // 6: authentication.LoginRequest.userData:type_name -> authentication.UserData
+	26, // 7: authentication.GetAllResponse.users:type_name -> authentication.User
+	28, // 8: authentication.FindUserRequest.findUser:type_name -> authentication.FindUser
+	26, // 9: authentication.FindUserResponse.user:type_name -> authentication.User
+	24, // 10: authentication.AuthenticationService.GetAll:input_type -> authentication.GetAllRequest
+	18, // 11: authentication.AuthenticationService.Register:input_type -> authentication.RegisterRequest
+	27, // 12: authentication.AuthenticationService.FindUser:input_type -> authentication.FindUserRequest
+	20, // 13: authentication.AuthenticationService.Login:input_type -> authentication.LoginRequest
+	22, // 14: authentication.AuthenticationService.Validate:input_type -> authentication.ValidateRequest
+	15, // 15: authentication.AuthenticationService.UpdatePersonalData:input_type -> authentication.UpdatePersonalDataRequest
+	13, // 16: authentication.AuthenticationService.UpdateUserWorkEducation:input_type -> authentication.UpdateUserWAERequest
+	11, // 17: authentication.AuthenticationService.UpdateUserSkillsInterests:input_type -> authentication.UpdateUserSAIRequest
+	5,  // 18: authentication.AuthenticationService.ConfirmAccount:input_type -> authentication.ConfirmAccountRequest
+	3,  // 19: authentication.AuthenticationService.PasswordRecoveryRequest:input_type -> authentication.PasswordRecoveryReq
+	1,  // 20: authentication.AuthenticationService.PasswordRecovery:input_type -> authentication.ChangePasswordWithCodeRequest
+	25, // 21: authentication.AuthenticationService.GetAll:output_type -> authentication.GetAllResponse
+	19, // 22: authentication.AuthenticationService.Register:output_type -> authentication.RegisterResponse
+	29, // 23: authentication.AuthenticationService.FindUser:output_type -> authentication.FindUserResponse
+	21, // 24: authentication.AuthenticationService.Login:output_type -> authentication.LoginResponse
+	23, // 25: authentication.AuthenticationService.Validate:output_type -> authentication.ValidateResponse
+	16, // 26: authentication.AuthenticationService.UpdatePersonalData:output_type -> authentication.UpdatePersonalDataResponse
+	14, // 27: authentication.AuthenticationService.UpdateUserWorkEducation:output_type -> authentication.UpdateUserWAEResponse
+	12, // 28: authentication.AuthenticationService.UpdateUserSkillsInterests:output_type -> authentication.UpdateUserSAIResponse
+	6,  // 29: authentication.AuthenticationService.ConfirmAccount:output_type -> authentication.ConfirmAccountResponse
+	0,  // 30: authentication.AuthenticationService.PasswordRecoveryRequest:output_type -> authentication.PasswordRecoveryResponse
+	0,  // 31: authentication.AuthenticationService.PasswordRecovery:output_type -> authentication.PasswordRecoveryResponse
+	21, // [21:32] is the sub-list for method output_type
+	10, // [10:21] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_authentication_service_authentication_service_proto_init() }
@@ -1738,7 +2053,7 @@ func file_authentication_service_authentication_service_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_authentication_service_authentication_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfirmAccountRequest); i {
+			switch v := v.(*PasswordRecoveryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1750,7 +2065,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfirmAccountResponse); i {
+			switch v := v.(*ChangePasswordWithCodeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1762,7 +2077,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserData); i {
+			switch v := v.(*ChangePassword); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1774,7 +2089,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserData); i {
+			switch v := v.(*PasswordRecoveryReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1786,7 +2101,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserSAI); i {
+			switch v := v.(*PasswordRecovery); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1798,7 +2113,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserWAE); i {
+			switch v := v.(*ConfirmAccountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1810,7 +2125,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserSAIRequest); i {
+			switch v := v.(*ConfirmAccountResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1822,7 +2137,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserSAIResponse); i {
+			switch v := v.(*UserData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1834,7 +2149,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserWAERequest); i {
+			switch v := v.(*UpdateUserData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1846,7 +2161,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserWAEResponse); i {
+			switch v := v.(*UpdateUserSAI); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1858,7 +2173,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePersonalDataRequest); i {
+			switch v := v.(*UpdateUserWAE); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1870,7 +2185,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePersonalDataResponse); i {
+			switch v := v.(*UpdateUserSAIRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1882,7 +2197,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserRegistrationData); i {
+			switch v := v.(*UpdateUserSAIResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1894,7 +2209,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RegisterRequest); i {
+			switch v := v.(*UpdateUserWAERequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1906,7 +2221,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*RegisterResponse); i {
+			switch v := v.(*UpdateUserWAEResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1918,7 +2233,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LoginRequest); i {
+			switch v := v.(*UpdatePersonalDataRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1930,7 +2245,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LoginResponse); i {
+			switch v := v.(*UpdatePersonalDataResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1942,7 +2257,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ValidateRequest); i {
+			switch v := v.(*UserRegistrationData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1954,7 +2269,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ValidateResponse); i {
+			switch v := v.(*RegisterRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1966,7 +2281,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllRequest); i {
+			switch v := v.(*RegisterResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1978,7 +2293,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAllResponse); i {
+			switch v := v.(*LoginRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1990,7 +2305,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*User); i {
+			switch v := v.(*LoginResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2002,7 +2317,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FindUserRequest); i {
+			switch v := v.(*ValidateRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2014,7 +2329,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FindUser); i {
+			switch v := v.(*ValidateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2026,6 +2341,66 @@ func file_authentication_service_authentication_service_proto_init() {
 			}
 		}
 		file_authentication_service_authentication_service_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_authentication_service_authentication_service_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAllResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_authentication_service_authentication_service_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*User); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_authentication_service_authentication_service_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindUserRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_authentication_service_authentication_service_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindUser); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_authentication_service_authentication_service_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FindUserResponse); i {
 			case 0:
 				return &v.state
@@ -2044,7 +2419,7 @@ func file_authentication_service_authentication_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_authentication_service_authentication_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   25,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

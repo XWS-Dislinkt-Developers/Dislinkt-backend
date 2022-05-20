@@ -70,6 +70,24 @@ func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, er
 	return foundUser, nil
 }
 
+func (store *UserPostgresStore) GetByEmail(email string) (*domain.User, error) {
+	var foundUser *domain.User
+	users, err := store.GetAll()
+	if err != nil {
+		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
+	}
+	for _, user := range *users {
+		if user.Email == email {
+			return &user, nil
+		}
+	}
+	if foundUser == nil {
+		ftm.Println("[UserPostgresStore-GetByEmail(email)]: Can't find user with this email: " + email)
+		return nil, errors.New("ERR - [UserPostgresStore-GetByEmail(email)]: Can't find user with this email: " + email)
+	}
+	return foundUser, nil
+}
+
 func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
 	var user domain.User
 	user.ID = userID

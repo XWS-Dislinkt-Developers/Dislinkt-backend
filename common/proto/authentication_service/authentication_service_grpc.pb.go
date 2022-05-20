@@ -31,6 +31,8 @@ type AuthenticationServiceClient interface {
 	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
 	ConfirmAccount(ctx context.Context, in *ConfirmAccountRequest, opts ...grpc.CallOption) (*ConfirmAccountResponse, error)
+	PasswordRecoveryRequest(ctx context.Context, in *PasswordRecoveryReq, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error)
+	PasswordRecovery(ctx context.Context, in *ChangePasswordWithCodeRequest, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error)
 }
 
 type authenticationServiceClient struct {
@@ -122,6 +124,24 @@ func (c *authenticationServiceClient) ConfirmAccount(ctx context.Context, in *Co
 	return out, nil
 }
 
+func (c *authenticationServiceClient) PasswordRecoveryRequest(ctx context.Context, in *PasswordRecoveryReq, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error) {
+	out := new(PasswordRecoveryResponse)
+	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/PasswordRecoveryRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) PasswordRecovery(ctx context.Context, in *ChangePasswordWithCodeRequest, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error) {
+	out := new(PasswordRecoveryResponse)
+	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/PasswordRecovery", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
@@ -135,6 +155,8 @@ type AuthenticationServiceServer interface {
 	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
 	ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error)
+	PasswordRecoveryRequest(context.Context, *PasswordRecoveryReq) (*PasswordRecoveryResponse, error)
+	PasswordRecovery(context.Context, *ChangePasswordWithCodeRequest) (*PasswordRecoveryResponse, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -168,6 +190,12 @@ func (UnimplementedAuthenticationServiceServer) UpdateUserSkillsInterests(contex
 }
 func (UnimplementedAuthenticationServiceServer) ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmAccount not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) PasswordRecoveryRequest(context.Context, *PasswordRecoveryReq) (*PasswordRecoveryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PasswordRecoveryRequest not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) PasswordRecovery(context.Context, *ChangePasswordWithCodeRequest) (*PasswordRecoveryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PasswordRecovery not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 
@@ -344,6 +372,42 @@ func _AuthenticationService_ConfirmAccount_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_PasswordRecoveryRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PasswordRecoveryReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).PasswordRecoveryRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authentication.AuthenticationService/PasswordRecoveryRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).PasswordRecoveryRequest(ctx, req.(*PasswordRecoveryReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_PasswordRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePasswordWithCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).PasswordRecovery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authentication.AuthenticationService/PasswordRecovery",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).PasswordRecovery(ctx, req.(*ChangePasswordWithCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -386,6 +450,14 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmAccount",
 			Handler:    _AuthenticationService_ConfirmAccount_Handler,
+		},
+		{
+			MethodName: "PasswordRecoveryRequest",
+			Handler:    _AuthenticationService_PasswordRecoveryRequest_Handler,
+		},
+		{
+			MethodName: "PasswordRecovery",
+			Handler:    _AuthenticationService_PasswordRecovery_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

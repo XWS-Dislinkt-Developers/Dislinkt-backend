@@ -11,4 +11,5 @@ type UserStore interface {
 	DeleteAll()
 	ConfirmAccount(idUser int) (*User, error)
 	GetById(id int) (*User, error)
+	GetByEmail(email string) (*User, error)
 }

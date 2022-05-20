@@ -26,44 +26,6 @@ func NewUserHandler(service *application.UserService, auth_service *application.
 	}
 }
 
-func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
-
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
-	//println("id je :", claims.Id)
-
-	users, err := handler.service.GetAll()
-	if err != nil || *users == nil {
-		return nil, err
-	}
-	response := &pb.GetAllResponse{
-		Users: []*pb.User{},
-	}
-	for _, user := range *users {
-		current := mapUser(&user)
-		response.Users = append(response.Users, current)
-	}
-	return response, nil
-}
-
-func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
-	print("USAO SAM U HENDLER ")
-	print(request.FindUser.Username)
-	User, err := handler.service.GetByUsername(request.FindUser.Username)
-	if err != nil || User == nil {
-		return nil, err
-	}
-	UserPb := mapUser(User)
-
-	response := &pb.FindUserResponse{
-		User: UserPb,
-	}
-
-	return response, nil
-}
-
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
@@ -134,8 +96,26 @@ func (handler *UserHandler) ConfirmAccount(ctx context.Context, req *pb.ConfirmA
 	handler.auth_service.ConfirmAccount(req.Token)
 
 	return &pb.ConfirmAccountResponse{
-		Link: "Posetite nas sajt i ulogujte se: http://localhost:4200",
+		Response: "Posetite nas sajt i ulogujte se: http://localhost:4200",
 	}, nil
+}
+
+func (handler *UserHandler) PasswordRecoveryRequest(ctx context.Context, req *pb.PasswordRecoveryReq) (*pb.PasswordRecoveryResponse, error) {
+
+	err := handler.auth_service.PasswordRecoveryRequest(req.Email.Email)
+
+	if err != nil {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+
 }
 
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
@@ -176,6 +156,50 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		Role:     user.Role,
 	}, nil
 }
+
+func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
+	claims, err := handler.auth_service.ValidateToken(req.Token)
+
+	if err != nil {
+		return &pb.ValidateResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	user, err := handler.service.Get(claims.Id) //TODO GET USER
+	if err != nil {
+		return &pb.ValidateResponse{
+			Status: http.StatusNotFound,
+			Error:  "User not found",
+		}, nil
+	}
+
+	return &pb.ValidateResponse{
+		Status: http.StatusOK,
+		UserId: int64(user.ID),
+	}, nil
+}
+
+func extractHeader(ctx context.Context, header string) (string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no headers in request")
+	}
+
+	authHeaders, ok := md[header]
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no header in request")
+	}
+
+	if len(authHeaders) != 1 {
+		return "", status.Error(codes.Unauthenticated, "more than 1 header in request")
+	}
+
+	return authHeaders[0], nil
+}
+
+//------------------------------------------------------------USER SERVICE------------------------------------------------------------
 
 func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
 
@@ -291,44 +315,40 @@ func (handler *UserHandler) UpdateUserSkillsInterests(ctx context.Context, reque
 	}, nil
 }
 
-func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
-	claims, err := handler.auth_service.ValidateToken(req.Token)
+func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
+	print("USAO SAM U HENDLER ")
+	print(request.FindUser.Username)
+	User, err := handler.service.GetByUsername(request.FindUser.Username)
+	if err != nil || User == nil {
+		return nil, err
+	}
+	UserPb := mapUser(User)
 
-	if err != nil {
-		return &pb.ValidateResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
+	response := &pb.FindUserResponse{
+		User: UserPb,
 	}
 
-	user, err := handler.service.Get(claims.Id) //TODO GET USER
-	if err != nil {
-		return &pb.ValidateResponse{
-			Status: http.StatusNotFound,
-			Error:  "User not found",
-		}, nil
-	}
-
-	return &pb.ValidateResponse{
-		Status: http.StatusOK,
-		UserId: int64(user.ID),
-	}, nil
+	return response, nil
 }
 
-func extractHeader(ctx context.Context, header string) (string, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no headers in request")
-	}
+func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 
-	authHeaders, ok := md[header]
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no header in request")
-	}
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
+	//println("id je :", claims.Id)
 
-	if len(authHeaders) != 1 {
-		return "", status.Error(codes.Unauthenticated, "more than 1 header in request")
+	users, err := handler.service.GetAll()
+	if err != nil || *users == nil {
+		return nil, err
 	}
-
-	return authHeaders[0], nil
+	response := &pb.GetAllResponse{
+		Users: []*pb.User{},
+	}
+	for _, user := range *users {
+		current := mapUser(&user)
+		response.Users = append(response.Users, current)
+	}
+	return response, nil
 }

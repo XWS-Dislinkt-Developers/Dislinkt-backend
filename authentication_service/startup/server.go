@@ -38,9 +38,10 @@ func (server *Server) Start() {
 
 	userStore := server.initUserStore(postgresClient)
 	conformationTokenStore := server.initTokenConformationStore(postgresClient)
+	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient)
 
 	userService := server.initUserService(userStore, conformationTokenStore)
-	authService := server.initAuthService(userStore, conformationTokenStore)
+	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
@@ -85,6 +86,14 @@ func (server *Server) initTokenConformationStore(client *gorm.DB) domain.Confirm
 	return store
 }
 
+func (server *Server) initPasswordRecoveryStore(client *gorm.DB) domain.PasswordRecoveryStore {
+	store, err := persistence.NewPasswordRecoveryPostgresStore(client)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return store
+}
+
 func (server *Server) initPublisher(subject string) saga.Publisher {
 	publisher, err := nats.NewNATSPublisher(
 		server.config.NatsHost, server.config.NatsPort,
@@ -109,8 +118,8 @@ func (server *Server) initUserService(store domain.UserStore, storeConfToken dom
 	return application.NewUserService(store, storeConfToken)
 }
 
-func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore) *application.AuthService {
-	return application.NewAuthService(store, storeConfToken)
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken, storePasswordRecovery)
 }
 
 // func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {

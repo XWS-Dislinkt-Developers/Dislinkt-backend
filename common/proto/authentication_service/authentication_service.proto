@@ -54,6 +54,41 @@ service AuthenticationService{
                         get: "/confirmAccount/{token}"
                 };
         }
+        rpc PasswordRecoveryRequest(PasswordRecoveryReq) returns (PasswordRecoveryResponse) {
+                option (google.api.http) = {
+                        post: "/passwordRecoveryRequest"
+                        body: "email"
+                };
+        }
+        rpc PasswordRecovery(ChangePasswordWithCodeRequest) returns (PasswordRecoveryResponse) {
+                option (google.api.http) = {
+                        post: "/passwordRecovery"
+                        body: "changePassword"
+                };
+        }
+}
+
+message PasswordRecoveryResponse {
+        int64 status = 1;
+        string error = 2;
+}
+
+message  ChangePasswordWithCodeRequest{
+        ChangePassword changePassword = 1;
+}
+
+message ChangePassword {
+        string code = 1;
+        string password = 2;
+        string confirmPassword = 3;
+}
+
+message PasswordRecoveryReq {
+        PasswordRecovery email = 1;
+}
+
+message PasswordRecovery{
+        string email = 1;
 }
 
 message  ConfirmAccountRequest {
@@ -61,7 +96,7 @@ message  ConfirmAccountRequest {
 }
 
 message  ConfirmAccountResponse {
-        string link = 1;
+        string response = 1;
 }
 
 message UserData{

@@ -19,12 +19,14 @@ type AuthService struct {
 	ExpirationHours        int64
 	store                  domain.UserStore
 	conformationTokenStore domain.ConfirmationTokenStore
+	passwordRecoveryStore  domain.PasswordRecoveryStore
 }
 
-func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore) *AuthService {
+func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore) *AuthService {
 	return &AuthService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
+		passwordRecoveryStore:  passwordRecoveryStore,
 	}
 }
 
@@ -88,19 +90,12 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 
 func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	m := gomail.NewMessage()
-
 	m.SetHeader("From", "sammilica99@gmail.com")
-
 	m.SetHeader("To", user.Email)
-
 	m.SetHeader("Subject", "Confirm your account")
-
 	token, _ := service.GenerateTokenForAccountConfirmation(user)
-
 	var text = "To confirm your account, please click here : http://localhost:8000/confirmAccount/" + token
-
 	m.SetBody("text/plain", text)
-
 	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
@@ -137,4 +132,38 @@ func (service *AuthService) ConfirmAccount(token string) (*domain.User, error) {
 	conformationToken, _ := service.conformationTokenStore.GetByConfirmationToken(token)
 	User, _ := service.store.GetById(conformationToken.UserId)
 	return service.store.ConfirmAccount(User.ID)
+}
+
+func (service *AuthService) PasswordRecoveryRequest(email string) error {
+	User, _ := service.store.GetByEmail(email)
+	recoveryPassword := &domain.PasswordRecovery{
+		UserId:       User.ID,
+		RecoveryCode: service.generateRandomString(),
+		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(2) +
+			time.Minute*time.Duration(0) +
+			time.Second*time.Duration(0)),
+	}
+	err := service.passwordRecoveryStore.Insert(recoveryPassword)
+	service.sendRecoveryCodeEmail(User, recoveryPassword.RecoveryCode)
+
+	return err
+}
+
+func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string) {
+	m := gomail.NewMessage()
+	m.SetHeader("From", "sammilica99@gmail.com")
+	m.SetHeader("To", user.Email)
+	m.SetHeader("Subject", "Password recovery")
+	var text = "You're code for password recovery is " + code + ".It will be active next 2 hours."
+	m.SetBody("text/plain", text)
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+
+	// This is only needed when SSL/TLS certificate is not valid on server.
+	// In production this should be set to false.
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	if err := d.DialAndSend(m); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 }
