@@ -81,6 +81,9 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 			Error:  "Username is already taken",
 		}, nil
 	}
+
+	//ovde pozvati fiju za proveru da li je slaba lozinka
+
 	handler.service.Create(&user)
 
 	handler.auth_service.SendEmailForUserAuthentication(&user)
@@ -118,17 +121,50 @@ func (handler *UserHandler) PasswordRecoveryRequest(ctx context.Context, req *pb
 
 }
 
+func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.ChangePasswordWithCodeRequest) (*pb.PasswordRecoveryResponse, error) {
+
+	if len(strings.TrimSpace(req.ChangePassword.Code)) == 0 {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Code can't be empty.",
+		}, nil
+	}
+
+	if len(strings.TrimSpace(req.ChangePassword.Password)) == 0 {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password can't be empty.",
+		}, nil
+	}
+
+	if req.ChangePassword.Password != req.ChangePassword.ConfirmPassword {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password mismatch",
+		}, nil
+	}
+
+	//ovde pozvati fiju za proveru da li je slaba lozinka
+
+	err := handler.auth_service.PasswordRecovery(req.ChangePassword.Code, req.ChangePassword.Password)
+
+	if err != "" {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err,
+		}, nil
+	}
+
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := handler.service.GetByUsername(req.UserData.Username)
 	println("[handler *UserHandler]Login")
-
-	if user.IsItConfirmed == false {
-		return &pb.LoginResponse{
-			Status: http.StatusNotFound,
-			Error:  "User's account is not confirmed!",
-		}, nil
-	}
 
 	if err != nil {
 		return &pb.LoginResponse{
@@ -137,12 +173,19 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		}, nil
 	}
 
+	if user.IsItConfirmed == false {
+		return &pb.LoginResponse{
+			Status: http.StatusNotFound,
+			Error:  "User's account is not confirmed!",
+		}, nil
+	}
+
 	match := handler.auth_service.CheckPasswordHash(req.UserData.Password, user.Password)
 
 	if !match {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
-			Error:  "User not found",
+			Error:  "Password is wrong!",
 		}, nil
 	}
 

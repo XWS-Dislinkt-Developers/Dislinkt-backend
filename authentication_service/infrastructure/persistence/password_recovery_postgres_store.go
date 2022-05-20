@@ -72,6 +72,6 @@ func (store *PasswordRecoveryPostgresStore) GetAll() (*[]domain.PasswordRecovery
 }
 
 func (store *PasswordRecoveryPostgresStore) Delete(idUser int) {
-	token, _ := store.GetByUserId(idUser)
-	store.db.Delete(&token)
+	passwordRecovery, _ := store.GetByUserId(idUser)
+	store.db.Where("user_id = ?", idUser).Delete(&passwordRecovery)
 }

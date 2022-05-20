@@ -131,7 +131,10 @@ func (service *AuthService) generateRandomString() (token string) {
 func (service *AuthService) ConfirmAccount(token string) (*domain.User, error) {
 	conformationToken, _ := service.conformationTokenStore.GetByConfirmationToken(token)
 	User, _ := service.store.GetById(conformationToken.UserId)
-	return service.store.ConfirmAccount(User.ID)
+	u, err := service.store.ConfirmAccount(User.ID)
+	service.conformationTokenStore.Delete(conformationToken.UserId)
+
+	return u, err
 }
 
 func (service *AuthService) PasswordRecoveryRequest(email string) error {
@@ -139,8 +142,8 @@ func (service *AuthService) PasswordRecoveryRequest(email string) error {
 	recoveryPassword := &domain.PasswordRecovery{
 		UserId:       User.ID,
 		RecoveryCode: service.generateRandomString(),
-		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(2) +
-			time.Minute*time.Duration(0) +
+		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(0) +
+			time.Minute*time.Duration(2) +
 			time.Second*time.Duration(0)),
 	}
 	err := service.passwordRecoveryStore.Insert(recoveryPassword)
@@ -166,4 +169,17 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 		fmt.Println(err)
 		panic(err)
 	}
+}
+
+func (service *AuthService) PasswordRecovery(code string, password string) string {
+	PasswordRecovery, _ := service.passwordRecoveryStore.GetByRecoveryCode(code)
+
+	if !time.Now().Local().Before(PasswordRecovery.ExpiresAt) {
+		return "Code for password recovery expired."
+	}
+
+	service.store.UpdatePassword(PasswordRecovery.UserId, service.HashPassword(password))
+	service.passwordRecoveryStore.Delete(PasswordRecovery.UserId)
+
+	return ""
 }

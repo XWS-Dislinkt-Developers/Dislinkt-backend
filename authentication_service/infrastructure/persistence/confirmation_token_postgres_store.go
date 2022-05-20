@@ -73,5 +73,5 @@ func (store *ConfirmationTokenPostgresStore) GetAll() (*[]domain.ConfirmationTok
 
 func (store *ConfirmationTokenPostgresStore) Delete(idUser int) {
 	token, _ := store.GetByUserId(idUser)
-	store.db.Delete(&token)
+	store.db.Where("user_id = ?", idUser).Delete(&token)
 }

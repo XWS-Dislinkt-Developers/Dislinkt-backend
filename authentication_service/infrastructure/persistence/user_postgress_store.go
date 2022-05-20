@@ -132,6 +132,15 @@ func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUs
 	store.db.Save(&user)
 	return nil, nil
 }
+
+func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
+	var user domain.User
+	user.ID = userId
+	store.db.First(&user)
+	user.Password = password
+	store.db.Save(&user)
+}
+
 func (store *UserPostgresStore) Insert(user *domain.User) error {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {
