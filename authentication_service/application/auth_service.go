@@ -1,11 +1,14 @@
 package application
 
 import (
+	"bufio"
 	"crypto/tls"
 	"errors"
 	"fmt"
 	gomail "gopkg.in/mail.v2"
+	"os"
 	"time"
+	"unicode"
 
 	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"github.com/golang-jwt/jwt"
@@ -182,4 +185,69 @@ func (service *AuthService) PasswordRecovery(code string, password string) strin
 	service.passwordRecoveryStore.Delete(PasswordRecovery.UserId)
 
 	return ""
+}
+
+func (service *AuthService) IsPasswordValid(password string) bool {
+	var (
+		hasMinLen  = false
+		hasUpper   = false
+		hasLower   = false
+		hasNumber  = false
+		hasSpecial = false
+	)
+	inARowCounter := 0
+	passRune := []rune(password)
+	characterToCompareWith := string(passRune[0:1])
+	if len(password) >= 10 {
+		hasMinLen = true
+	}
+	for _, char := range password {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		case unicode.IsNumber(char):
+			hasNumber = true
+		case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			hasSpecial = true
+		}
+
+		if string(char) == characterToCompareWith {
+			inARowCounter++
+		} else {
+			inARowCounter = 1
+		}
+		characterToCompareWith = string(char)
+
+		if inARowCounter >= 3 {
+			return false
+		}
+	}
+	return hasMinLen && hasUpper && hasLower && hasNumber && hasSpecial
+}
+
+func (service *AuthService) CheckForCommonPasswords(password string) bool {
+	f, err := os.Open("common_password_list.txt")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanWords)
+
+	for scanner.Scan() {
+		if password == scanner.Text() {
+			return false
+		}
+		fmt.Println(scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
+	}
+	return true
 }

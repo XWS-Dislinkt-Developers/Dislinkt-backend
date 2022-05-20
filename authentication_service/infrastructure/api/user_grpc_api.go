@@ -81,8 +81,21 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 			Error:  "Username is already taken",
 		}, nil
 	}
-
 	//ovde pozvati fiju za proveru da li je slaba lozinka
+	if !handler.auth_service.IsPasswordValid(strings.TrimSpace(user.Password)) {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error: "Your password must be at least 10 characters long, containing at least 1 lowercase and 1 uppercase letter," +
+				" at least 1 special character(~`!@#$%^&* etc.) and a number.",
+		}, nil
+	}
+
+	if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(user.Password)) {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
+		}, nil
+	}
 
 	handler.service.Create(&user)
 
@@ -145,6 +158,20 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 	}
 
 	//ovde pozvati fiju za proveru da li je slaba lozinka
+	if !handler.auth_service.IsPasswordValid(strings.TrimSpace(req.ChangePassword.Password)) {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error: "Your password must be at least 10 characters long, containing at least 1 lowercase and 1 uppercase letter," +
+				" at least 1 special character(~`!@#$%^&* etc.) and a number.",
+		}, nil
+	}
+
+	if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(req.ChangePassword.Password)) {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
+		}, nil
+	}
 
 	err := handler.auth_service.PasswordRecovery(req.ChangePassword.Code, req.ChangePassword.Password)
 
