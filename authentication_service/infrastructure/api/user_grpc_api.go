@@ -157,7 +157,7 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 
 	return &pb.PasswordRecoveryResponse{
 		Status: http.StatusOK,
-		Error:  "",
+		Error:  "Password successfully changed.",
 	}, nil
 }
 

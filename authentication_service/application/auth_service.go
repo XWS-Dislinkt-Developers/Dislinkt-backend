@@ -181,5 +181,5 @@ func (service *AuthService) PasswordRecovery(code string, password string) strin
 	service.store.UpdatePassword(PasswordRecovery.UserId, service.HashPassword(password))
 	service.passwordRecoveryStore.Delete(PasswordRecovery.UserId)
 
-	return "Password successfully changed."
+	return ""
 }
