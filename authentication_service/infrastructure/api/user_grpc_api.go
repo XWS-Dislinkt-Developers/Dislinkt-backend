@@ -188,6 +188,50 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 	}, nil
 }
 
+func (handler *UserHandler) PasswordlessLoginRequest(ctx context.Context, req *pb.PasswordlessLoginReq) (*pb.PasswordRecoveryResponse, error) {
+
+	user, _ := handler.auth_service.GetByEmail(req.Email.Email)
+	err := handler.auth_service.PasswordlessLoginRequest(user)
+
+	if err != nil {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "Email sent.",
+	}, nil
+}
+
+func (handler *UserHandler) PasswordlessLogin(ctx context.Context, req *pb.PasswordlessLogRequest) (*pb.LoginResponse, error) {
+
+	user, res := handler.auth_service.PasswordlessLogin(req.Code.Code)
+
+	if user != nil {
+		token, _ := handler.auth_service.GenerateToken(user)
+
+		return &pb.LoginResponse{
+			Status:   http.StatusOK,
+			Token:    token,
+			Error:    res,
+			Username: user.Username,
+			Id:       int64(user.ID),
+			Role:     user.Role,
+		}, nil
+	}
+
+	return &pb.LoginResponse{
+		Status:   http.StatusBadRequest,
+		Token:    "",
+		Error:    res,
+		Username: "",
+		Id:       0,
+		Role:     "",
+	}, nil
+}
+
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
 	user, err := handler.service.GetByUsername(req.UserData.Username)

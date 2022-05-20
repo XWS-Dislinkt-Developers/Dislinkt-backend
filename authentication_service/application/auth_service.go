@@ -23,13 +23,15 @@ type AuthService struct {
 	store                  domain.UserStore
 	conformationTokenStore domain.ConfirmationTokenStore
 	passwordRecoveryStore  domain.PasswordRecoveryStore
+	passwordlessLoginStore domain.PasswordlessLoginStore
 }
 
-func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore) *AuthService {
+func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore) *AuthService {
 	return &AuthService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
 		passwordRecoveryStore:  passwordRecoveryStore,
+		passwordlessLoginStore: passwordlessLoginStore,
 	}
 }
 
@@ -123,8 +125,17 @@ func (service *AuthService) GenerateTokenForAccountConfirmation(user *domain.Use
 }
 
 func (service *AuthService) generateRandomString() (token string) {
-	letterBytes := "abcdedfghijklmnopqrstABCDEFGHIJKLMNOP"
+	letterBytes := "abcdedfghijklmnopqrstABCDEFGHIJKLMNOP123456789"
 	b := make([]byte, 20)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
+
+func (service *AuthService) generateCode() (token string) {
+	letterBytes := "abcdedfghijklmnopqrstABCDEFGHIJKLMNOP123456789"
+	b := make([]byte, 8)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
@@ -140,11 +151,15 @@ func (service *AuthService) ConfirmAccount(token string) (*domain.User, error) {
 	return u, err
 }
 
+func (service *AuthService) GetByEmail(email string) (*domain.User, error) {
+	return service.store.GetByEmail(email)
+}
+
 func (service *AuthService) PasswordRecoveryRequest(email string) error {
 	User, _ := service.store.GetByEmail(email)
 	recoveryPassword := &domain.PasswordRecovery{
 		UserId:       User.ID,
-		RecoveryCode: service.generateRandomString(),
+		RecoveryCode: service.generateCode(),
 		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(0) +
 			time.Minute*time.Duration(2) +
 			time.Second*time.Duration(0)),
@@ -174,6 +189,25 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 	}
 }
 
+func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code string) {
+	m := gomail.NewMessage()
+	m.SetHeader("From", "sammilica99@gmail.com")
+	m.SetHeader("To", user.Email)
+	m.SetHeader("Subject", "Password recovery")
+	var text = "You're code for password recovery is " + code + ".It will be active next 5 minutes."
+	m.SetBody("text/plain", text)
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+
+	// This is only needed when SSL/TLS certificate is not valid on server.
+	// In production this should be set to false.
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	if err := d.DialAndSend(m); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+}
+
 func (service *AuthService) PasswordRecovery(code string, password string) string {
 	PasswordRecovery, _ := service.passwordRecoveryStore.GetByRecoveryCode(code)
 
@@ -185,6 +219,35 @@ func (service *AuthService) PasswordRecovery(code string, password string) strin
 	service.passwordRecoveryStore.Delete(PasswordRecovery.UserId)
 
 	return ""
+}
+
+func (service *AuthService) PasswordlessLogin(code string) (user *domain.User, err string) {
+	passwordlessLogin, _ := service.passwordlessLoginStore.GetByCode(code)
+
+	if passwordlessLogin != nil {
+		if !time.Now().Local().Before(passwordlessLogin.ExpiresAt) {
+			service.passwordlessLoginStore.Delete(passwordlessLogin.UserId)
+			return nil, "Code for login expired."
+		}
+
+		user, _ = service.store.GetById(passwordlessLogin.UserId)
+		service.passwordlessLoginStore.Delete(passwordlessLogin.UserId)
+		return user, "User is successfully found."
+	}
+	return nil, "Code for login is wrong."
+}
+
+func (service *AuthService) PasswordlessLoginRequest(User *domain.User) error {
+	passwordlessLogin := &domain.PasswordlessLogin{
+		UserId: User.ID,
+		Code:   service.generateCode(),
+		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(0) +
+			time.Minute*time.Duration(2) +
+			time.Second*time.Duration(0)),
+	}
+	err := service.passwordlessLoginStore.Insert(passwordlessLogin)
+	service.sendPasswordlessLoginEmail(User, passwordlessLogin.Code)
+	return err
 }
 
 func (service *AuthService) IsPasswordValid(password string) bool {

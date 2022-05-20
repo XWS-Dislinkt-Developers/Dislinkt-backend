@@ -39,9 +39,10 @@ func (server *Server) Start() {
 	userStore := server.initUserStore(postgresClient)
 	conformationTokenStore := server.initTokenConformationStore(postgresClient)
 	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient)
+	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient)
 
 	userService := server.initUserService(userStore, conformationTokenStore)
-	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore)
+	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
@@ -94,6 +95,14 @@ func (server *Server) initPasswordRecoveryStore(client *gorm.DB) domain.Password
 	return store
 }
 
+func (server *Server) initPasswordlessLoginStore(client *gorm.DB) domain.PasswordlessLoginStore {
+	store, err := persistence.NewPasswordlessLoginPostgresStore(client)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return store
+}
+
 func (server *Server) initPublisher(subject string) saga.Publisher {
 	publisher, err := nats.NewNATSPublisher(
 		server.config.NatsHost, server.config.NatsPort,
@@ -118,8 +127,8 @@ func (server *Server) initUserService(store domain.UserStore, storeConfToken dom
 	return application.NewUserService(store, storeConfToken)
 }
 
-func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore) *application.AuthService {
-	return application.NewAuthService(store, storeConfToken, storePasswordRecovery)
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore)
 }
 
 // func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {

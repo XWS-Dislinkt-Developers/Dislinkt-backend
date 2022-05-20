@@ -22,3 +22,9 @@ type PasswordRecovery struct {
 	RecoveryCode string    `json:"recoveryCode" ,gorm:"unique" validate:"required,recoveryCode" `
 	ExpiresAt    time.Time `json:"expiresAt" `
 }
+
+type PasswordlessLogin struct {
+	UserId    int       `json:"userId" ,gorm:"unique" validate:"required,userId" `
+	Code      string    `json:"code" ,gorm:"unique" validate:"required,cCode" `
+	ExpiresAt time.Time `json:"expiresAt" `
+}

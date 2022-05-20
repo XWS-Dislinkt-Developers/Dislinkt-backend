@@ -66,6 +66,34 @@ service AuthenticationService{
                         body: "changePassword"
                 };
         }
+        rpc PasswordlessLoginRequest(PasswordlessLoginReq) returns (PasswordRecoveryResponse) {
+                option (google.api.http) = {
+                        post: "/passwordlessLoginRequest"
+                        body: "email"
+                };
+        }
+        rpc PasswordlessLogin(PasswordlessLogRequest) returns (LoginResponse) {
+                option (google.api.http) = {
+                        post: "/passwordlessLogin"
+                        body: "code"
+                };
+        }
+}
+
+message Email {
+        string email = 1;
+}
+
+message Code {
+        string code = 1;
+}
+
+message PasswordlessLoginReq {
+        Email email = 1;
+}
+
+message PasswordlessLogRequest {
+        Code code = 1;
 }
 
 message PasswordRecoveryResponse {
