@@ -1,0 +1,4 @@
+p, admin, /feed, *
+p, user, /user, *
+p, *, /login, *
+p, *, /register, *

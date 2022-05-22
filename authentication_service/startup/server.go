@@ -2,6 +2,10 @@ package startup
 
 import (
 	"fmt"
+	mw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/middleware"
+	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
+	grpc_tags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	logg "github.com/sirupsen/logrus"
 	"log"
 	"net"
 
@@ -10,7 +14,7 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/intercept"
+	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/intercept"
 	authentication "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
@@ -147,15 +151,38 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(
-			grpc_middleware.ChainUnaryServer(
-				intercept.InterceptToken,
+
+	/*
+		grpcServer := grpc.NewServer(
+			grpc.UnaryInterceptor(
+				grpc_middleware.ChainUnaryServer(
+					intercept.InterceptToken,
+				),
 			),
-		),
-	)
+		)
+		authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatalf("failed to serve: %s", err)
+		}*/
+
+	logger := logg.WithFields(logg.Fields{
+		"goapi": "server",
+	})
+
+	CommonInterceptors := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+		grpc_logrus.UnaryServerInterceptor(logger),
+		mw.AuthInterceptor(),
+		grpc_tags.UnaryServerInterceptor(),
+	))
+
+	opts := []grpc.ServerOption{
+		CommonInterceptors,
+	}
+
+	grpcServer := grpc.NewServer(opts...)
 	authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
+
 	}
 }
