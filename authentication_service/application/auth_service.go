@@ -161,7 +161,7 @@ func (service *AuthService) PasswordRecoveryRequest(email string) error {
 		UserId:       User.ID,
 		RecoveryCode: service.generateCode(),
 		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(0) +
-			time.Minute*time.Duration(2) +
+			time.Minute*time.Duration(5) +
 			time.Second*time.Duration(0)),
 	}
 	err := service.passwordRecoveryStore.Insert(recoveryPassword)
@@ -193,8 +193,8 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	m := gomail.NewMessage()
 	m.SetHeader("From", "sammilica99@gmail.com")
 	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Password recovery")
-	var text = "You're code for password recovery is " + code + ".It will be active next 5 minutes."
+	m.SetHeader("Subject", "Passwordless login")
+	var text = "You're code for login is " + code + ".It will be active next 5 minutes."
 	m.SetBody("text/plain", text)
 	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
 
@@ -242,7 +242,7 @@ func (service *AuthService) PasswordlessLoginRequest(User *domain.User) error {
 		UserId: User.ID,
 		Code:   service.generateCode(),
 		ExpiresAt: time.Now().Local().Add(time.Hour*time.Duration(0) +
-			time.Minute*time.Duration(2) +
+			time.Minute*time.Duration(5) +
 			time.Second*time.Duration(0)),
 	}
 	err := service.passwordlessLoginStore.Insert(passwordlessLogin)

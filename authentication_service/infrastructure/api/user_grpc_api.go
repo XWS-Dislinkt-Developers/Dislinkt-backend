@@ -36,6 +36,7 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	user.Password = handler.auth_service.HashPassword(request.User.Password)
 	user.Gender = request.User.Gender
 	user.IsPrivateProfile = false
+	user.Role = "user"
 	if len(strings.TrimSpace(user.Username)) == 0 {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
