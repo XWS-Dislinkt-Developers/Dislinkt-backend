@@ -25,7 +25,7 @@ func NewConfig() *Config {
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
 
-		HTTPSServerKey:         "localhost.key",
-		HTTPSServerCertificate: "localhost.crt",
+		HTTPSServerKey:         "server.key",
+		HTTPSServerCertificate: "server.crt",
 	}
 }
