@@ -9,9 +9,6 @@ import (
 	authenticationService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 
 	"log"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func getConnection(address string) (*grpc.ClientConn, error) {

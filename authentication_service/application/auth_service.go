@@ -314,3 +314,17 @@ func (service *AuthService) CheckForCommonPasswords(password string) bool {
 	}
 	return true
 }
+
+func (service *AuthService) CheckIfAdmin(role string) (retVal bool) {
+	if role == "admin" {
+		return true
+	}
+	return false
+}
+
+func (service *AuthService) CheckIfUser(role string) (retVal bool) {
+	if role == "user" {
+		return true
+	}
+	return false
+}

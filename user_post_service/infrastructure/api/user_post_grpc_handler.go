@@ -39,8 +39,8 @@ func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler
 	}
 }
 
+//USER
 func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_post.CreateUserPostRequest) (*pb_post.CreateUserPostResponse, error) {
-
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
@@ -58,6 +58,7 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 }
 
 func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetResponse, error) {
+	//return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow this method")
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -78,7 +79,10 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-
+	//PROVERA ULOGE
+	//if handler.auth_service.CheckIfUser(claims.Role) == false {
+	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
+	//}
 	IdLoggedUser := claims.Id
 
 	AllUserConnections := make([]int, 0)
@@ -171,7 +175,6 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-
 	newComment := mapNewCommentToUserPost(request, claims.Id)
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)

@@ -98,5 +98,5 @@ func (server *Server) Start() {
 		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin"}),
 	)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
+	log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
 }
