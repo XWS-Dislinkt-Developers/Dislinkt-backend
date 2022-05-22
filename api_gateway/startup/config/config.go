@@ -8,6 +8,8 @@ type Config struct {
 	UserPostPort       string
 	UserConnectionHost string
 	UserConnectionPort string
+	RBACConfig         string
+	RBACPolicy         string
 }
 
 func NewConfig() *Config {
@@ -22,5 +24,8 @@ func NewConfig() *Config {
 
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
+
+		RBACConfig: "middleware/rbac_model.conf",
+		RBACPolicy: "middleware/rbac_policy.csv",
 	}
 }

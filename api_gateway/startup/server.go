@@ -3,18 +3,17 @@ package startup
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/handlers"
-
+	mw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/middleware"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
+	"github.com/gorilla/handlers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"log"
+	"net/http"
 )
 
 type Server struct {
@@ -98,5 +97,5 @@ func (server *Server) Start() {
 		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin"}),
 	)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)), mw.AuthMiddleware(server.mux))
 }
