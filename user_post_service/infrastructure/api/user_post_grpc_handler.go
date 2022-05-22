@@ -133,6 +133,15 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 }
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+	//PROVERA ULOGE
+	if handler.auth_service.CheckIfUser(claims.Role) == false {
+		return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
+	}
+
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
 		return nil, err

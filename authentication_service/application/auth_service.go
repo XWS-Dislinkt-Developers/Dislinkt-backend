@@ -99,7 +99,7 @@ func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	m.SetHeader("To", user.Email)
 	m.SetHeader("Subject", "Confirm your account")
 	token, _ := service.GenerateTokenForAccountConfirmation(user)
-	var text = "To confirm your account, please click here : http://localhost:8000/confirmAccount/" + token
+	var text = "To confirm your account, please click here : https://localhost:8000/confirmAccount/" + token
 	m.SetBody("text/plain", text)
 	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
 
