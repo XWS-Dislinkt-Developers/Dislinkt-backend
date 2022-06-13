@@ -101,7 +101,7 @@ func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	token, _ := service.GenerateTokenForAccountConfirmation(user)
 	var text = "To confirm your account, please click here : https://localhost:8000/confirmAccount/" + token
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
@@ -177,7 +177,7 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 	m.SetHeader("Subject", "Password recovery")
 	var text = "You're code for password recovery is " + code + ".It will be active next 2 hours."
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
@@ -196,7 +196,7 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	m.SetHeader("Subject", "Passwordless login")
 	var text = "You're code for login is " + code + ".It will be active next 5 minutes."
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.

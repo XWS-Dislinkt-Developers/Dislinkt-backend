@@ -3,15 +3,13 @@ package startup
 import (
 	"fmt"
 	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
-
+	logger "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/logger"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/persistence"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
-	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
-	// "github.com/tamararankovic/microservices_demo/common/saga/messaging/nats"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/grpc"
 	"log"
@@ -46,7 +44,8 @@ func (server *Server) Start() {
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
-	userPostHandler := server.initUserPostHandler(userPostService)
+	logger := logger.InitializeLogger("post-service", "INFO")
+	userPostHandler := server.initUserPostHandler(userPostService, logger)
 
 	server.startGrpcServer(userPostHandler)
 }
@@ -112,8 +111,8 @@ func (server *Server) initCreateUserPostHandler(service *application.UserPostSer
 	}
 }
 */
-func (server *Server) initUserPostHandler(service *application.UserPostService) *api.UserPostHandler {
-	return api.NewUserPostHandler(service)
+func (server *Server) initUserPostHandler(service *application.UserPostService, logger *logger.Logger) *api.UserPostHandler {
+	return api.NewUserPostHandler(service, logger)
 }
 
 func (server *Server) startGrpcServer(userPostHandler *api.UserPostHandler) {

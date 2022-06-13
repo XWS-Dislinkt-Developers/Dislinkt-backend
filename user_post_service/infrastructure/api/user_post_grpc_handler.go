@@ -8,6 +8,7 @@ import (
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	pb_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
+	logger "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/logger"
 	app_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
 	app_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
@@ -30,12 +31,15 @@ type UserPostHandler struct {
 
 	pb_conn.UnimplementedUserConnectionServiceServer
 	conn_service *app_conn.UserConnectionService
+
+	logger *logger.Logger
 }
 
-func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler {
+func NewUserPostHandler(post_service *app_post.UserPostService, logger *loggg.Logger) *UserPostHandler {
 
 	return &UserPostHandler{
 		post_service: post_service,
+		logger:       logger,
 	}
 }
 
@@ -133,14 +137,16 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 }
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	header, _ := extractHeader(ctx, "authorization")
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
 	//PROVERA ULOGE
-	if handler.auth_service.CheckIfUser(claims.Role) == false {
-		return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
-	}
+	//if handler.auth_service.CheckIfUser(claims.Role) == false {
+	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
+	//}
+
+	handler.logger.Logger.Infof("Get all method info ")
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
@@ -246,8 +252,3 @@ type UserConnection struct {
 type Connection struct {
 	con []string
 }
-
-//
-//type Requests struct {
-//	Request string
-//}
