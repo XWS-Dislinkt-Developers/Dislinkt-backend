@@ -11,6 +11,7 @@ import (
 	app_conn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
 	app_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/logger"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -18,6 +19,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -30,12 +32,17 @@ type UserPostHandler struct {
 
 	pb_conn.UnimplementedUserConnectionServiceServer
 	conn_service *app_conn.UserConnectionService
+
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserPostHandler(post_service *app_post.UserPostService) *UserPostHandler {
+func NewUserPostHandler(post_service *app_post.UserPostService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserPostHandler {
 
 	return &UserPostHandler{
 		post_service: post_service,
+		loggerInfo:   loggerInfo,
+		loggerError:  loggerError,
 	}
 }
 
@@ -49,9 +56,14 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 
 	userPost := mapNewUserPost(request.UserPost, claims.Id)
 	err := handler.post_service.Create(userPost)
+
 	if err != nil {
+		handler.loggerInfo.Logger.Errorf(err.Error())
 		return nil, err
 	}
+
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: CreateUserPost - User with id " + strconv.Itoa(claims.Id) + " created new post.")
+
 	return &pb_post.CreateUserPostResponse{
 		UserPost: mapUserPost(userPost),
 	}, nil
@@ -102,11 +114,7 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	if err != nil {
 		fmt.Printf("There was an error decoding the json. err = %s", err)
 	}
-	//var temp Connection
-	//for _, p := range responsenew.UserConnections {
-	//
-	//
-	//}
+
 	AllConnections, _ := handler.conn_service.GetAll()
 
 	for _, userConnection := range AllConnections {
@@ -133,17 +141,20 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 }
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	header, _ := extractHeader(ctx, "authorization")
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
 	//PROVERA ULOGE
-	if handler.auth_service.CheckIfUser(claims.Role) == false {
-		return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
-	}
+	//if handler.auth_service.CheckIfUser(claims.Role) == false {
+	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
+	//}
+
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll")
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
+		handler.loggerError.Logger.Errorf(err.Error())
 		return nil, err
 	}
 	response := &pb_post.GetAllResponse{
@@ -168,6 +179,7 @@ func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, reque
 	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
 
 	UserPost, _ := handler.post_service.AddReaction(newReaction, postId)
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: AddReactionToUserPost - User with id " + strconv.Itoa(claims.Id) + " reacted to post with id " + request.AddReaction.PostId + ".")
 
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
@@ -188,6 +200,7 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
 	UserPost, _ := handler.post_service.AddComment(newComment, postId)
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: AddCommentToUserPost - User with id " + strconv.Itoa(claims.Id) + " added comment to post with id " + request.AddComment.IdPost + ".")
 
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
@@ -246,8 +259,3 @@ type UserConnection struct {
 type Connection struct {
 	con []string
 }
-
-//
-//type Requests struct {
-//	Request string
-//}

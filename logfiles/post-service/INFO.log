@@ -1,0 +1,7 @@
+INFO | 2022-06-13 18:09:04 | Get all method 
+INFO | 2022-06-13 18:15:14 | Get all method 
+INFO | 2022-06-13 18:15:55 | Get all method 
+INFO | 2022-06-13 18:28:24 | User_post_grpc_handler: CreateUserPost - User with id  created new post.
+INFO | 2022-06-13 23:22:46 | User_post_grpc_handler: CreateUserPost - User with id  created new post. 
+INFO | 2022-06-13 23:28:42 | User_post_grpc_handler: CreateUserPost - User with id  created new post. 
+INFO | 2022-06-13 23:29:21 | User_post_grpc_handler: CreateUserPost - User with id 2 created new post. 

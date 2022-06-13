@@ -3,11 +3,11 @@ package startup
 import (
 	"fmt"
 	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
-
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/infrastructure/persistence"
+	logger "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/logger"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
@@ -34,6 +34,9 @@ const (
 
 func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
+
+	loggerInfo := logger.InitializeLogger("post-service", "INFO")
+	loggerError := logger.InitializeLogger("post-service", "ERROR")
 	userPostStore := server.initUserPostStore(mongoClient)
 
 	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
@@ -46,7 +49,7 @@ func (server *Server) Start() {
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
-	userPostHandler := server.initUserPostHandler(userPostService)
+	userPostHandler := server.initUserPostHandler(userPostService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userPostHandler)
 }
@@ -112,8 +115,8 @@ func (server *Server) initCreateUserPostHandler(service *application.UserPostSer
 	}
 }
 */
-func (server *Server) initUserPostHandler(service *application.UserPostService) *api.UserPostHandler {
-	return api.NewUserPostHandler(service)
+func (server *Server) initUserPostHandler(service *application.UserPostService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserPostHandler {
+	return api.NewUserPostHandler(service, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userPostHandler *api.UserPostHandler) {
