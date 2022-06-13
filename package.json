@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "owasp-dependency-check": "^0.0.18"
+  }
+}
