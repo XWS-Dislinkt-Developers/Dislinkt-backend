@@ -58,7 +58,7 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 	err := handler.post_service.Create(userPost)
 
 	if err != nil {
-		handler.loggerInfo.Logger.Errorf(err.Error())
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: CreateUserPost - failed - User with id " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
 
@@ -74,12 +74,15 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: Get - failed method ")
 		return nil, err
 	}
 	UserPost, err := handler.post_service.Get(objectId)
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: Get - failed method ")
 		return nil, err
 	}
+
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
 		UserPost: UserPostPb,
@@ -101,10 +104,12 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	feedPosts := make([]*domain.UserPost, 0)
 	resp, err := http.Get("http://localhost:8000/userConnections")
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method-  User with id " + strconv.Itoa(claims.Id) + " doesn't have connections")
 		log.Fatalln(err)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method-  User with id " + strconv.Itoa(claims.Id) + " failed while fetching connections")
 		log.Fatalln(err)
 	}
 	sb := string(body)
@@ -112,9 +117,10 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	var responsenew ResponseNew
 	err = json.Unmarshal(body, &responsenew)
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method while decoding json-  User with id " + strconv.Itoa(claims.Id))
 		fmt.Printf("There was an error decoding the json. err = %s", err)
 	}
-
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetPostsForFeed - User with id " + strconv.Itoa(claims.Id) + " get posts.")
 	AllConnections, _ := handler.conn_service.GetAll()
 
 	for _, userConnection := range AllConnections {
@@ -141,22 +147,21 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 
 }
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
 	//PROVERA ULOGE
 	//if handler.auth_service.CheckIfUser(claims.Role) == false {
 	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
 	//}
 
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll | id user ---> 3|")
-
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf(err.Error())
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetAll - failed method | User with id " + strconv.Itoa(claims.Id) + " failed while fetching his post")
 		return nil, err
 	}
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll | User with id " + strconv.Itoa(claims.Id) + " get his posts")
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}
@@ -214,8 +219,10 @@ func (handler *UserPostHandler) GetUserPosts(ctx context.Context, request *pb_po
 	id := int(request.Id)
 	userPosts, err := handler.post_service.GetUserPosts(id)
 	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetUserPosts - failed method - User with id " + strconv.Itoa(id) + " failed while fetching his post")
 		return nil, err
 	}
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetUserPosts - User with id " + strconv.Itoa(id) + " get his posts ")
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}

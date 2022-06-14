@@ -35,6 +35,7 @@ func (service *UserPostService) Create(userPost *domain.UserPost) error {
 	err := service.store.Insert(userPost)
 	service.loggerInfo.Logger.Infof("User_post_service: Create - User with id " + strconv.Itoa(userPost.UserId) + " created new post.")
 	if err != nil {
+		service.loggerError.Logger.Errorf("User_post_service: Create - failed method -  User with id " + strconv.Itoa(userPost.UserId) + " didn't create post.")
 		return err
 	}
 	return nil
@@ -44,6 +45,7 @@ func (service *UserPostService) AddComment(comment *domain.Comment, idPost primi
 	UserPost, _ := service.store.Get(idPost)
 	if comment.Text != "" {
 		UserPost.Comments = append(UserPost.Comments, *comment)
+		service.loggerInfo.Logger.Infof("User_post_service: AddComment - User with id " + strconv.Itoa(UserPost.UserId) + " created new comment.")
 		service.store.UpdateComments(UserPost)
 	}
 	return service.store.Get(idPost)
@@ -63,6 +65,7 @@ func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost pr
 		UserPost.Reactions = append(UserPost.Reactions, *reaction)
 		service.store.AddReaction(UserPost)
 	}
+	service.loggerInfo.Logger.Infof("User_post_service: AddReaction - User with id " + strconv.Itoa(UserPost.UserId) + " add new reaction.")
 	return service.store.Get(idPost)
 }
 
@@ -99,7 +102,9 @@ func (service *UserPostService) UpdateReaction(reaction *domain.Reaction, userPo
 				break
 			}
 		}
+
 	}
+	service.loggerInfo.Logger.Infof("User_post_service: AddReaction - User with id " + strconv.Itoa(userPost.UserId) + " add new reaction.")
 	service.store.UpdateReactions(updatedReaction, userPost)
 }
 

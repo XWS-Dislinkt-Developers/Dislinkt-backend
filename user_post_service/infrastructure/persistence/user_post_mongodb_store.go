@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strconv"
 )
 
 const (
@@ -43,8 +44,10 @@ func (store *UserPostMongoDBStore) Insert(userPost *domain.UserPost) error {
 	//userPost.Id = primitive.NewObjectID()
 	result, err := store.userPosts.InsertOne(context.TODO(), userPost)
 	if err != nil {
+		store.loggerError.Logger.Errorf("User_post_mongodb_store: Insert - failed method - User with id " + strconv.Itoa(userPost.UserId) + " failed while saving his post in database")
 		return err
 	}
+	store.loggerInfo.Logger.Infof("User_post_mongodb_store: Insert - User with id " + strconv.Itoa(userPost.UserId) + " save his post in database")
 	userPost.Id = result.InsertedID.(primitive.ObjectID)
 	return nil
 }
@@ -58,6 +61,7 @@ func (store *UserPostMongoDBStore) filter(filter interface{}) ([]*domain.UserPos
 	defer cursor.Close(context.TODO())
 
 	if err != nil {
+
 		return nil, err
 	}
 	return decode(cursor)
@@ -72,17 +76,21 @@ func (store *UserPostMongoDBStore) filterOne(filter interface{}) (UserPost *doma
 func (store *UserPostMongoDBStore) UpdateComments(userPost *domain.UserPost) {
 	_, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"comments", userPost.Comments}}}})
 	if err != nil {
-		println("success update ")
+		println("failed")
+		store.loggerError.Logger.Errorf("User_post_mongodb_store: UpdateComments - failed method - User with id " + strconv.Itoa(userPost.UserId) + " failed while updating his comment in database")
 	}
-	println("failed")
+	store.loggerInfo.Logger.Infof("User_post_mongodb_store: Insert - User with id " + strconv.Itoa(userPost.UserId) + " update his comment in database")
+	println("success update ")
 }
 
 func (store *UserPostMongoDBStore) AddReaction(userPost *domain.UserPost) {
 	_, err := store.userPosts.UpdateOne(context.TODO(), bson.M{"_id": userPost.Id}, bson.D{{"$set", bson.D{{"reactions", userPost.Reactions}}}})
 	if err != nil {
-		println("success reaction update ")
+		println("failed reaction update")
+		store.loggerError.Logger.Errorf("User_post_mongodb_store: AddReaction - failed method - User with id " + strconv.Itoa(userPost.UserId) + " failed while adding his reaction in database")
 	}
-	println("failed reaction update")
+	println("success reaction update ")
+	store.loggerInfo.Logger.Infof("User_post_mongodb_store: AddReaction - User with id " + strconv.Itoa(userPost.UserId) + " add reaction in database")
 }
 
 func (store *UserPostMongoDBStore) UpdateReactions(userReaction *domain.Reaction, userPost *domain.UserPost) {
@@ -94,9 +102,10 @@ func (store *UserPostMongoDBStore) UpdateReactions(userReaction *domain.Reaction
 		})
 	//0 because that's first structure in array
 	if err != nil {
-		println("ima eror")
+		store.loggerError.Logger.Errorf("User_post_mongodb_store: UpdateReactions - failed method - User with id " + strconv.Itoa(userPost.UserId) + "failed while updating reaction in database")
+
 	}
-	println("nema eror")
+	store.loggerInfo.Logger.Infof("User_post_mongodb_store: UpdateReactions - User with id " + strconv.Itoa(userPost.UserId) + " update reaction in database")
 }
 
 func (store *UserPostMongoDBStore) GetPostsByUserId(userId int) ([]*domain.UserPost, error) {
