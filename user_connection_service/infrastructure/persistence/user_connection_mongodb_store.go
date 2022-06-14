@@ -3,8 +3,10 @@ package persistence
 import (
 	"context"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"strconv"
 )
 
 const (
@@ -14,12 +16,16 @@ const (
 
 type UserConnectionMongoDBStore struct {
 	userConnections *mongo.Collection
+	loggerInfo      *logg.Logger
+	loggerError     *logg.Logger
 }
 
-func NewUserConnectionMongoDBStore(client *mongo.Client) domain.UserConnectionStore {
+func NewUserConnectionMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.UserConnectionStore {
 	userConnections := client.Database(DATABASE).Collection(COLLECTION)
 	return &UserConnectionMongoDBStore{
 		userConnections: userConnections,
+		loggerInfo:      loggerInfo,
+		loggerError:     loggerError,
 	}
 }
 
@@ -35,7 +41,9 @@ func (store *UserConnectionMongoDBStore) GetAll() ([]*domain.UserConnection, err
 
 func (store *UserConnectionMongoDBStore) Insert(userConnection *domain.UserConnection) error {
 	_, err := store.userConnections.InsertOne(context.TODO(), userConnection)
+	store.loggerInfo.Logger.Infof("User_connection_mongodb_store: Insert - User with id " + strconv.Itoa(userConnection.UserId) + " save his connection in database ")
 	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: Insert - failed method - couldn't save user connection in database")
 		return err
 	}
 	//userConnection.Id = result.InsertedID.(primitive.ObjectID)
@@ -64,8 +72,14 @@ func (store *UserConnectionMongoDBStore) filterOne(filter interface{}) (UserConn
 
 func (store *UserConnectionMongoDBStore) UpdateRequestConnection(userConnection *domain.UserConnection) {
 	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"requests", userConnection.Requests}}}})
+
 	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: UpdateRequestConnection - failed method - User with id " + strconv.Itoa(userConnection.UserId) + " couldn't update his connection in database ")
+
 		println("Failed update request connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: UpdaterequestConnection - User with id " + strconv.Itoa(userConnection.UserId) + " updated his connections in database")
+
 	}
 }
 
@@ -73,7 +87,12 @@ func (store *UserConnectionMongoDBStore) AddConnections(userConnection *domain.U
 	_, err1 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"connections", userConnection.Connections}}}})
 	_, err2 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": loggedUserConnection.UserId}, bson.D{{"$set", bson.D{{"connections", loggedUserConnection.Connections}}}})
 	if err1 != nil || err2 != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: AddConnections - failed method - User with id " + strconv.Itoa(loggedUserConnection.UserId) + " couldn't add connection in database ")
+
 		println("Failed update connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: AddConnections - User with id " + strconv.Itoa(loggedUserConnection.UserId) + " save connection in database")
+
 	}
 }
 

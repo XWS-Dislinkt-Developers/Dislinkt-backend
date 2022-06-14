@@ -4,19 +4,24 @@ import (
 	"errors"
 	ftm "fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"gorm.io/gorm"
 )
 
 type ConfirmationTokenPostgresStore struct {
-	db *gorm.DB
+	db          *gorm.DB
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewConfirmationTokenPostgresStore(db *gorm.DB) (domain.ConfirmationTokenStore, error) {
+func NewConfirmationTokenPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.ConfirmationTokenStore, error) {
 	err := db.AutoMigrate(&domain.ConfirmationToken{})
 	if err != nil {
 		return nil, err
 	}
-	return &ConfirmationTokenPostgresStore{db: db}, nil
+	return &ConfirmationTokenPostgresStore{db: db,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError}, nil
 }
 
 func (store *ConfirmationTokenPostgresStore) GetByUserId(id int) (*domain.ConfirmationToken, error) {

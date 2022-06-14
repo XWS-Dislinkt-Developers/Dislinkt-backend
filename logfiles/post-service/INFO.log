@@ -7,3 +7,6 @@ INFO | 2022-06-13 23:28:42 | User_post_grpc_handler: CreateUserPost - User with 
 INFO | 2022-06-13 23:29:21 | User_post_grpc_handler: CreateUserPost - User with id 2 created new post. 
 INFO | 2022-06-14 15:46:27 | User_post_service: Create - User with id 2 created new post. 
 INFO | 2022-06-14 15:46:27 | User_post_grpc_handler: CreateUserPost - User with id 2 created new post. 
+INFO | 2022-06-14 19:40:52 | User_post_mongodb_store: Insert - User with id 1 save his post in database 
+INFO | 2022-06-14 19:40:52 | User_post_mongodb_store: Insert - User with id 1 save his post in database 
+INFO | 2022-06-14 19:40:52 | User_post_mongodb_store: Insert - User with id 2 save his post in database 

@@ -7,6 +7,9 @@ replace github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common => ../common
 require (
 	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service v0.0.0-20220507154226-146352b760aa
 	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505203713-b8b7bb6f5439
+	github.com/sirupsen/logrus v1.8.1
+	github.com/snowzach/rotatefilehook v0.0.0-20220211133110-53752135082d
+	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3
 	google.golang.org/grpc v1.46.0
@@ -30,4 +33,5 @@ require (
 	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )

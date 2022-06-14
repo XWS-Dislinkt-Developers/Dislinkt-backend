@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	gomail "gopkg.in/mail.v2"
 	"os"
 	"time"
@@ -24,14 +25,18 @@ type AuthService struct {
 	conformationTokenStore domain.ConfirmationTokenStore
 	passwordRecoveryStore  domain.PasswordRecoveryStore
 	passwordlessLoginStore domain.PasswordlessLoginStore
+	loggerInfo             *logg.Logger
+	loggerError            *logg.Logger
 }
 
-func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore) *AuthService {
+func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *AuthService {
 	return &AuthService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
 		passwordRecoveryStore:  passwordRecoveryStore,
 		passwordlessLoginStore: passwordlessLoginStore,
+		loggerInfo:             loggerInfo,
+		loggerError:            loggerError,
 	}
 }
 
@@ -177,7 +182,7 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 	m.SetHeader("Subject", "Password recovery")
 	var text = "You're code for password recovery is " + code + ".It will be active next 2 hours."
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
@@ -196,7 +201,7 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	m.SetHeader("Subject", "Passwordless login")
 	var text = "You're code for login is " + code + ".It will be active next 5 minutes."
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.

@@ -3,12 +3,15 @@ package startup
 import (
 	"fmt"
 	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
+
 	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/infrastructure/persistence"
+	logger "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/startup/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	// saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
@@ -34,20 +37,22 @@ const (
 )
 
 func (server *Server) Start() {
-	mongoClient := server.initMongoClient()
-	userConnectionStore := server.initUserConnectionStore(mongoClient)
+	loggerInfo := logger.InitializeLogger("connection-service", "INFO")
+	loggerError := logger.InitializeLogger("connection-service", "ERROR")
 
+	mongoClient := server.initMongoClient()
+	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
 	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
 	//replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
 	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
 
-	userConnectionService := server.initUserConnectionService(userConnectionStore)
+	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
-	userConnectionHandler := server.initUserConnectionHandler(userConnectionService)
+	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userConnectionHandler)
 }
@@ -60,8 +65,8 @@ func (server *Server) initMongoClient() *mongo.Client {
 	return client
 }
 
-func (server *Server) initUserConnectionStore(client *mongo.Client) domain.UserConnectionStore {
-	store := persistence.NewUserConnectionMongoDBStore(client)
+func (server *Server) initUserConnectionStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.UserConnectionStore {
+	store := persistence.NewUserConnectionMongoDBStore(client, loggerInfo, loggerError)
 	store.DeleteAll()
 	for _, userConnection := range userConnections {
 		err := store.Insert(userConnection)
@@ -101,8 +106,8 @@ func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subs
 	return orchestrator
 }
 */
-func (server *Server) initUserConnectionService(store domain.UserConnectionStore) *application.UserConnectionService {
-	return application.NewUserConnectionService(store)
+func (server *Server) initUserConnectionService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserConnectionService {
+	return application.NewUserConnectionService(store, loggerInfo, loggerError)
 }
 
 /*
@@ -113,8 +118,8 @@ func (server *Server) initCreateUserPostHandler(service *application.UserPostSer
 	}
 }
 */
-func (server *Server) initUserConnectionHandler(service *application.UserConnectionService) *api.UserConnectionHandler {
-	return api.NewUserConnectionHandler(service)
+func (server *Server) initUserConnectionHandler(service *application.UserConnectionService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserConnectionHandler {
+	return api.NewUserConnectionHandler(service, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userConnectionHandler *api.UserConnectionHandler) {

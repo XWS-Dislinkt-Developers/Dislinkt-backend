@@ -4,19 +4,24 @@ import (
 	"errors"
 	ftm "fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"gorm.io/gorm"
 )
 
 type PasswordRecoveryPostgresStore struct {
-	db *gorm.DB
+	db          *gorm.DB
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewPasswordRecoveryPostgresStore(db *gorm.DB) (domain.PasswordRecoveryStore, error) {
+func NewPasswordRecoveryPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.PasswordRecoveryStore, error) {
 	err := db.AutoMigrate(&domain.PasswordRecovery{})
 	if err != nil {
 		return nil, err
 	}
-	return &PasswordRecoveryPostgresStore{db: db}, nil
+	return &PasswordRecoveryPostgresStore{db: db,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError}, nil
 }
 
 func (store *PasswordRecoveryPostgresStore) GetByRecoveryCode(recoveryCode string) (passwordRecovery *domain.PasswordRecovery, err error) {

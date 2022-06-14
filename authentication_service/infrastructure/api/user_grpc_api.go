@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -17,12 +18,16 @@ type UserHandler struct {
 	service *application.UserService
 	pb.UnimplementedAuthenticationServiceServer
 	auth_service *application.AuthService
+	loggerInfo   *logg.Logger
+	loggerError  *logg.Logger
 }
 
-func NewUserHandler(service *application.UserService, auth_service *application.AuthService) *UserHandler {
+func NewUserHandler(service *application.UserService, auth_service *application.AuthService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserHandler {
 	return &UserHandler{
 		service:      service,
 		auth_service: auth_service,
+		loggerInfo:   loggerInfo,
+		loggerError:  loggerError,
 	}
 }
 

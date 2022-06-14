@@ -2,15 +2,20 @@ package application
 
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
 )
 
 type UserConnectionService struct {
-	store domain.UserConnectionStore
+	store       domain.UserConnectionStore
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserConnectionService(store domain.UserConnectionStore) *UserConnectionService {
+func NewUserConnectionService(store domain.UserConnectionStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionService {
 	return &UserConnectionService{
-		store: store,
+		store:       store,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError,
 	}
 }
 

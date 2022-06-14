@@ -37,6 +37,7 @@ func (server *Server) Start() {
 
 	loggerInfo := logger.InitializeLogger("post-service", "INFO")
 	loggerError := logger.InitializeLogger("post-service", "ERROR")
+
 	userPostStore := server.initUserPostStore(mongoClient, loggerInfo, loggerError)
 
 	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)

@@ -2,13 +2,11 @@ package startup
 
 import (
 	"fmt"
-	"log"
-	"net"
-
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/persistence"
+	logger "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/startup/config"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/intercept"
 	authentication "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
@@ -17,6 +15,8 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
+	"log"
+	"net"
 )
 
 type Server struct {
@@ -34,21 +34,24 @@ const (
 )
 
 func (server *Server) Start() {
+	loggerInfo := logger.InitializeLogger("post-service", "INFO")
+	loggerError := logger.InitializeLogger("post-service", "ERROR")
+
 	postgresClient := server.initPostgresClient()
 
-	userStore := server.initUserStore(postgresClient)
-	conformationTokenStore := server.initTokenConformationStore(postgresClient)
-	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient)
-	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient)
+	userStore := server.initUserStore(postgresClient, loggerInfo, loggerError)
+	conformationTokenStore := server.initTokenConformationStore(postgresClient, loggerInfo, loggerError)
+	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient, loggerInfo, loggerError)
+	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
 
-	userService := server.initUserService(userStore, conformationTokenStore)
-	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore)
+	userService := server.initUserService(userStore, conformationTokenStore, loggerInfo, loggerError)
+	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	//server.initCreateOrderHandler(userService, replyPublisher, commandSubscriber)
 
-	userHandler := server.initUserHandler(userService, authService)
+	userHandler := server.initUserHandler(userService, authService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userHandler)
 }
@@ -64,8 +67,8 @@ func (server *Server) initPostgresClient() *gorm.DB {
 	return client
 }
 
-func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
-	store, err := persistence.NewUserPostgresStore(client)
+func (server *Server) initUserStore(client *gorm.DB, loggerInfo *logger.Logger, loggerError *logger.Logger) domain.UserStore {
+	store, err := persistence.NewUserPostgresStore(client, loggerInfo, loggerError)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,24 +82,24 @@ func (server *Server) initUserStore(client *gorm.DB) domain.UserStore {
 	return store
 }
 
-func (server *Server) initTokenConformationStore(client *gorm.DB) domain.ConfirmationTokenStore {
-	store, err := persistence.NewConfirmationTokenPostgresStore(client)
+func (server *Server) initTokenConformationStore(client *gorm.DB, loggerInfo *logger.Logger, loggerError *logger.Logger) domain.ConfirmationTokenStore {
+	store, err := persistence.NewConfirmationTokenPostgresStore(client, loggerInfo, loggerError)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return store
 }
 
-func (server *Server) initPasswordRecoveryStore(client *gorm.DB) domain.PasswordRecoveryStore {
-	store, err := persistence.NewPasswordRecoveryPostgresStore(client)
+func (server *Server) initPasswordRecoveryStore(client *gorm.DB, loggerInfo *logger.Logger, loggerError *logger.Logger) domain.PasswordRecoveryStore {
+	store, err := persistence.NewPasswordRecoveryPostgresStore(client, loggerInfo, loggerError)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return store
 }
 
-func (server *Server) initPasswordlessLoginStore(client *gorm.DB) domain.PasswordlessLoginStore {
-	store, err := persistence.NewPasswordlessLoginPostgresStore(client)
+func (server *Server) initPasswordlessLoginStore(client *gorm.DB, loggerInfo *logger.Logger, loggerError *logger.Logger) domain.PasswordlessLoginStore {
+	store, err := persistence.NewPasswordlessLoginPostgresStore(client, loggerInfo, loggerError)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -123,12 +126,12 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	return subscriber
 }
 
-func (server *Server) initUserService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore) *application.UserService {
-	return application.NewUserService(store, storeConfToken)
+func (server *Server) initUserService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserService {
+	return application.NewUserService(store, storeConfToken, loggerInfo, loggerError)
 }
 
-func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore) *application.AuthService {
-	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore)
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError)
 }
 
 // func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {
@@ -138,8 +141,8 @@ func (server *Server) initAuthService(store domain.UserStore, storeConfToken dom
 // 	}
 // }
 
-func (server *Server) initUserHandler(service *application.UserService, authService *application.AuthService) *api.UserHandler {
-	return api.NewUserHandler(service, authService)
+func (server *Server) initUserHandler(service *application.UserService, authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
+	return api.NewUserHandler(service, authService, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userHandler *api.UserHandler) {

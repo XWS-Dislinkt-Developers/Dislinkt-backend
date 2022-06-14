@@ -4,19 +4,24 @@ import (
 	"errors"
 	ftm "fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"gorm.io/gorm"
 )
 
 type PasswordlessLoginPostgresStore struct {
-	db *gorm.DB
+	db          *gorm.DB
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewPasswordlessLoginPostgresStore(db *gorm.DB) (domain.PasswordlessLoginStore, error) {
+func NewPasswordlessLoginPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.PasswordlessLoginStore, error) {
 	err := db.AutoMigrate(&domain.PasswordlessLogin{})
 	if err != nil {
 		return nil, err
 	}
-	return &PasswordlessLoginPostgresStore{db: db}, nil
+	return &PasswordlessLoginPostgresStore{db: db,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError}, nil
 }
 
 func (store *PasswordlessLoginPostgresStore) GetByCode(code string) (passwordlessLogin *domain.PasswordlessLogin, err error) {

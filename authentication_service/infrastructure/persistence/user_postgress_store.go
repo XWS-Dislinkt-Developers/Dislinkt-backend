@@ -4,19 +4,24 @@ import (
 	"errors"
 	ftm "fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"gorm.io/gorm"
 )
 
 type UserPostgresStore struct {
-	db *gorm.DB
+	db          *gorm.DB
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserPostgresStore(db *gorm.DB) (domain.UserStore, error) {
+func NewUserPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.UserStore, error) {
 	err := db.AutoMigrate(&domain.User{})
 	if err != nil {
 		return nil, err
 	}
-	return &UserPostgresStore{db: db}, nil
+	return &UserPostgresStore{db: db,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError}, nil
 }
 
 func (store *UserPostgresStore) Get(id int) (*domain.User, error) { // TODO: why not integer (id)??

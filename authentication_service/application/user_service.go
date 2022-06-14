@@ -3,17 +3,22 @@ package application
 import (
 	"errors"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 )
 
 type UserService struct {
 	store                  domain.UserStore
 	conformationTokenStore domain.ConfirmationTokenStore
+	loggerInfo             *logg.Logger
+	loggerError            *logg.Logger
 }
 
-func NewUserService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore) *UserService {
+func NewUserService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserService {
 	return &UserService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
+		loggerInfo:             loggerInfo,
+		loggerError:            loggerError,
 	}
 }
 
