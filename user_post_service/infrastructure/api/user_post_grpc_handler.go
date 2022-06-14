@@ -150,7 +150,7 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
 	//}
 
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll | id user ---> 3|")
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {

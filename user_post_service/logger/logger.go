@@ -28,7 +28,7 @@ func InitializeLogger(serviceName string, typeMessage string) *Logger {
 		Filename:   file,
 		MaxSize:    100, //MB
 		MaxBackups: 50,
-		MaxAge:     14, //DAYS
+		MaxAge:     1, //DAYS
 		Level:      logrus.InfoLevel,
 		//Formatter: &logrus.JSONFormatter{
 		//	TimestampFormat: "2006-01-02 15:04:05",

@@ -3,6 +3,7 @@ package persistence
 import (
 	"context"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,13 +15,17 @@ const (
 )
 
 type UserPostMongoDBStore struct {
-	userPosts *mongo.Collection
+	userPosts   *mongo.Collection
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserPostMongoDBStore(client *mongo.Client) domain.UserPostStore {
+func NewUserPostMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.UserPostStore {
 	userPosts := client.Database(DATABASE).Collection(COLLECTION)
 	return &UserPostMongoDBStore{
-		userPosts: userPosts,
+		userPosts:   userPosts,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError,
 	}
 }
 

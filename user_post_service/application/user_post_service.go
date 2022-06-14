@@ -2,17 +2,23 @@ package application
 
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/logger"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strconv"
 	"time"
 )
 
 type UserPostService struct {
-	store domain.UserPostStore
+	store       domain.UserPostStore
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserPostService(store domain.UserPostStore) *UserPostService {
+func NewUserPostService(store domain.UserPostStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserPostService {
 	return &UserPostService{
-		store: store,
+		store:       store,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError,
 	}
 }
 
@@ -27,6 +33,7 @@ func (service *UserPostService) GetAll() ([]*domain.UserPost, error) {
 func (service *UserPostService) Create(userPost *domain.UserPost) error {
 	userPost.CreatedAt = time.Now()
 	err := service.store.Insert(userPost)
+	service.loggerInfo.Logger.Infof("User_post_service: Create - User with id " + strconv.Itoa(userPost.UserId) + " created new post.")
 	if err != nil {
 		return err
 	}

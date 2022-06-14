@@ -37,13 +37,13 @@ func (server *Server) Start() {
 
 	loggerInfo := logger.InitializeLogger("post-service", "INFO")
 	loggerError := logger.InitializeLogger("post-service", "ERROR")
-	userPostStore := server.initUserPostStore(mongoClient)
+	userPostStore := server.initUserPostStore(mongoClient, loggerInfo, loggerError)
 
 	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
 	//replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
 	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
 
-	userPostService := server.initUserPostService(userPostStore)
+	userPostService := server.initUserPostService(userPostStore, loggerInfo, loggerError)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
@@ -62,8 +62,8 @@ func (server *Server) initMongoClient() *mongo.Client {
 	return client
 }
 
-func (server *Server) initUserPostStore(client *mongo.Client) domain.UserPostStore {
-	store := persistence.NewUserPostMongoDBStore(client)
+func (server *Server) initUserPostStore(client *mongo.Client, loggerInfo *logger.Logger, loggerError *logger.Logger) domain.UserPostStore {
+	store := persistence.NewUserPostMongoDBStore(client, loggerInfo, loggerError)
 	store.DeleteAll()
 	for _, userPost := range userPosts {
 		err := store.Insert(userPost)
@@ -103,8 +103,8 @@ func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subs
 	return orchestrator
 }
 */
-func (server *Server) initUserPostService(store domain.UserPostStore) *application.UserPostService {
-	return application.NewUserPostService(store)
+func (server *Server) initUserPostService(store domain.UserPostStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserPostService {
+	return application.NewUserPostService(store, loggerInfo, loggerError)
 }
 
 /*
