@@ -6,6 +6,7 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type UserPostgresStore struct {
@@ -38,6 +39,8 @@ func (store *UserPostgresStore) GetById(id int) (*domain.User, error) {
 	var foundUser *domain.User
 	users, err := store.GetAll()
 	if err != nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: GetById - failed method - can't find user with user id " + strconv.Itoa(id))
+
 		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
 	}
 	for _, user := range *users {
@@ -46,9 +49,12 @@ func (store *UserPostgresStore) GetById(id int) (*domain.User, error) {
 		}
 	}
 	if foundUser == nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: GetById - failed method - can't find user with user id " + strconv.Itoa(id))
 		ftm.Println("[UserPostgresStore-GetById(id)]: Can't find user with this id: " + string(id))
 		return nil, errors.New("ERR - [UserPostgresStore-GetById(id)]: Can't find user with this id: " + string(id))
 	}
+	store.loggerInfo.Logger.Infof("User_postgres_store: GetById - User id " + strconv.Itoa(id))
+
 	return foundUser, nil
 
 }
@@ -61,6 +67,8 @@ func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, er
 	//var users []domain.User
 	users, err := store.GetAll()
 	if err != nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: GetByUsername - failed method - no users")
+
 		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
 	}
 	for _, user := range *users {
@@ -69,9 +77,13 @@ func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, er
 		}
 	}
 	if foundUser == nil {
-		ftm.Println("[UserPostgresStore-GetByUsername(username)]: Can't find user with this username: " + username)
-		return nil, errors.New("ERR - [UserPostgresStore-GetByUsername(username)]: Can't find user with this username: " + username)
+		store.loggerError.Logger.Errorf("User_postgres_store: GetByUsername - failed method - Can't find user with this username ")
+
+		ftm.Println("[UserPostgresStore-GetByUsername(username)]: Can't find user with this username ")
+		return nil, errors.New("ERR - [UserPostgresStore-GetByUsername(username)]: Can't find user with sent username ")
 	}
+	store.loggerInfo.Logger.Infof("User_postgres_store: GetByUsername - user with user id " + strconv.Itoa(foundUser.ID) + " is found.")
+
 	return foundUser, nil
 }
 
@@ -87,9 +99,13 @@ func (store *UserPostgresStore) GetByEmail(email string) (*domain.User, error) {
 		}
 	}
 	if foundUser == nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: GetByEmail - failed method - Can't find user with this email ")
+
 		ftm.Println("[UserPostgresStore-GetByEmail(email)]: Can't find user with this email: " + email)
 		return nil, errors.New("ERR - [UserPostgresStore-GetByEmail(email)]: Can't find user with this email: " + email)
 	}
+	store.loggerInfo.Logger.Infof("User_postgres_store: GetByEmail - user with user id " + strconv.Itoa(foundUser.ID) + " is found.")
+
 	return foundUser, nil
 }
 
@@ -105,6 +121,7 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	user.Biography = dto.Biography
 	user.DateOfBirth = dto.DateOfBirth
 	store.db.Save(&user)
+	store.loggerInfo.Logger.Infof("User_postgres_store: UpdateUser - User id " + strconv.Itoa(userID) + " changed data in database!")
 
 	return nil, nil
 }
@@ -115,6 +132,7 @@ func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error)
 	store.db.First(&user)
 	user.IsItConfirmed = true
 	store.db.Save(&user)
+	store.loggerInfo.Logger.Infof("User_postgres_store: ConfirmAccount - User id " + strconv.Itoa(idUser) + " confirmed account")
 
 	return nil, nil
 }
@@ -126,6 +144,8 @@ func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUser
 	user.Work = dto.Work
 	user.Education = dto.Education
 	store.db.Save(&user)
+	store.loggerInfo.Logger.Infof("User_postgres_store: UpdateUserWorkAndEducation - User id " + strconv.Itoa(userId) + " change data in database!")
+
 	return nil, nil
 }
 func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUserSAIDto, userId int) (*domain.User, error) {
@@ -135,6 +155,8 @@ func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUs
 	user.Skills = dto.Skills
 	user.Interests = dto.Interests
 	store.db.Save(&user)
+	store.loggerInfo.Logger.Infof("User_postgres_store: UpdateUserSkillsAndInterests - User id " + strconv.Itoa(userId) + " change data in database!")
+
 	return nil, nil
 }
 
@@ -144,20 +166,28 @@ func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
 	store.db.First(&user)
 	user.Password = password
 	store.db.Save(&user)
+	store.loggerInfo.Logger.Infof("User_postgres_store: UpdatePassword - User id " + strconv.Itoa(userId) + " changed password! ")
+
 }
 
 func (store *UserPostgresStore) Insert(user *domain.User) error {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: Insert - failed method - user " + user.Username + " is already registred! ")
+
 		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 	}
 
 	result := store.db.Create(user)
 	if result.Error != nil {
+		store.loggerError.Logger.Errorf("User_postgres_store: Insert - failed method - user " + user.Username + " can't be saved!")
+
 		ftm.Println("[UserPostgresStore-Insert(user)]: Can't insert user.")
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. ")
 	}
+	store.loggerInfo.Logger.Infof("User_postgres_store: Insert - User " + user.Username + " is registred! ")
+
 	return nil
 }
 

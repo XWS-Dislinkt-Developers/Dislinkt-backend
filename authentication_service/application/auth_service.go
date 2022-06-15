@@ -8,6 +8,7 @@ import (
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	gomail "gopkg.in/mail.v2"
 	"os"
+	"strconv"
 	"time"
 	"unicode"
 
@@ -66,9 +67,10 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 	signedToken, err = token.SignedString([]byte("Key"))
 
 	if err != nil {
+		service.loggerError.Logger.Errorf("Auth_service: GenerateToken - failed method - token can't be generated")
 		return "", err
 	}
-
+	service.loggerInfo.Logger.Infof("Auth_service: GenerateToken - user with id " + strconv.Itoa(user.ID) + " get token and loged in.")
 	return signedToken, nil
 }
 
@@ -82,19 +84,23 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 	)
 
 	if err != nil {
+		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - token isn't valid")
 		return
 	}
 
 	claims, ok := token.Claims.(*domain.JwtClaims)
 
 	if !ok {
+		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - couldn't parse claims")
 		return nil, errors.New("couldn't parse claims")
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
+		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - JWT is expired")
+
 		return nil, errors.New("JWT is expired")
 	}
-
+	service.loggerInfo.Logger.Infof("Auth_service: Validate - token is valid.")
 	return claims, nil
 }
 
@@ -106,16 +112,19 @@ func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	token, _ := service.GenerateTokenForAccountConfirmation(user)
 	var text = "To confirm your account, please click here : https://localhost:8000/confirmAccount/" + token
 	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "yearsandyears")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
+		service.loggerError.Logger.Errorf("Auth_service: SendEmailForUserAuthentication - failed method - email isn't sent.")
+
 		fmt.Println(err)
 		panic(err)
 	}
+	service.loggerInfo.Logger.Infof("Auth_service: SendEmailForUserAuthentication - email for user authentication is sent.")
 }
 
 func (service *AuthService) GenerateTokenForAccountConfirmation(user *domain.User) (confToken string, err error) {
@@ -153,6 +162,7 @@ func (service *AuthService) ConfirmAccount(token string) (*domain.User, error) {
 	u, err := service.store.ConfirmAccount(User.ID)
 	service.conformationTokenStore.Delete(conformationToken.UserId)
 
+	service.loggerInfo.Logger.Infof("Auth_service: ConfirmAccount - user " + User.Name + " is confirmed his account")
 	return u, err
 }
 
@@ -189,9 +199,14 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
+
+		service.loggerError.Logger.Error("Auth_service: sendRecoveryCodeEmail - failed method - email isn't sent ")
+
 		fmt.Println(err)
 		panic(err)
 	}
+	service.loggerInfo.Logger.Infof("Auth_service: sendRecoveryCodeEmail - email for recovery code is sent to user with user id " + strconv.Itoa(user.ID))
+
 }
 
 func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code string) {
@@ -208,15 +223,21 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
+		service.loggerError.Logger.Error("Auth_service: sendPasswordlessLoginEmail - failed method - email isn't sent ")
+
 		fmt.Println(err)
 		panic(err)
 	}
+	service.loggerInfo.Logger.Infof("Auth_service: sendPasswordlessLoginEmail - email for passwordless login is sent to user with user id " + strconv.Itoa(user.ID))
+
 }
 
 func (service *AuthService) PasswordRecovery(code string, password string) string {
 	PasswordRecovery, _ := service.passwordRecoveryStore.GetByRecoveryCode(code)
 
 	if !time.Now().Local().Before(PasswordRecovery.ExpiresAt) {
+		service.loggerError.Logger.Error("Auth_service: PasswordRecovery - failed method - code for passwordless recovery expired")
+
 		return "Code for password recovery expired."
 	}
 
@@ -237,8 +258,11 @@ func (service *AuthService) PasswordlessLogin(code string) (user *domain.User, e
 
 		user, _ = service.store.GetById(passwordlessLogin.UserId)
 		service.passwordlessLoginStore.Delete(passwordlessLogin.UserId)
+		service.loggerInfo.Logger.Infof("Auth_service: PasswordlessLogin - user with user id " + strconv.Itoa(user.ID) + " is logged in. ")
 		return user, "You are now logged in!"
 	}
+	service.loggerError.Logger.Errorf("Auth_service: PasswordlessLogin - failed method - code for login for user with user id " + strconv.Itoa(user.ID) + " is expired. ")
+
 	return nil, "Code for login is wrong."
 }
 
