@@ -34,8 +34,8 @@ const (
 )
 
 func (server *Server) Start() {
-	loggerInfo := logger.InitializeLogger("post-service", "INFO")
-	loggerError := logger.InitializeLogger("post-service", "ERROR")
+	loggerInfo := logger.InitializeLogger("authentication-service", "INFO")
+	loggerError := logger.InitializeLogger("authentication-service", "ERROR")
 
 	postgresClient := server.initPostgresClient()
 

@@ -70,7 +70,7 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 		service.loggerError.Logger.Errorf("Auth_service: GenerateToken - failed method - token can't be generated")
 		return "", err
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: GenerateToken - user with id " + strconv.Itoa(user.ID) + " get token and loged in.")
+	service.loggerInfo.Logger.Infof("Auth_service: GenerateToken - user with id " + strconv.Itoa(user.ID) + " get token and logged in.")
 	return signedToken, nil
 }
 
