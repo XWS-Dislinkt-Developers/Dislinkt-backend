@@ -18,7 +18,7 @@ type ConfirmationTokenPostgresStore struct {
 func NewConfirmationTokenPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.ConfirmationTokenStore, error) {
 	err := db.AutoMigrate(&domain.ConfirmationToken{})
 	if err != nil {
-		loggerError.Logger.Errorf("Confirmation_token_postgres_store: NewConfirmationTokenPostgresStore - failed method   ")
+		loggerError.Logger.Errorf("Confirmation_token_postgres_store: - failed method   ")
 
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (store *ConfirmationTokenPostgresStore) GetByUserId(id int) (*domain.Confir
 	var token *domain.ConfirmationToken
 	tokens, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: GetByUserId - failed method - there is no user with user id " + strconv.Itoa(id))
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: NUUI  " + strconv.Itoa(id))
 
 		return nil, errors.New("[ConfirmationTokenPostgresStore-GetByUserId(id)]: There's no user.")
 	}
@@ -41,7 +41,7 @@ func (store *ConfirmationTokenPostgresStore) GetByUserId(id int) (*domain.Confir
 		}
 	}
 	if token == nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: GetByUserId - failed method - token is null ")
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: TIN ")
 		return nil, errors.New("ERR - [ConfirmationTokenPostgresStore-GetByUserId(id)]: Can't find user with this id: " + string(id))
 	}
 	return token, nil
@@ -51,7 +51,7 @@ func (store *ConfirmationTokenPostgresStore) GetByConfirmationToken(confToken st
 	var token *domain.ConfirmationToken
 	tokens, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: GetByConfirmationToken - failed method - there is no token ")
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: NT")
 		return nil, errors.New("[ConfirmationTokenPostgresStore-GetByConfirmationToken(confToken)]: There's no token.")
 	}
 	for _, t := range *tokens {
@@ -60,7 +60,7 @@ func (store *ConfirmationTokenPostgresStore) GetByConfirmationToken(confToken st
 		}
 	}
 	if token == nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: GetByConfirmationToken - failed method - can't find user with this token ")
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: CNFUT ")
 		return nil, errors.New("ERR - [ConfirmationTokenPostgresStore-GetByConfirmationToken(confToken)]: Can't find user with this token: " + confToken)
 	}
 	return token, nil
@@ -69,12 +69,12 @@ func (store *ConfirmationTokenPostgresStore) GetByConfirmationToken(confToken st
 func (store *ConfirmationTokenPostgresStore) Insert(confirmationToken *domain.ConfirmationToken) error {
 	result := store.db.Create(confirmationToken)
 	if result.Error != nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: Insert - failed method - can't save confirmation token in database ")
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: CNSCTD ")
 
 		ftm.Println("[ConfirmationTokenPostgresStore-Insert(confirmationToken)]: Can't insert confirmationToken.")
 		return errors.New("ERR - [ConfirmationTokenPostgresStore-Insert(confirmationToken)]: Can't insert confirmationToken. ")
 	}
-	store.loggerInfo.Logger.Infof("Confirmation_token_postgres_store: Insert - new confirmation token is saved in database")
+	store.loggerInfo.Logger.Infof("Confirmation_token_postgres_store: CTSD ")
 	return nil
 }
 
@@ -82,7 +82,7 @@ func (store *ConfirmationTokenPostgresStore) GetAll() (*[]domain.ConfirmationTok
 	var tokens []domain.ConfirmationToken
 	result := store.db.Find(&tokens)
 	if result.Error != nil {
-		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: GetAll - failed method - can't read data from database! ")
+		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: CNRDD ! ")
 
 		return nil, result.Error
 	}
@@ -92,6 +92,6 @@ func (store *ConfirmationTokenPostgresStore) GetAll() (*[]domain.ConfirmationTok
 func (store *ConfirmationTokenPostgresStore) Delete(idUser int) {
 	token, _ := store.GetByUserId(idUser)
 	store.db.Where("user_id = ?", idUser).Delete(&token)
-	store.loggerInfo.Logger.Infof("Confirmation_token_postgres_store: Delete - confirmation token is deleted from database for user " + strconv.Itoa(idUser))
+	store.loggerInfo.Logger.Infof("Confirmation_token_postgres_store: Delete - CTDFD | UI " + strconv.Itoa(idUser))
 
 }

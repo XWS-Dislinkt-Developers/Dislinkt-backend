@@ -18,7 +18,7 @@ type PasswordRecoveryPostgresStore struct {
 func NewPasswordRecoveryPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.PasswordRecoveryStore, error) {
 	err := db.AutoMigrate(&domain.PasswordRecovery{})
 	if err != nil {
-		loggerError.Logger.Errorf("Password_recovery_postgres_store: NewPasswordRecoveryPostgresStore - failed method   ")
+		loggerError.Logger.Errorf("Password_recovery_postgres_store: - failed method   ")
 
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (store *PasswordRecoveryPostgresStore) GetByRecoveryCode(recoveryCode strin
 	var password *domain.PasswordRecovery
 	passwords, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: GetByRecoveryCode - failed method - there is no user with this code")
+		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: NUWC ")
 
 		return nil, errors.New("[PasswordRecoveryPostgresStore-GetByRecoveryCode(confToken)]: There's no user.")
 	}
@@ -41,11 +41,11 @@ func (store *PasswordRecoveryPostgresStore) GetByRecoveryCode(recoveryCode strin
 		}
 	}
 	if password == nil {
-		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: GetByRecoveryCode - failed method - there is no user with this code")
+		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: NUWC ")
 
 		return nil, errors.New("ERR - [ConfirmationTokenPostgresStore-GetByConfirmationToken(confToken)]: Can't find user with this token: " + recoveryCode)
 	}
-	store.loggerInfo.Logger.Infof("Password_recovery_postgres_store: GetByRecoveryCode - found user with recovery code")
+	store.loggerInfo.Logger.Infof("Password_recovery_postgres_store: FUWRC ")
 
 	return password, nil
 }
@@ -54,7 +54,7 @@ func (store *PasswordRecoveryPostgresStore) GetByUserId(id int) (*domain.Passwor
 	var password *domain.PasswordRecovery
 	passwords, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: GetByUserId - failed method - there is no user with id " + strconv.Itoa(id))
+		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: NUUI  " + strconv.Itoa(id))
 
 		return nil, errors.New("[PasswordRecoveryPostgresStore-GetByUserId(id)]: There's no user.")
 	}
@@ -73,12 +73,12 @@ func (store *PasswordRecoveryPostgresStore) GetByUserId(id int) (*domain.Passwor
 func (store *PasswordRecoveryPostgresStore) Insert(passwordRecovery *domain.PasswordRecovery) error {
 	result := store.db.Create(passwordRecovery)
 	if result.Error != nil {
-		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: Insert - failed method - password recovery can't be saved in database!")
+		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: PSWRCNSD!")
 
 		ftm.Println("[PasswordRecoveryPostgresStore-Insert(passwordRecovery)]: Can't insert passwordRecovery.")
 		return errors.New("ERR - [PasswordRecoveryPostgresStore-Insert(passwordRecovery)]: Can't insert passwordRecovery. ")
 	}
-	store.loggerInfo.Logger.Infof("Password_recovery_postgres_store: Insert - new password recovery is saved! ")
+	store.loggerInfo.Logger.Infof("Password_recovery_postgres_store: NPSWRS ")
 
 	return nil
 }

@@ -31,7 +31,7 @@ func (store *PasswordlessLoginPostgresStore) GetByCode(code string) (passwordles
 	var password *domain.PasswordlessLogin
 	passwords, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: GetByCode - failed method - there is no user with this code")
+		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: NUWC ")
 		return nil, errors.New("[PasswordlessLoginPostgresStore-GetByCode(recoveryCode)]: There's no user.")
 	}
 	for _, p := range *passwords {
@@ -40,11 +40,11 @@ func (store *PasswordlessLoginPostgresStore) GetByCode(code string) (passwordles
 		}
 	}
 	if password == nil {
-		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: GetByCode - failed method - can't find user with this token ")
+		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: CNFUT ")
 
 		return nil, errors.New("ERR - [PasswordlessLoginPostgresStore-GetByCode(recoveryCode)]: Can't find user with this token")
 	}
-	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: GetByCode - user is found")
+	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: UF ")
 	return password, nil
 }
 
@@ -52,7 +52,7 @@ func (store *PasswordlessLoginPostgresStore) GetByUserId(id int) (*domain.Passwo
 	var password *domain.PasswordlessLogin
 	passwords, err := store.GetAll()
 	if err != nil {
-		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: GetByUserId - failed method - can't find user with user id " + strconv.Itoa(id))
+		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: NUUI " + strconv.Itoa(id))
 
 		return nil, errors.New("[PasswordlessLoginPostgresStore-GetByUserId(id)]: There's no user.")
 	}
@@ -62,11 +62,11 @@ func (store *PasswordlessLoginPostgresStore) GetByUserId(id int) (*domain.Passwo
 		}
 	}
 	if password == nil {
-		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: GetByUserId - failed method - can't find user with user id " + strconv.Itoa(id))
+		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: NUUI " + strconv.Itoa(id))
 
 		return nil, errors.New("ERR - [PasswordlessLoginPostgresStore-GetByUserId(id)]: Can't find user with this id: " + string(id))
 	}
-	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: GetByUserId - user with id  " + strconv.Itoa(id) + " is found")
+	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: UF | UI  " + strconv.Itoa(id))
 
 	return password, nil
 }
@@ -74,12 +74,12 @@ func (store *PasswordlessLoginPostgresStore) GetByUserId(id int) (*domain.Passwo
 func (store *PasswordlessLoginPostgresStore) Insert(passwordlessLogin *domain.PasswordlessLogin) error {
 	result := store.db.Create(passwordlessLogin)
 	if result.Error != nil {
-		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: Insert - failed method - can't save passwordles login ")
+		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: CNSPSWL ")
 
 		ftm.Println("[PasswordlessLoginPostgresStore-Insert(passwordlessLogin)]: Can't insert passwordlessLogin.")
 		return errors.New("ERR - [PasswordlessLoginPostgresStore-Insert(passwordlessLogin)]: Can't insert passwordlessLogin. ")
 	}
-	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: Insert - passwordles login is saved in database")
+	store.loggerInfo.Logger.Infof("Passwordless_login_postgres_store: PSWLSD")
 
 	return nil
 }

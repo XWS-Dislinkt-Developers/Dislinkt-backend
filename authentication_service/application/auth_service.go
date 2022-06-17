@@ -162,7 +162,7 @@ func (service *AuthService) ConfirmAccount(token string) (*domain.User, error) {
 	u, err := service.store.ConfirmAccount(User.ID)
 	service.conformationTokenStore.Delete(conformationToken.UserId)
 
-	service.loggerInfo.Logger.Infof("Auth_service: ConfirmAccount - user " + User.Name + " is confirmed his account")
+	service.loggerInfo.Logger.Infof("Auth_service: UCA | UI " + strconv.Itoa(User.ID))
 	return u, err
 }
 
@@ -180,6 +180,7 @@ func (service *AuthService) PasswordRecoveryRequest(email string) error {
 			time.Second*time.Duration(0)),
 	}
 	err := service.passwordRecoveryStore.Insert(recoveryPassword)
+	service.loggerInfo.Logger.Infof("Auth_service: PSWRR | UI  " + strconv.Itoa(User.ID))
 	service.sendRecoveryCodeEmail(User, recoveryPassword.RecoveryCode)
 
 	return err
@@ -200,12 +201,12 @@ func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string
 
 	if err := d.DialAndSend(m); err != nil {
 
-		service.loggerError.Logger.Error("Auth_service: sendRecoveryCodeEmail - failed method - email isn't sent ")
+		service.loggerError.Logger.Error("Auth_service: EINSRC | UI  " + strconv.Itoa(user.ID))
 
 		fmt.Println(err)
 		panic(err)
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: sendRecoveryCodeEmail - email for recovery code is sent to user with user id " + strconv.Itoa(user.ID))
+	service.loggerInfo.Logger.Infof("Auth_service: ERCIS  | UI " + strconv.Itoa(user.ID))
 
 }
 
@@ -223,12 +224,12 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
-		service.loggerError.Logger.Error("Auth_service: sendPasswordlessLoginEmail - failed method - email isn't sent ")
+		service.loggerError.Logger.Error("Auth_service: EINSPSWL | UI  " + strconv.Itoa(user.ID))
 
 		fmt.Println(err)
 		panic(err)
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: sendPasswordlessLoginEmail - email for passwordless login is sent to user with user id " + strconv.Itoa(user.ID))
+	service.loggerInfo.Logger.Infof("Auth_service: sendPasswordlessLoginEmail - EPSWLIS | UI " + strconv.Itoa(user.ID))
 
 }
 
@@ -236,7 +237,7 @@ func (service *AuthService) PasswordRecovery(code string, password string) strin
 	PasswordRecovery, _ := service.passwordRecoveryStore.GetByRecoveryCode(code)
 
 	if !time.Now().Local().Before(PasswordRecovery.ExpiresAt) {
-		service.loggerError.Logger.Error("Auth_service: PasswordRecovery - failed method - code for passwordless recovery expired")
+		service.loggerError.Logger.Error("Auth_service: CPSWLRE ")
 
 		return "Code for password recovery expired."
 	}
@@ -258,10 +259,10 @@ func (service *AuthService) PasswordlessLogin(code string) (user *domain.User, e
 
 		user, _ = service.store.GetById(passwordlessLogin.UserId)
 		service.passwordlessLoginStore.Delete(passwordlessLogin.UserId)
-		service.loggerInfo.Logger.Infof("Auth_service: PasswordlessLogin - user with user id " + strconv.Itoa(user.ID) + " is logged in. ")
+		service.loggerInfo.Logger.Infof("Auth_service: ULI | UI  " + strconv.Itoa(user.ID))
 		return user, "You are now logged in!"
 	}
-	service.loggerError.Logger.Errorf("Auth_service: PasswordlessLogin - failed method - code for login for user with user id " + strconv.Itoa(user.ID) + " is expired. ")
+	service.loggerError.Logger.Errorf("Auth_service: CLIW | UI  " + strconv.Itoa(user.ID))
 
 	return nil, "Code for login is wrong."
 }
@@ -275,6 +276,7 @@ func (service *AuthService) PasswordlessLoginRequest(User *domain.User) error {
 			time.Second*time.Duration(0)),
 	}
 	err := service.passwordlessLoginStore.Insert(passwordlessLogin)
+	service.loggerInfo.Logger.Infof("Auth_service: PSWLR | UI  " + strconv.Itoa(User.ID))
 	service.sendPasswordlessLoginEmail(User, passwordlessLogin.Code)
 	return err
 }

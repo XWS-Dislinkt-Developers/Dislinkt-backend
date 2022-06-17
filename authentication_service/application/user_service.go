@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
+	"strconv"
 )
 
 type UserService struct {
@@ -25,7 +26,7 @@ func NewUserService(store domain.UserStore, conformationTokenStore domain.Confir
 func (service *UserService) Create(user *domain.User) {
 	err := service.store.Insert(user)
 	if err != nil {
-		service.loggerError.Logger.Error("User_service: Create - failed method - can't save user ")
+		service.loggerError.Logger.Error("User_service: CNSU ")
 		println("Error in create method")
 	}
 
@@ -42,7 +43,7 @@ func (service *UserService) GetByUsername(username string) (*domain.User, error)
 func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
 	foundUser, _ := service.GetByUsername(dto.Username)
 	if foundUser != nil && foundUser.ID != userID {
-		service.loggerError.Logger.Error("User_service: Update user - failed method - username is already taken")
+		service.loggerError.Logger.Error("User_service: USNAT  | UI " + strconv.Itoa(foundUser.ID))
 
 		return nil, errors.New("Username is already taken")
 	}
