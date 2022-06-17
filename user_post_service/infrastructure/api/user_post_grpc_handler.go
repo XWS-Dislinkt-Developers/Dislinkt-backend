@@ -58,11 +58,11 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 	err := handler.post_service.Create(userPost)
 
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: CreateUserPost - failed - User with id " + strconv.Itoa(claims.Id))
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UFCNP | UI  " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
 
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: CreateUserPost - User with id " + strconv.Itoa(claims.Id) + " created new post.")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USCNP | UI " + strconv.Itoa(claims.Id))
 
 	return &pb_post.CreateUserPostResponse{
 		UserPost: mapUserPost(userPost),
@@ -74,12 +74,12 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: Get - failed method ")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FGAP ")
 		return nil, err
 	}
 	UserPost, err := handler.post_service.Get(objectId)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: Get - failed method ")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FGAP ")
 		return nil, err
 	}
 
@@ -104,12 +104,12 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	feedPosts := make([]*domain.UserPost, 0)
 	resp, err := http.Get("http://localhost:8000/userConnections")
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method-  User with id " + strconv.Itoa(claims.Id) + " doesn't have connections")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UDNHC | UI  " + strconv.Itoa(claims.Id))
 		log.Fatalln(err)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method-  User with id " + strconv.Itoa(claims.Id) + " failed while fetching connections")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FTFCFU | UI  " + strconv.Itoa(claims.Id))
 		log.Fatalln(err)
 	}
 	sb := string(body)
@@ -117,10 +117,10 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	var responsenew ResponseNew
 	err = json.Unmarshal(body, &responsenew)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetPostsForFeed - failed method while decoding json-  User with id " + strconv.Itoa(claims.Id))
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FWDJ | UI  " + strconv.Itoa(claims.Id))
 		fmt.Printf("There was an error decoding the json. err = %s", err)
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetPostsForFeed - User with id " + strconv.Itoa(claims.Id) + " get posts.")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGP | UI  " + strconv.Itoa(claims.Id))
 	AllConnections, _ := handler.conn_service.GetAll()
 
 	for _, userConnection := range AllConnections {
@@ -158,10 +158,10 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetAll - failed method | User with id " + strconv.Itoa(claims.Id) + " failed while fetching his post")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FGAPU | UI  " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetAll | User with id " + strconv.Itoa(claims.Id) + " get his posts")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI  " + strconv.Itoa(claims.Id))
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}
@@ -184,7 +184,7 @@ func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, reque
 	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
 
 	UserPost, _ := handler.post_service.AddReaction(newReaction, postId)
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: AddReactionToUserPost - User with id " + strconv.Itoa(claims.Id) + " reacted to post with id " + request.AddReaction.PostId + ".")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANRTP | UI  " + strconv.Itoa(claims.Id))
 
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
@@ -205,7 +205,7 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
 	UserPost, _ := handler.post_service.AddComment(newComment, postId)
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: AddCommentToUserPost - User with id " + strconv.Itoa(claims.Id) + " added comment to post with id " + request.AddComment.IdPost + ".")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANCTP  | UI " + strconv.Itoa(claims.Id))
 
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
@@ -219,10 +219,10 @@ func (handler *UserPostHandler) GetUserPosts(ctx context.Context, request *pb_po
 	id := int(request.Id)
 	userPosts, err := handler.post_service.GetUserPosts(id)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: GetUserPosts - failed method - User with id " + strconv.Itoa(id) + " failed while fetching his post")
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler:FGAPU  | UI  " + strconv.Itoa(id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: GetUserPosts - User with id " + strconv.Itoa(id) + " get his posts ")
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI " + strconv.Itoa(id))
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}

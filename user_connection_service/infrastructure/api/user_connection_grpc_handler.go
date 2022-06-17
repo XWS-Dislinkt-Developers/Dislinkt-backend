@@ -51,7 +51,7 @@ func (handler *UserConnectionHandler) GetAll(ctx context.Context, request *pb_co
 }
 func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context, id int) (connections []int) {
 	UserConnection, _ := handler.connection_service.GetConnectionsById(id)
-	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GetConnectionsByUserId - User with id " + strconv.Itoa(id) + " get all connections")
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(id))
 	return UserConnection.Connections
 }
 
@@ -67,10 +67,10 @@ func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_co
 	//Ovo je trenutno da nam vrati sve iz baze nakon follow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: Follow - failed method - User with id " + strconv.Itoa(claims.Id) + " failed to follow user " + strconv.Itoa(int(request.IdUser)))
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTFU | UI " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerError.Logger.Errorf("User_connection_grpc_handler: Follow - User with id " + strconv.Itoa(claims.Id) + " follow user " + strconv.Itoa(int(request.IdUser)))
+	handler.loggerError.Logger.Errorf("User_connection_grpc_handler: SFU | UI " + strconv.Itoa(claims.Id))
 	response := &pb_connection.FollowResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
@@ -93,10 +93,10 @@ func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_
 	//Ovo je trenutno da nam vrati sve iz baze nakon unfollow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: Unfollow - failed method - User with id " + strconv.Itoa(claims.Id) + " failed to unfollow user " + strconv.Itoa(int(request.IdUser)))
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTUFU | UI " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: Unfollow - User with id " + strconv.Itoa(claims.Id) + " unfollow user " + strconv.Itoa(int(request.IdUser)))
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SUFU | UI " + strconv.Itoa(claims.Id))
 	response := &pb_connection.FollowResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
@@ -118,10 +118,10 @@ func (handler *UserConnectionHandler) AcceptConnectionRequest(ctx context.Contex
 	//Ovo je trenutno da nam vrati sve iz baze nakon unfollow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: AcceptConnectionRequest - failed method - User with id " + strconv.Itoa(claims.Id) + " couldn't accept connection request ")
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTACCR | UI " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: AcceptConnectionRequest - User with id " + strconv.Itoa(claims.Id) + " accept connection request ")
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SACCR | UI " + strconv.Itoa(claims.Id))
 
 	response := &pb_connection.FollowResponse{
 		UserConnections: []*pb_connection.UserConnection{},
@@ -144,11 +144,11 @@ func (handler *UserConnectionHandler) DeclineConnectionRequest(ctx context.Conte
 	//Ovo je trenutno da nam vrati sve iz baze nakon unfollow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: AcceptConnectionRequest - failed method - User with id " + strconv.Itoa(claims.Id) + " couldn't accept connection request ")
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTDCR | UI " + strconv.Itoa(claims.Id))
 
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: AcceptConnectionRequest - User with id " + strconv.Itoa(claims.Id) + " accept connection request from user id " + strconv.Itoa(int(request.IdUser)))
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SDCR | UI " + strconv.Itoa(claims.Id))
 
 	response := &pb_connection.FollowResponse{
 		UserConnections: []*pb_connection.UserConnection{},
