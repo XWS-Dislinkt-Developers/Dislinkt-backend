@@ -1,4 +1,10 @@
 UIx : user id x
+FLI : failed to log in
+TCBG : token cannot be generated
+TINV : token is not valid
+CNPC : could not parse claims
+JWTEX : jwt expired
+FSEFA : failed to sent email for authentication
 EINSRC  :email isn't sent for recovery code
 EINSPSWL  :email isn't sent for passwordless login 
 CPSWLRE : code for passwordless recovery expired

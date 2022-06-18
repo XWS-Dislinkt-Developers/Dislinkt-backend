@@ -67,10 +67,9 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 	signedToken, err = token.SignedString([]byte("Key"))
 
 	if err != nil {
-		service.loggerError.Logger.Errorf("Auth_service: GenerateToken - failed method - token can't be generated")
-		return "", err
+		service.loggerError.Logger.Errorf("Auth_service: TCBG")
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: GenerateToken - user with id " + strconv.Itoa(user.ID) + " get token and logged in.")
+	service.loggerInfo.Logger.Infof("Auth_service: ULI " + strconv.Itoa(user.ID))
 	return signedToken, nil
 }
 
@@ -84,23 +83,23 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 	)
 
 	if err != nil {
-		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - token isn't valid")
+		service.loggerError.Logger.Errorf("Auth_service: TINV")
 		return
 	}
 
 	claims, ok := token.Claims.(*domain.JwtClaims)
 
 	if !ok {
-		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - couldn't parse claims")
+		service.loggerError.Logger.Errorf("Auth_service: CNPC")
 		return nil, errors.New("couldn't parse claims")
 	}
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
-		service.loggerError.Logger.Errorf("Auth_service: Validate - failed method - JWT is expired")
+		service.loggerError.Logger.Errorf("Auth_service: JWTEX")
 
 		return nil, errors.New("JWT is expired")
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: Validate - token is valid.")
+	service.loggerInfo.Logger.Infof("Auth_service: TV")
 	return claims, nil
 }
 
@@ -119,12 +118,12 @@ func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
-		service.loggerError.Logger.Errorf("Auth_service: SendEmailForUserAuthentication - failed method - email isn't sent.")
+		service.loggerError.Logger.Errorf("Auth_service: FSEFA")
 
 		fmt.Println(err)
 		panic(err)
 	}
-	service.loggerInfo.Logger.Infof("Auth_service: SendEmailForUserAuthentication - email for user authentication is sent.")
+	service.loggerInfo.Logger.Infof("Auth_service: EFAS")
 }
 
 func (service *AuthService) GenerateTokenForAccountConfirmation(user *domain.User) (confToken string, err error) {

@@ -1,5 +1,7 @@
 UIx : User id x
 UCA : user confirmed his account.
+TV: token is valid
+EFAS : email for autentication is sent
 ERCIS : email for recovery code is sent to user
 EPSWLIS : email for passwordless login is sent to user 
 ULI : user is logged in.
