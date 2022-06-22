@@ -1,5 +1,7 @@
 package config
 
+import "os"
+
 type Config struct {
 	Port                   string
 	AuthenticationHost     string
@@ -14,10 +16,10 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port: "8000", //os.Getenv("GATEWAY_PORT"),
+		Port: os.Getenv("GATEWAY_PORT"), //"8000",
 
-		AuthenticationHost: "localhost", //os.Getenv("AUTHENTICATION_SERVICE_HOST"),
-		AuthenticationPort: "8001",      //os.Getenv("AUTHENTICATION_SERVICE_PORT"),
+		AuthenticationHost: os.Getenv("AUTHENTICATION_SERVICE_HOST"), //"localhost",
+		AuthenticationPort: os.Getenv("AUTHENTICATION_SERVICE_PORT"), //"8001",
 
 		UserPostHost: "localhost",
 		UserPostPort: "8002",
