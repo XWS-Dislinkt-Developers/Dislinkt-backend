@@ -27,7 +27,7 @@ func NewConfig() *Config {
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
 
-		HTTPSServerKey:         os.Getenv("HTTPS_SERVER_KEY"),         //"server.key",
-		HTTPSServerCertificate: os.Getenv("HTTPS_SERVER_CERTIFICATE"), //"server.crt",
+		HTTPSServerKey:         os.Getenv("HTTPS_SERVER_KEY"),         //cert/"server.key",
+		HTTPSServerCertificate: os.Getenv("HTTPS_SERVER_CERTIFICATE"), //"cert/server.crt",
 	}
 }
