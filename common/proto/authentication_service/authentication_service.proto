@@ -7,11 +7,6 @@ package authentication;
 import "google/api/annotations.proto";
 
 service AuthenticationService{
-        rpc GetAll(GetAllRequest) returns(GetAllResponse) {
-        	option (google.api.http) = {
-			          get: "/users"
-          };
-        }
         rpc Register(RegisterRequest) returns (RegisterResponse) {
                 option (google.api.http) = {
                         post: "/register"
@@ -31,24 +26,6 @@ service AuthenticationService{
                 };
         }
         rpc Validate(ValidateRequest) returns (ValidateResponse) {}
-        rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
-                option (google.api.http) = {
-                        post: "/updatePersonalData"
-                        body:"updateUserData"
-                };
-        }
-        rpc UpdateUserWorkEducation(UpdateUserWAERequest) returns (UpdateUserWAEResponse) {
-                option (google.api.http) = {
-                        post: "/updateWorkAndEducation"
-                        body:"updateUserData"
-                };
-        }
-        rpc UpdateUserSkillsInterests(UpdateUserSAIRequest) returns (UpdateUserSAIResponse) {
-                option (google.api.http) = {
-                        post: "/updateSkillsInterests"
-                        body:"updateUserData"
-                };
-        }
         rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
                 option (google.api.http) = {
                         get: "/confirmAccount/{token}"

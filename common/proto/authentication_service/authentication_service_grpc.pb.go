@@ -22,14 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error)
-	UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error)
-	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
-	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
 	ConfirmAccount(ctx context.Context, in *ConfirmAccountRequest, opts ...grpc.CallOption) (*ConfirmAccountResponse, error)
 	PasswordRecoveryRequest(ctx context.Context, in *PasswordRecoveryReq, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error)
 	PasswordRecovery(ctx context.Context, in *ChangePasswordWithCodeRequest, opts ...grpc.CallOption) (*PasswordRecoveryResponse, error)
@@ -43,15 +39,6 @@ type authenticationServiceClient struct {
 
 func NewAuthenticationServiceClient(cc grpc.ClientConnInterface) AuthenticationServiceClient {
 	return &authenticationServiceClient{cc}
-}
-
-func (c *authenticationServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/GetAll", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *authenticationServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
@@ -84,33 +71,6 @@ func (c *authenticationServiceClient) Login(ctx context.Context, in *LoginReques
 func (c *authenticationServiceClient) Validate(ctx context.Context, in *ValidateRequest, opts ...grpc.CallOption) (*ValidateResponse, error) {
 	out := new(ValidateResponse)
 	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/Validate", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authenticationServiceClient) UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error) {
-	out := new(UpdatePersonalDataResponse)
-	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/UpdatePersonalData", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authenticationServiceClient) UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error) {
-	out := new(UpdateUserWAEResponse)
-	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/UpdateUserWorkEducation", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authenticationServiceClient) UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error) {
-	out := new(UpdateUserSAIResponse)
-	err := c.cc.Invoke(ctx, "/authentication.AuthenticationService/UpdateUserSkillsInterests", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,14 +126,10 @@ func (c *authenticationServiceClient) PasswordlessLogin(ctx context.Context, in 
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility
 type AuthenticationServiceServer interface {
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	FindUser(context.Context, *FindUserRequest) (*FindUserResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Validate(context.Context, *ValidateRequest) (*ValidateResponse, error)
-	UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error)
-	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
-	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
 	ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error)
 	PasswordRecoveryRequest(context.Context, *PasswordRecoveryReq) (*PasswordRecoveryResponse, error)
 	PasswordRecovery(context.Context, *ChangePasswordWithCodeRequest) (*PasswordRecoveryResponse, error)
@@ -186,9 +142,6 @@ type AuthenticationServiceServer interface {
 type UnimplementedAuthenticationServiceServer struct {
 }
 
-func (UnimplementedAuthenticationServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
-}
 func (UnimplementedAuthenticationServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
@@ -200,15 +153,6 @@ func (UnimplementedAuthenticationServiceServer) Login(context.Context, *LoginReq
 }
 func (UnimplementedAuthenticationServiceServer) Validate(context.Context, *ValidateRequest) (*ValidateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
-}
-func (UnimplementedAuthenticationServiceServer) UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalData not implemented")
-}
-func (UnimplementedAuthenticationServiceServer) UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserWorkEducation not implemented")
-}
-func (UnimplementedAuthenticationServiceServer) UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserSkillsInterests not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmAccount not implemented")
@@ -236,24 +180,6 @@ type UnsafeAuthenticationServiceServer interface {
 
 func RegisterAuthenticationServiceServer(s grpc.ServiceRegistrar, srv AuthenticationServiceServer) {
 	s.RegisterService(&AuthenticationService_ServiceDesc, srv)
-}
-
-func _AuthenticationService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).GetAll(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/authentication.AuthenticationService/GetAll",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).GetAll(ctx, req.(*GetAllRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthenticationService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -324,60 +250,6 @@ func _AuthenticationService_Validate_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthenticationServiceServer).Validate(ctx, req.(*ValidateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthenticationService_UpdatePersonalData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePersonalDataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).UpdatePersonalData(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/authentication.AuthenticationService/UpdatePersonalData",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).UpdatePersonalData(ctx, req.(*UpdatePersonalDataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthenticationService_UpdateUserWorkEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserWAERequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).UpdateUserWorkEducation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/authentication.AuthenticationService/UpdateUserWorkEducation",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).UpdateUserWorkEducation(ctx, req.(*UpdateUserWAERequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthenticationService_UpdateUserSkillsInterests_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserSAIRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).UpdateUserSkillsInterests(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/authentication.AuthenticationService/UpdateUserSkillsInterests",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).UpdateUserSkillsInterests(ctx, req.(*UpdateUserSAIRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -480,10 +352,6 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthenticationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetAll",
-			Handler:    _AuthenticationService_GetAll_Handler,
-		},
-		{
 			MethodName: "Register",
 			Handler:    _AuthenticationService_Register_Handler,
 		},
@@ -498,18 +366,6 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Validate",
 			Handler:    _AuthenticationService_Validate_Handler,
-		},
-		{
-			MethodName: "UpdatePersonalData",
-			Handler:    _AuthenticationService_UpdatePersonalData_Handler,
-		},
-		{
-			MethodName: "UpdateUserWorkEducation",
-			Handler:    _AuthenticationService_UpdateUserWorkEducation_Handler,
-		},
-		{
-			MethodName: "UpdateUserSkillsInterests",
-			Handler:    _AuthenticationService_UpdateUserSkillsInterests_Handler,
 		},
 		{
 			MethodName: "ConfirmAccount",

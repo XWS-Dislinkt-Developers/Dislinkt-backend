@@ -3,8 +3,8 @@ package persistence
 import (
 	"errors"
 	ftm "fmt"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
-	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/logger"
 	"gorm.io/gorm"
 	"strconv"
 )
@@ -119,17 +119,6 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	user.DateOfBirth = dto.DateOfBirth
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI  " + strconv.Itoa(userID))
-
-	return nil, nil
-}
-
-func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error) {
-	var user domain.User
-	user.ID = idUser
-	store.db.First(&user)
-	user.IsItConfirmed = true
-	store.db.Save(&user)
-	store.loggerInfo.Logger.Infof("User_postgres_store: UCA | UI  " + strconv.Itoa(idUser))
 
 	return nil, nil
 }

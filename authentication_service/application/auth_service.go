@@ -358,3 +358,23 @@ func (service *AuthService) CheckIfUser(role string) (retVal bool) {
 	}
 	return false
 }
+
+func (service *AuthService) Get(id int) (*domain.User, error) {
+	return service.store.Get(id)
+}
+
+func (service *AuthService) Create(user *domain.User) {
+	err := service.store.Insert(user)
+	if err != nil {
+		println("Error in create method")
+	}
+
+}
+
+//func (service *AuthService) Get(id int) (*domain.User, error) {
+//	return service.store.Get(id)
+//}
+
+func (service *AuthService) GetByUsername(username string) (*domain.User, error) {
+	return service.store.GetByUsername(username)
+}

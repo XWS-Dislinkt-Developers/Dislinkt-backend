@@ -2,24 +2,22 @@ package application
 
 import (
 	"errors"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
-	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/logger"
 	"strconv"
 )
 
 type UserService struct {
-	store                  domain.UserStore
-	conformationTokenStore domain.ConfirmationTokenStore
-	loggerInfo             *logg.Logger
-	loggerError            *logg.Logger
+	store       domain.UserStore
+	loggerInfo  *logg.Logger
+	loggerError *logg.Logger
 }
 
-func NewUserService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserService {
+func NewUserService(store domain.UserStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserService {
 	return &UserService{
-		store:                  store,
-		conformationTokenStore: conformationTokenStore,
-		loggerInfo:             loggerInfo,
-		loggerError:            loggerError,
+		store:       store,
+		loggerInfo:  loggerInfo,
+		loggerError: loggerError,
 	}
 }
 
@@ -54,6 +52,7 @@ func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*d
 func (service *UserService) UpdateUserWAE(dto domain.UpdateUserWAEDto, userID int) (*domain.User, error) {
 	return service.store.UpdateUserWorkAndEducation(dto, userID)
 }
+
 func (service *UserService) UpdateUserSAI(dto domain.UpdateUserSAIDto, userID int) (*domain.User, error) {
 	return service.store.UpdateUserSkillsAndInterests(dto, userID)
 }
