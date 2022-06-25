@@ -1,7 +1,5 @@
 package config
 
-import "os"
-
 type Config struct {
 	Port       string
 	UserDBHost string
@@ -17,15 +15,26 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:       os.Getenv("AUTHENTICATION_SERVICE_PORT"), // "8001",
-		UserDBHost: os.Getenv("AUTHENTICATION_DB_HOST"),      //"localhost",
-		UserDBPort: os.Getenv("AUTHENTICATION_DB_PORT"),      //"5432",
-		UserDBName: os.Getenv("AUTHENTICATION_DB_NAME"),      //"authentication",
-		UserDBUser: os.Getenv("AUTHENTICATION_DB_USER"),      //"postgres",
-		UserDBPass: os.Getenv("AUTHENTICATION_DB_PASS"),      //"ftn",
-		NatsHost:   os.Getenv("NATS_HOST"),                   // " nats",
-		NatsPort:   os.Getenv("NATS_PORT"),                   //"4222",
-		NatsUser:   os.Getenv("NATS_USER"),                   //"ruser",
-		NatsPass:   os.Getenv("NATS_PASS"),                   // "T0pS3cr3t",
+		Port:       "8001",
+		UserDBHost: "localhost",
+		UserDBPort: "5432",
+		UserDBName: "authentication",
+		UserDBUser: "postgres",
+		UserDBPass: "postgres",
+		NatsHost:   "nats",
+		NatsPort:   "4222",
+		NatsUser:   "ruser",
+		NatsPass:   "T0pS3cr3t",
+
+		//Port:       os.Getenv("AUTHENTICATION_SERVICE_PORT"),
+		//UserDBHost: os.Getenv("AUTHENTICATION_DB_HOST"),
+		//UserDBPort: os.Getenv("AUTHENTICATION_DB_PORT"),
+		//UserDBName: os.Getenv("AUTHENTICATION_DB_NAME"),
+		//UserDBUser: os.Getenv("AUTHENTICATION_DB_USER"),
+		//UserDBPass: os.Getenv("AUTHENTICATION_DB_PASS"),
+		//NatsHost:   os.Getenv("NATS_HOST"),
+		//NatsPort:   os.Getenv("NATS_PORT"),
+		//NatsUser:   os.Getenv("NATS_USER"),
+		//NatsPass:   os.Getenv("NATS_PASS"),
 	}
 }

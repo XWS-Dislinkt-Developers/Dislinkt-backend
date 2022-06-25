@@ -101,7 +101,8 @@ message  ConfirmAccountRequest {
 }
 
 message  ConfirmAccountResponse {
-        string response = 1;
+        string email = 1;
+        string response = 2;
 }
 
 message UserData{

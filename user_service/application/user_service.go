@@ -27,7 +27,6 @@ func (service *UserService) Create(user *domain.User) {
 		service.loggerError.Logger.Error("User_service: CNSU ")
 		println("Error in create method")
 	}
-
 }
 
 func (service *UserService) Get(id int) (*domain.User, error) {
@@ -63,4 +62,8 @@ func (service *UserService) GetAll() (*[]domain.User, error) {
 
 func (service *UserService) DeleteAll() {
 	service.store.DeleteAll()
+}
+
+func (service *UserService) ConfirmAccount(email string) {
+	service.store.ConfirmAccount(email)
 }

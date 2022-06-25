@@ -99,7 +99,6 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	}
 
 	handler.auth_service.Create(&user)
-
 	handler.auth_service.SendEmailForUserAuthentication(&user)
 
 	return &pb.RegisterResponse{
@@ -110,9 +109,10 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 
 func (handler *UserHandler) ConfirmAccount(ctx context.Context, req *pb.ConfirmAccountRequest) (*pb.ConfirmAccountResponse, error) {
 
-	handler.auth_service.ConfirmAccount(req.Token)
+	user, _ := handler.auth_service.ConfirmAccount(req.Token)
 
 	return &pb.ConfirmAccountResponse{
+		Email:    user.Email,
 		Response: "Posetite nas sajt i ulogujte se: http://localhost:4200",
 	}, nil
 }
@@ -158,7 +158,6 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 		}, nil
 	}
 
-	//ovde pozvati fiju za proveru da li je slaba lozinka
 	if !handler.auth_service.IsPasswordValid(strings.TrimSpace(req.ChangePassword.Password)) {
 		return &pb.PasswordRecoveryResponse{
 			Status: http.StatusBadRequest,

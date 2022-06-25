@@ -15,15 +15,26 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:       "8005",      //os.Getenv("USER_SERVICE_PORT"),
-		UserDBHost: "localhost", //os.Getenv("USER_DB_HOST"),
-		UserDBPort: "5432",      //os.Getenv("USER_DB_PORT"),
-		UserDBName: "users",     //os.Getenv("USER_DB_NAME"),
-		UserDBUser: "postgres",  //os.Getenv("USER_DB_USER"),
-		UserDBPass: "postgres",  // os.Getenv("USER_DB_PASS"),
-		NatsHost:   " nats",     //os.Getenv("NATS_HOST"),
-		NatsPort:   "4222",      //os.Getenv("NATS_PORT"),
-		NatsUser:   "ruser",     //os.Getenv("NATS_USER"),
-		NatsPass:   "T0pS3cr3t", //os.Getenv("NATS_PASS"),
+		Port:       "8003",
+		UserDBHost: "localhost",
+		UserDBPort: "5432",
+		UserDBName: "users",
+		UserDBUser: "postgres",
+		UserDBPass: "postgres",
+		NatsHost:   "nats",
+		NatsPort:   "4222",
+		NatsUser:   "ruser",
+		NatsPass:   "T0pS3cr3t",
+
+		//Port:       os.Getenv("USER_SERVICE_PORT"),
+		//UserDBHost: os.Getenv("USER_DB_HOST"),
+		//UserDBPort: os.Getenv("USER_DB_PORT"),
+		//UserDBName: os.Getenv("USER_DB_NAME"),
+		//UserDBUser: os.Getenv("USER_DB_USER"),
+		//UserDBPass: os.Getenv("USER_DB_PASS"),
+		//NatsHost:   os.Getenv("NATS_HOST"),
+		//NatsPort:   os.Getenv("NATS_PORT"),
+		//NatsUser:   os.Getenv("NATS_USER"),
+		//NatsPass:   os.Getenv("NATS_PASS"),
 	}
 }

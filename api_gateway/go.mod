@@ -5,7 +5,7 @@ go 1.18
 replace github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common => ../common
 
 require (
-	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220505203713-b8b7bb6f5439
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220508215230-00f28c4f6d5f
 	github.com/gorilla/handlers v1.5.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	google.golang.org/grpc v1.46.0

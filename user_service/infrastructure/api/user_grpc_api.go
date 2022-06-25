@@ -159,6 +159,34 @@ func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllReque
 	return response, nil
 }
 
+func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+
+	var user domain.User
+	user.Username = request.User.Username
+	user.Name = request.User.Name
+	user.Email = request.User.Email
+	user.Password = handler.auth_service.HashPassword(request.User.Password)
+	user.Gender = request.User.Gender
+	user.IsPrivateProfile = false
+	user.Role = "user"
+	handler.service.Create(&user)
+
+	return &pb.RegisterResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
+func (handler *UsersHandler) ConfirmAccount(ctx context.Context, request *pb.ConfirmAccountRequest) (*pb.ConfirmAccountResponse, error) {
+
+	handler.service.ConfirmAccount(request.Email)
+
+	return &pb.ConfirmAccountResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

@@ -7,6 +7,17 @@ package user_service;
 import "google/api/annotations.proto";
 
 service UserService{
+  rpc CreateUser(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/createUser"
+      body:"user"
+    };
+  }
+  rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
+    option (google.api.http) = {
+      get: "/confirmAccount/{email}"
+    };
+  }
   rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
     option (google.api.http) = {
       post: "/updatePersonalData"
@@ -25,6 +36,34 @@ service UserService{
       body:"updateUserData"
     };
   }
+}
+
+message ConfirmAccountRequest{
+  string email = 1;
+}
+
+message ConfirmAccountResponse{
+  int64 status = 1;
+  string error = 2;
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string username = 3;
+  string password = 4;
+  string email = 5;
+  string address = 6;
+  string gender = 7;
+}
+
+message RegisterRequest {
+  User user=1;
+}
+
+message RegisterResponse {
+  int64 status = 1;
+  string error = 2;
 }
 
 message  ChangePasswordWithCodeRequest{
@@ -103,14 +142,4 @@ message GetAllRequest {
 
 message GetAllResponse {
   repeated User users = 1;
-}
-
-message User {
-  int64 id = 1;
-  string name = 2;
-  string username = 3;
-  string password = 4;
-  string email = 5;
-  string address = 6;
-  string gender = 7;
 }

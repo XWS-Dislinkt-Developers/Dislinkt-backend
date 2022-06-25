@@ -130,8 +130,7 @@ func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error)
 	user.IsItConfirmed = true
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCA | UI  " + strconv.Itoa(idUser))
-
-	return nil, nil
+	return &user, nil
 }
 
 func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUserWAEDto, userId int) (*domain.User, error) {

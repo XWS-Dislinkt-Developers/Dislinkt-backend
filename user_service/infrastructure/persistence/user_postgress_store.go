@@ -15,6 +15,14 @@ type UserPostgresStore struct {
 	loggerError *logg.Logger
 }
 
+func (store *UserPostgresStore) ConfirmAccount(email string) {
+	var user domain.User
+	user.Email = email
+	store.db.First(&user)
+	user.IsItConfirmed = true
+	store.db.Save(&user)
+}
+
 func NewUserPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.UserStore, error) {
 	err := db.AutoMigrate(&domain.User{})
 	if err != nil {

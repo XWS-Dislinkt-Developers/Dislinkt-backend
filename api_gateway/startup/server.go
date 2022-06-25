@@ -3,6 +3,7 @@ package startup
 import (
 	"context"
 	"fmt"
+	apiAuth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
@@ -63,12 +64,28 @@ func (server *Server) initHandlers() {
 }
 
 func (server *Server) initCustomHandlers() {
-	// authEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
-	// catalogueEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
-	// orderingEmdpoint := fmt.Sprintf("%s:%s", server.config.OrderingHost, server.config.OrderingPort)
-	// shippingEmdpoint := fmt.Sprintf("%s:%s", server.config.ShippingHost, server.config.ShippingPort)
-	// orderingHandler := api.NewOrderingHandler(orderingEmdpoint, catalogueEmdpoint, shippingEmdpoint)
-	// orderingHandler.Init(server.mux)
+	server.initAccountActivationHandler()
+	server.initRegistrationHandler()
+}
+
+func (server *Server) initAccountActivationHandler() {
+	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
+	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
+
+	authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
+	userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	accountActivationHandler := apiAuth.NewAccountActivationHandler(authEndpoint, userEndpoint)
+	accountActivationHandler.Init(server.mux)
+}
+
+func (server *Server) initRegistrationHandler() {
+	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
+	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
+
+	authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
+	userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint)
+	registrationHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {
@@ -79,7 +96,7 @@ func (server *Server) Start() {
 	)
 
 	//HTTPS
-	log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
+	//log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
 	//HTTP
-	//log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
 }
