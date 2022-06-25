@@ -2,20 +2,17 @@ package application
 
 import (
 	"bufio"
-	"crypto/tls"
 	"errors"
 	"fmt"
+	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
-	gomail "gopkg.in/mail.v2"
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
+	"math/rand"
 	"os"
 	"strconv"
 	"time"
 	"unicode"
-
-	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
-	"github.com/golang-jwt/jwt"
-	"golang.org/x/crypto/bcrypt"
-	"math/rand"
 )
 
 type AuthService struct {
@@ -58,7 +55,6 @@ func (service *AuthService) GenerateToken(user *domain.User) (signedToken string
 		Role:     user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(8)).Unix(),
-			//Issuer:    service.Issuer,
 		},
 	}
 
@@ -96,34 +92,10 @@ func (service *AuthService) ValidateToken(signedToken string) (claims *domain.Jw
 
 	if claims.ExpiresAt < time.Now().Local().Unix() {
 		service.loggerError.Logger.Errorf("Auth_service: JWTEX")
-
 		return nil, errors.New("JWT is expired")
 	}
 	service.loggerInfo.Logger.Infof("Auth_service: TV")
 	return claims, nil
-}
-
-func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
-	m := gomail.NewMessage()
-	m.SetHeader("From", "sammilica99@gmail.com")
-	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Confirm your account")
-	token, _ := service.GenerateTokenForAccountConfirmation(user)
-	var text = "To confirm your account, please click here : http://localhost:8000/confirmUserAccount/" + token
-	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
-
-	// This is only needed when SSL/TLS certificate is not valid on server.
-	// In production this should be set to false.
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
-	if err := d.DialAndSend(m); err != nil {
-		service.loggerError.Logger.Errorf("Auth_service: FSEFA")
-
-		fmt.Println(err)
-		panic(err)
-	}
-	service.loggerInfo.Logger.Infof("Auth_service: EFAS")
 }
 
 func (service *AuthService) GenerateTokenForAccountConfirmation(user *domain.User) (confToken string, err error) {
@@ -131,9 +103,7 @@ func (service *AuthService) GenerateTokenForAccountConfirmation(user *domain.Use
 		UserId:            user.ID,
 		ConfirmationToken: service.generateRandomString(),
 	}
-
 	service.conformationTokenStore.Insert(token)
-
 	return token.ConfirmationToken, nil
 }
 
@@ -183,53 +153,6 @@ func (service *AuthService) PasswordRecoveryRequest(email string) error {
 	service.sendRecoveryCodeEmail(User, recoveryPassword.RecoveryCode)
 
 	return err
-}
-
-func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string) {
-	m := gomail.NewMessage()
-	m.SetHeader("From", "sammilica99@gmail.com")
-	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Password recovery")
-	var text = "You're code for password recovery is " + code + ".It will be active next 2 hours."
-	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
-
-	// This is only needed when SSL/TLS certificate is not valid on server.
-	// In production this should be set to false.
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
-	if err := d.DialAndSend(m); err != nil {
-
-		service.loggerError.Logger.Error("Auth_service: EINSRC | UI  " + strconv.Itoa(user.ID))
-
-		fmt.Println(err)
-		panic(err)
-	}
-	service.loggerInfo.Logger.Infof("Auth_service: ERCIS  | UI " + strconv.Itoa(user.ID))
-
-}
-
-func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code string) {
-	m := gomail.NewMessage()
-	m.SetHeader("From", "sammilica99@gmail.com")
-	m.SetHeader("To", user.Email)
-	m.SetHeader("Subject", "Passwordless login")
-	var text = "You're code for login is " + code + ".It will be active next 5 minutes."
-	m.SetBody("text/plain", text)
-	d := gomail.NewDialer("smtp.gmail.com", 587, "sammilica99@gmail.com", "setmkiwpicaxhmti")
-
-	// This is only needed when SSL/TLS certificate is not valid on server.
-	// In production this should be set to false.
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
-	if err := d.DialAndSend(m); err != nil {
-		service.loggerError.Logger.Error("Auth_service: EINSPSWL | UI  " + strconv.Itoa(user.ID))
-
-		fmt.Println(err)
-		panic(err)
-	}
-	service.loggerInfo.Logger.Infof("Auth_service: sendPasswordlessLoginEmail - EPSWLIS | UI " + strconv.Itoa(user.ID))
-
 }
 
 func (service *AuthService) PasswordRecovery(code string, password string) string {
@@ -321,7 +244,7 @@ func (service *AuthService) IsPasswordValid(password string) bool {
 }
 
 func (service *AuthService) CheckForCommonPasswords(password string) bool {
-	f, err := os.Open("common_password_list.txt")
+	f, err := os.Open("documents/common_password_list.txt")
 
 	if err != nil {
 		fmt.Println(err)
@@ -336,7 +259,6 @@ func (service *AuthService) CheckForCommonPasswords(password string) bool {
 		if password == scanner.Text() {
 			return false
 		}
-		fmt.Println(scanner.Text())
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -368,12 +290,7 @@ func (service *AuthService) Create(user *domain.User) {
 	if err != nil {
 		println("Error in create method")
 	}
-
 }
-
-//func (service *AuthService) Get(id int) (*domain.User, error) {
-//	return service.store.Get(id)
-//}
 
 func (service *AuthService) GetByUsername(username string) (*domain.User, error) {
 	return service.store.GetByUsername(username)

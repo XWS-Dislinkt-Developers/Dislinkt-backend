@@ -19,7 +19,6 @@ func NewConfirmationTokenPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, log
 	err := db.AutoMigrate(&domain.ConfirmationToken{})
 	if err != nil {
 		loggerError.Logger.Errorf("Confirmation_token_postgres_store: - failed method   ")
-
 		return nil, err
 	}
 	return &ConfirmationTokenPostgresStore{db: db,
@@ -32,7 +31,6 @@ func (store *ConfirmationTokenPostgresStore) GetByUserId(id int) (*domain.Confir
 	tokens, err := store.GetAll()
 	if err != nil {
 		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: NUUI  " + strconv.Itoa(id))
-
 		return nil, errors.New("[ConfirmationTokenPostgresStore-GetByUserId(id)]: There's no user.")
 	}
 	for _, t := range *tokens {
@@ -83,7 +81,6 @@ func (store *ConfirmationTokenPostgresStore) GetAll() (*[]domain.ConfirmationTok
 	result := store.db.Find(&tokens)
 	if result.Error != nil {
 		store.loggerError.Logger.Errorf("Confirmation_token_postgres_store: CNRDD ! ")
-
 		return nil, result.Error
 	}
 	return &tokens, nil

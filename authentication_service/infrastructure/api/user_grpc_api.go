@@ -271,6 +271,20 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 	}, nil
 }
 
+func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
+	User, err := handler.auth_service.GetByUsername(request.FindUser.Username)
+	if err != nil || User == nil {
+		return nil, err
+	}
+	UserPb := mapUser(User)
+
+	response := &pb.FindUserResponse{
+		User: UserPb,
+	}
+
+	return response, nil
+}
+
 func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
 	claims, err := handler.auth_service.ValidateToken(req.Token)
 

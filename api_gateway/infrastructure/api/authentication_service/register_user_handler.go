@@ -3,7 +3,6 @@ package authentication_service
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/domain"
 	services "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/services"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
@@ -33,9 +32,7 @@ func (handler *RegisterUserHandler) Init(mux *runtime.ServeMux) {
 }
 
 func (handler *RegisterUserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	fmt.Println(r.Body)
 	registerRequestJson, err := decodeBodyToRegisterRequest(r.Body)
-	fmt.Println(registerRequestJson)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("400 - Unable to decode request body!"))

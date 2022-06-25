@@ -33,6 +33,8 @@ func NewConfig() *Config {
 		HTTPSServerKey:         ".cert/server.key",
 		HTTPSServerCertificate: ".cert/server.crt",
 
+
+		//DOCKER
 		//Port: os.Getenv("GATEWAY_PORT"),
 		//AuthenticationHost: os.Getenv("AUTHENTICATION_SERVICE_HOST"),
 		//AuthenticationPort: os.Getenv("AUTHENTICATION_SERVICE_PORT"),

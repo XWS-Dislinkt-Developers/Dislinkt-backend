@@ -72,8 +72,10 @@ func (server *Server) initAccountActivationHandler() {
 	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
 	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
 
-	authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
-	userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	//authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
+	//userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	accountActivationHandler := apiAuth.NewAccountActivationHandler(authEndpoint, userEndpoint)
 	accountActivationHandler.Init(server.mux)
 }
@@ -82,8 +84,10 @@ func (server *Server) initRegistrationHandler() {
 	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
 	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
 
-	authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
-	userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	//authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
+	//userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint)
 	registrationHandler.Init(server.mux)
 }
@@ -96,7 +100,7 @@ func (server *Server) Start() {
 	)
 
 	//HTTPS
-	//log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
+	log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
 	//HTTP
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
+	//log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
 }

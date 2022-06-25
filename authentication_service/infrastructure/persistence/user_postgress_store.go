@@ -119,7 +119,6 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	user.DateOfBirth = dto.DateOfBirth
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI  " + strconv.Itoa(userID))
-
 	return nil, nil
 }
 
@@ -141,7 +140,6 @@ func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUser
 	user.Education = dto.Education
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI " + strconv.Itoa(userId))
-
 	return nil, nil
 }
 func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUserSAIDto, userId int) (*domain.User, error) {
@@ -152,7 +150,6 @@ func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUs
 	user.Interests = dto.Interests
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI " + strconv.Itoa(userId))
-
 	return nil, nil
 }
 
@@ -163,14 +160,12 @@ func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
 	user.Password = password
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCPSW | UI  " + strconv.Itoa(userId))
-
 }
 
 func (store *UserPostgresStore) Insert(user *domain.User) error {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {
 		store.loggerError.Logger.Errorf("User_postgres_store: UAR ")
-
 		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 	}
@@ -183,7 +178,6 @@ func (store *UserPostgresStore) Insert(user *domain.User) error {
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. ")
 	}
 	store.loggerInfo.Logger.Infof("User_postgres_store: UIR ")
-
 	return nil
 }
 

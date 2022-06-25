@@ -130,20 +130,6 @@ func (handler *UsersHandler) UpdateUserSkillsInterests(ctx context.Context, requ
 	}, nil
 }
 
-//func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
-//	User, err := handler.service.GetByUsername(request.FindUser.Username)
-//	if err != nil || User == nil {
-//		return nil, err
-//	}
-//	UserPb := mapUser(User)
-//
-//	response := &pb.FindUserResponse{
-//		User: UserPb,
-//	}
-//
-//	return response, nil
-//}
-
 func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {
