@@ -12,12 +12,12 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:           "8002",
-		UserPostDBHost: "localhost",
-		UserPostDBPort: "27017",
-		NatsHost:       "nats",
-		NatsPort:       "4222",
-		NatsUser:       "ruser",
-		NatsPass:       "T0pS3cr3t",
+		//Port:           "8002",
+		//UserPostDBHost: "localhost",
+		//UserPostDBPort: "27017",
+		//NatsHost:       "nats",
+		//NatsPort:       "4222",
+		//NatsUser:       "ruser",
+		//NatsPass:       "T0pS3cr3t",
 	}
 }
