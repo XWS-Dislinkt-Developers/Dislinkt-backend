@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	apiAuth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
+	apiPost "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/post_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
@@ -67,6 +68,7 @@ func (server *Server) initCustomHandlers() {
 	server.initAccountActivationHandler()
 	server.initRegistrationHandler()
 	server.initPasswordRecoveryHandler()
+	server.initUserFeedHandler()
 }
 
 func (server *Server) initAccountActivationHandler() {
@@ -88,6 +90,13 @@ func (server *Server) initPasswordRecoveryHandler() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	passwordReqHandler := apiAuth.NewPasswordRecoveryHandler(authEndpoint, userEndpoint)
 	passwordReqHandler.Init(server.mux)
+}
+
+func (server *Server) initUserFeedHandler() {
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	feedHandler := apiPost.NewUserFeedHandler(postEndpoint, connectionEndpoint)
+	feedHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {
