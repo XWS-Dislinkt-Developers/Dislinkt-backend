@@ -10,9 +10,8 @@ import (
 )
 
 type AccountActivationHandler struct {
-	authClientAddress    string
-	userClientAddress    string
-	companyClientAddress string
+	authClientAddress string
+	userClientAddress string
 }
 
 func NewAccountActivationHandler(authClientAddress, userClientAddress string) *AccountActivationHandler {

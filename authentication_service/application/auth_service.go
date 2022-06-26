@@ -155,19 +155,20 @@ func (service *AuthService) PasswordRecoveryRequest(email string) error {
 	return err
 }
 
-func (service *AuthService) PasswordRecovery(code string, password string) string {
+func (service *AuthService) PasswordRecovery(code string, password string) (string, *domain.User) {
 	PasswordRecovery, _ := service.passwordRecoveryStore.GetByRecoveryCode(code)
+	user, _ := service.store.GetById(PasswordRecovery.UserId)
 
 	if !time.Now().Local().Before(PasswordRecovery.ExpiresAt) {
 		service.loggerError.Logger.Error("Auth_service: CPSWLRE ")
 
-		return "Code for password recovery expired."
+		return "Code for password recovery expired.", user
 	}
 
 	service.store.UpdatePassword(PasswordRecovery.UserId, service.HashPassword(password))
 	service.passwordRecoveryStore.Delete(PasswordRecovery.UserId)
 
-	return ""
+	return "", user
 }
 
 func (service *AuthService) PasswordlessLogin(code string) (user *domain.User, err string) {

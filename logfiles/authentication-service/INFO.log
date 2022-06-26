@@ -41,3 +41,39 @@ INFO | 2022-06-25 14:02:12 | Auth_service: EFAS
 INFO | 2022-06-25 14:02:19 | User_postgres_store: UCA | UI  1 
 INFO | 2022-06-25 14:02:19 | Confirmation_token_postgres_store: Delete - CTDFD | UI 1 
 INFO | 2022-06-25 14:02:19 | Auth_service: UCA | UI 1 
+INFO | 2022-06-25 15:17:54 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:17:54 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:17:55 | Auth_service: EFAS 
+INFO | 2022-06-25 15:18:28 | User_postgres_store: UCA | UI  2 
+INFO | 2022-06-25 15:18:28 | Confirmation_token_postgres_store: Delete - CTDFD | UI 2 
+INFO | 2022-06-25 15:18:28 | Auth_service: UCA | UI 2 
+INFO | 2022-06-25 15:21:22 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:21:22 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:21:23 | Auth_service: EFAS 
+INFO | 2022-06-25 15:22:04 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:22:04 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:22:05 | Auth_service: EFAS 
+INFO | 2022-06-25 15:22:18 | User_postgres_store: UCA | UI  4 
+INFO | 2022-06-25 15:22:18 | Confirmation_token_postgres_store: Delete - CTDFD | UI 4 
+INFO | 2022-06-25 15:22:18 | Auth_service: UCA | UI 4 
+INFO | 2022-06-25 15:24:03 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:24:03 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:24:04 | Auth_service: EFAS 
+INFO | 2022-06-25 15:24:18 | User_postgres_store: UCA | UI  5 
+INFO | 2022-06-25 15:24:18 | Confirmation_token_postgres_store: Delete - CTDFD | UI 5 
+INFO | 2022-06-25 15:24:18 | Auth_service: UCA | UI 5 
+INFO | 2022-06-25 15:24:50 | Auth_service: ULI 5 
+INFO | 2022-06-25 15:26:04 | Auth_service: ULI 5 
+INFO | 2022-06-25 15:29:09 | Auth_service: ULI 5 
+INFO | 2022-06-26 17:27:05 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:27:05 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:27:06 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:29:08 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:29:08 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:29:09 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:31:59 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:31:59 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:32:01 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:33:16 | User_postgres_store: UCPSW | UI  5 
+INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5 
+INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5 

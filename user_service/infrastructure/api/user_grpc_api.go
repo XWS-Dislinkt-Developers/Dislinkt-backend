@@ -173,6 +173,16 @@ func (handler *UsersHandler) ConfirmAccount(ctx context.Context, request *pb.Con
 	}, nil
 }
 
+func (handler *UsersHandler) ChangePassword(ctx context.Context, request *pb.ChangePasswordReq) (*pb.ConfirmAccountResponse, error) {
+
+	handler.service.ChangePassword(request.ChangePassword.Email, request.ChangePassword.Password)
+
+	return &pb.ConfirmAccountResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+}
+
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {

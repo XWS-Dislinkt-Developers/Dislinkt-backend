@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/logger"
+	"golang.org/x/crypto/bcrypt"
 	"strconv"
 )
 
@@ -66,4 +67,13 @@ func (service *UserService) DeleteAll() {
 
 func (service *UserService) ConfirmAccount(email string) {
 	service.store.ConfirmAccount(email)
+}
+
+func (service *UserService) ChangePassword(email, password string) {
+	service.store.ChangePassword(email, service.HashPassword(password))
+}
+
+func (service *UserService) HashPassword(password string) string {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 5)
+	return string(bytes)
 }

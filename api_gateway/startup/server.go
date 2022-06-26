@@ -66,14 +66,10 @@ func (server *Server) initHandlers() {
 func (server *Server) initCustomHandlers() {
 	server.initAccountActivationHandler()
 	server.initRegistrationHandler()
+	server.initPasswordRecoveryHandler()
 }
 
 func (server *Server) initAccountActivationHandler() {
-	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
-	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
-
-	//authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
-	//userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
 	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	accountActivationHandler := apiAuth.NewAccountActivationHandler(authEndpoint, userEndpoint)
@@ -81,15 +77,17 @@ func (server *Server) initAccountActivationHandler() {
 }
 
 func (server *Server) initRegistrationHandler() {
-	//authEndpoint := fmt.Sprintf("%s:%s", "authentication_service", "8001")
-	//userEndpoint := fmt.Sprintf("%s:%s", "user_service", "8003")
-
-	//authEndpoint := fmt.Sprintf("%s:%s", "localhost", "8001")
-	//userEndpoint := fmt.Sprintf("%s:%s", "localhost", "8003")
 	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint)
 	registrationHandler.Init(server.mux)
+}
+
+func (server *Server) initPasswordRecoveryHandler() {
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	passwordReqHandler := apiAuth.NewPasswordRecoveryHandler(authEndpoint, userEndpoint)
+	passwordReqHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

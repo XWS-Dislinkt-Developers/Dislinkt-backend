@@ -15,14 +15,6 @@ type UserPostgresStore struct {
 	loggerError *logg.Logger
 }
 
-func (store *UserPostgresStore) ConfirmAccount(email string) {
-	var user domain.User
-	user.Email = email
-	store.db.First(&user)
-	user.IsItConfirmed = true
-	store.db.Save(&user)
-}
-
 func NewUserPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *logg.Logger) (domain.UserStore, error) {
 	err := db.AutoMigrate(&domain.User{})
 	if err != nil {
@@ -31,6 +23,22 @@ func NewUserPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, loggerError *log
 	return &UserPostgresStore{db: db,
 		loggerInfo:  loggerInfo,
 		loggerError: loggerError}, nil
+}
+
+func (store *UserPostgresStore) ConfirmAccount(email string) {
+	var user domain.User
+	user.Email = email
+	store.db.First(&user)
+	user.IsItConfirmed = true
+	store.db.Save(&user)
+}
+
+func (store *UserPostgresStore) ChangePassword(email, password string) {
+	var user domain.User
+	user.Email = email
+	store.db.First(&user)
+	user.Password = password
+	store.db.Save(&user)
 }
 
 func (store *UserPostgresStore) Get(id int) (*domain.User, error) { // TODO: why not integer (id)??

@@ -13,4 +13,5 @@ type UserStore interface {
 	GetByEmail(email string) (*User, error)
 	UpdatePassword(userId int, password string)
 	ConfirmAccount(email string)
+	ChangePassword(email, password string)
 }

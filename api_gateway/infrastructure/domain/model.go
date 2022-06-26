@@ -9,3 +9,9 @@ type User struct {
 	ConfirmPassword string `json:"confirmPassword"`
 	Gender          string `json:"gender"`
 }
+
+type PasswordRecoveryDTO struct {
+	Code            string
+	Password        string
+	ConfirmPassword string
+}

@@ -6,9 +6,6 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 	"net/http"
 	"strings"
 )
@@ -31,24 +28,14 @@ func NewUserHandler(auth_service *application.AuthService, loggerInfo *logg.Logg
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
-
 	user.Username = request.User.Username
-	user.Name = request.User.Name
 	user.Email = request.User.Email
 	user.Password = handler.auth_service.HashPassword(request.User.Password)
-	user.Gender = request.User.Gender
-	user.IsPrivateProfile = false
 	user.Role = "user"
 	if len(strings.TrimSpace(user.Username)) == 0 {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
 			Error:  "Username can't be empty.",
-		}, nil
-	}
-	if len(strings.TrimSpace(user.Name)) == 0 {
-		return &pb.RegisterResponse{
-			Status: http.StatusBadRequest,
-			Error:  "Name can't be empty.",
 		}, nil
 	}
 	if len(strings.TrimSpace(user.Email)) == 0 {
@@ -61,12 +48,6 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
 			Error:  "Password can't be empty.",
-		}, nil
-	}
-	if len(strings.TrimSpace(user.Gender)) == 0 {
-		return &pb.RegisterResponse{
-			Status: http.StatusBadRequest,
-			Error:  "Gender can't be empty.",
 		}, nil
 	}
 	if request.User.Password != request.User.ConfirmPassword {
@@ -173,7 +154,7 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 		}, nil
 	}
 
-	err := handler.auth_service.PasswordRecovery(req.ChangePassword.Code, req.ChangePassword.Password)
+	err, user := handler.auth_service.PasswordRecovery(req.ChangePassword.Code, req.ChangePassword.Password)
 
 	if err != "" {
 		return &pb.PasswordRecoveryResponse{
@@ -185,6 +166,7 @@ func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.Change
 	return &pb.PasswordRecoveryResponse{
 		Status: http.StatusOK,
 		Error:  "Password successfully changed.",
+		Email:  user.Email,
 	}, nil
 }
 
@@ -307,22 +289,4 @@ func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateReques
 		Status: http.StatusOK,
 		UserId: int64(user.ID),
 	}, nil
-}
-
-func extractHeader(ctx context.Context, header string) (string, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no headers in request")
-	}
-
-	authHeaders, ok := md[header]
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no header in request")
-	}
-
-	if len(authHeaders) != 1 {
-		return "", status.Error(codes.Unauthenticated, "more than 1 header in request")
-	}
-
-	return authHeaders[0], nil
 }
