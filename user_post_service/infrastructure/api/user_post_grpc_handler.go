@@ -88,56 +88,6 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 }
 
 func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
-	//IdLoggedUser := claims.Id
-	//
-	//AllUserConnections := make([]int, 0)
-	//feedPosts := make([]*domain.UserPost, 0)
-	//resp, err := http.Get("https://localhost:8000/userConnections")
-	//if err != nil {
-	//	handler.loggerError.Logger.Errorf("User_post_grpc_handler: UDNHC | UI  " + strconv.Itoa(claims.Id))
-	//	log.Fatalln(err)
-	//}
-	//body, err := ioutil.ReadAll(resp.Body)
-	//if err != nil {
-	//	handler.loggerError.Logger.Errorf("User_post_grpc_handler: FTFCFU | UI  " + strconv.Itoa(claims.Id))
-	//	log.Fatalln(err)
-	//}
-	//sb := string(body)
-	//log.Printf(sb)
-	//var responsenew ResponseNew
-	//err = json.Unmarshal(body, &responsenew)
-	//if err != nil {
-	//	handler.loggerError.Logger.Errorf("User_post_grpc_handler: FWDJ | UI  " + strconv.Itoa(claims.Id))
-	//	fmt.Printf("There was an error decoding the json. err = %s", err)
-	//}
-	//handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGP | UI  " + strconv.Itoa(claims.Id))
-	////AllConnections, _ := handler.conn_service.GetAll()
-	//
-	////for _, userConnection := range AllConnections {
-	////	if userConnection.UserId == IdLoggedUser {
-	////		AllUserConnections = userConnection.Connections
-	////	}
-	////}
-	//
-	//for _, idConnection := range AllUserConnections {
-	//	Posts, _ := handler.post_service.GetUserPosts(idConnection)
-	//	for _, c := range Posts {
-	//		feedPosts = append(feedPosts, c)
-	//	}
-	//}
-	//
-	//response := &pb_post.GetAllResponse{
-	//	UserPosts: []*pb_post.UserPost{},
-	//}
-	//for _, UserPost := range feedPosts {
-	//	current := mapUserPost(UserPost)
-	//	response.UserPosts = append(response.UserPosts, current)
-	//}
-	//return response, nil
 
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
@@ -184,20 +134,6 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 		}
 
 	}
-	//AllConnections, _ := handler.conn_service.GetAll()
-	//
-	//for _, userConnection := range AllConnections {
-	//	if userConnection.UserId == IdLoggedUser {
-	//		AllUserConnections = userConnection.Connections
-	//	}
-	//}
-
-	//for _, idConnection := range AllUserConnections {
-	//	Posts, _ := handler.post_service.GetUserPosts(idConnection)
-	//	for _, c := range Posts {
-	//		feedPosts = append(feedPosts, c)
-	//	}
-	//}
 
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},

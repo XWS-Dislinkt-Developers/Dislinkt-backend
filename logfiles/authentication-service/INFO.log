@@ -79,3 +79,6 @@ INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5
 INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5 
 INFO | 2022-06-26 18:55:54 | Auth_service: ULI 5 
 INFO | 2022-06-26 18:58:54 | Auth_service: ULI 1 
+INFO | 2022-06-27 12:59:09 | User_postgres_store: UIR  
+INFO | 2022-06-27 12:59:09 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-27 12:59:10 | Auth_service: EFAS 
