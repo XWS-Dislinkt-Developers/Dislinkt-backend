@@ -61,10 +61,6 @@ func (store *UserPostgresStore) GetById(id int) (*domain.User, error) {
 
 func (store *UserPostgresStore) GetByUsername(username string) (*domain.User, error) {
 	var foundUser *domain.User
-	//result := store.db.Where("username = ?", username).First(foundUser)
-	// ftm.Println("[UserPostgresStore]:username ", username)
-	// ftm.Println("[UserPostgresStore]:result found ", result.RowsAffected)
-	//var users []domain.User
 	users, err := store.GetAll()
 	if err != nil {
 		store.loggerError.Logger.Errorf("User_postgres_store: NU")
@@ -110,23 +106,6 @@ func (store *UserPostgresStore) GetByEmail(email string) (*domain.User, error) {
 	return foundUser, nil
 }
 
-func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
-	var user domain.User
-	user.ID = userID
-	store.db.First(&user)
-	user.Username = dto.Username
-	user.Name = dto.Name
-	user.Gender = dto.Gender
-	user.Email = dto.Email
-	user.PhoneNumber = dto.PhoneNumber
-	user.Biography = dto.Biography
-	user.DateOfBirth = dto.DateOfBirth
-	store.db.Save(&user)
-	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI  " + strconv.Itoa(userID))
-
-	return nil, nil
-}
-
 func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error) {
 	var user domain.User
 	user.ID = idUser
@@ -134,31 +113,7 @@ func (store *UserPostgresStore) ConfirmAccount(idUser int) (*domain.User, error)
 	user.IsItConfirmed = true
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCA | UI  " + strconv.Itoa(idUser))
-
-	return nil, nil
-}
-
-func (store *UserPostgresStore) UpdateUserWorkAndEducation(dto domain.UpdateUserWAEDto, userId int) (*domain.User, error) {
-	var user domain.User
-	user.ID = userId
-	store.db.First(&user)
-	user.Work = dto.Work
-	user.Education = dto.Education
-	store.db.Save(&user)
-	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI " + strconv.Itoa(userId))
-
-	return nil, nil
-}
-func (store *UserPostgresStore) UpdateUserSkillsAndInterests(dto domain.UpdateUserSAIDto, userId int) (*domain.User, error) {
-	var user domain.User
-	user.ID = userId
-	store.db.First(&user)
-	user.Skills = dto.Skills
-	user.Interests = dto.Interests
-	store.db.Save(&user)
-	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI " + strconv.Itoa(userId))
-
-	return nil, nil
+	return &user, nil
 }
 
 func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
@@ -168,14 +123,12 @@ func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
 	user.Password = password
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCPSW | UI  " + strconv.Itoa(userId))
-
 }
 
 func (store *UserPostgresStore) Insert(user *domain.User) error {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {
 		store.loggerError.Logger.Errorf("User_postgres_store: UAR ")
-
 		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
 	}
@@ -188,7 +141,6 @@ func (store *UserPostgresStore) Insert(user *domain.User) error {
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. ")
 	}
 	store.loggerInfo.Logger.Infof("User_postgres_store: UIR ")
-
 	return nil
 }
 

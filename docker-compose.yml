@@ -25,6 +25,41 @@ services:
     networks:
       - network
 
+#  user_post_service:
+#    image: user_post_service
+#    container_name: user_post_service
+#    build:
+#      context: .
+#      dockerfile: ./user_post_service/Dockerfile
+#    restart: on-failure
+#    environment:
+#      USER_POST_DB_HOST: ${USER_POST_DB_HOST}
+#      MONGO_DB_PORT: ${MONGO_DB_PORT}
+#      USER_POST_SERVICE_PORT: ${USER_POST_SERVICE_PORT}
+#    depends_on:
+#      - post_mongo_db
+#    networks:
+#      - network
+
+  user_service:
+    image: user_service
+    container_name: user_service
+    build:
+      context: .
+      dockerfile: ./user_service/Dockerfile
+    restart: on-failure
+    environment:
+      USER_DB_HOST: ${USER_DB_HOST}
+      USER_DB_PORT: ${USER_DB_PORT}
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASS: ${USER_DB_PASS}
+      USER_DB_NAME: ${USER_DB_NAME}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+    depends_on:
+      - user_db
+    networks:
+      - network
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -36,10 +71,20 @@ services:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
     environment:
       GATEWAY_PORT: ${GATEWAY_PORT}
-      AUTHENTICATION_HOST: ${AUTHENTICATION_SERVICE_HOST}
+      AUTHENTICATION_SERVICE_HOST: ${AUTHENTICATION_SERVICE_HOST}
       AUTHENTICATION_SERVICE_PORT: ${AUTHENTICATION_SERVICE_PORT}
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+      USER_POST_SERVICE_HOST: ${USER_POST_SERVICE_HOST}
+      USER_POST_SERVICE_PORT: ${USER_POST_SERVICE_PORT}
+      HTTPS_SERVER_KEY: ${HTTPS_SERVER_KEY}
+      HTTPS_SERVER_CERTIFICATE: ${HTTPS_SERVER_CERTIFICATE}
     networks:
       - network
+    volumes:
+      - type: bind
+        source: ./.cert/
+        target: /root/cert
 
   authentication_db:
     image: postgres
@@ -51,6 +96,24 @@ services:
       POSTGRES_DB: ${AUTHENTICATION_DB_NAME}
     networks:
       - network
+
+  user_db:
+    image: postgres
+    container_name: user_db
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${USER_DB_USER}
+      POSTGRES_PASSWORD: ${USER_DB_PASS}
+      POSTGRES_DB: ${USER_DB_NAME}
+    networks:
+      - network
+
+#  post_mongo_db:
+#    image: mongo
+#    container_name: post_mongo_db
+#    restart: on-failure
+#    networks:
+#      - network
 
   nats:
     image: nats

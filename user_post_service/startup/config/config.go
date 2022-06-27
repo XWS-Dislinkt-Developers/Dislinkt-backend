@@ -12,13 +12,16 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:           "8002",      // os.Getenv("ORDERING_SERVICE_PORT"),
-		UserPostDBHost: "localhost", // os.Getenv("ORDERING_DB_HOST"),
-		UserPostDBPort: "27017",     // os.Getenv("ORDERING_DB_PORT"),
-		NatsHost:       "nats",      // os.Getenv("NATS_HOST"),
-		NatsPort:       "4222",      // os.Getenv("NATS_PORT"),
-		NatsUser:       "ruser",     // os.Getenv("NATS_USER"),
-		NatsPass:       "T0pS3cr3t", // os.Getenv("NATS_PASS"),
+		Port:           "8002",
+		UserPostDBHost: "localhost",
+		UserPostDBPort: "27017",
+		NatsHost:       "nats",
+		NatsPort:       "4222",
+		NatsUser:       "ruser",
+		NatsPass:       "T0pS3cr3t",
 
+		//Port:           os.Getenv("USER_POST_SERVICE_PORT"),
+		//UserPostDBHost: os.Getenv("USER_POST_DB_HOST"),
+		//UserPostDBPort: os.Getenv("MONGO_DB_POST"),
 	}
 }

@@ -8,24 +8,38 @@ type Config struct {
 	UserPostPort           string
 	UserConnectionHost     string
 	UserConnectionPort     string
+	UserHost               string
+	UserPort               string
 	HTTPSServerKey         string
 	HTTPSServerCertificate string
 }
 
 func NewConfig() *Config {
 	return &Config{
-		Port: "8000", //os.Getenv("GATEWAY_PORT"),
+		Port: "8000",
 
-		AuthenticationHost: "localhost", //os.Getenv("AUTHENTICATION_SERVICE_HOST"),
-		AuthenticationPort: "8001",      //os.Getenv("AUTHENTICATION_SERVICE_PORT"),
+		AuthenticationHost: "localhost",
+		AuthenticationPort: "8001",
 
 		UserPostHost: "localhost",
 		UserPostPort: "8002",
 
+		UserHost: "localhost",
+		UserPort: "8003",
+
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
 
-		HTTPSServerKey:         "server.key",
-		HTTPSServerCertificate: "server.crt",
+		HTTPSServerKey:         ".cert/server.key",
+		HTTPSServerCertificate: ".cert/server.crt",
+
+		//DOCKER
+		//Port:                   os.Getenv("GATEWAY_PORT"),
+		//AuthenticationHost:     os.Getenv("AUTHENTICATION_SERVICE_HOST"),
+		//AuthenticationPort:     os.Getenv("AUTHENTICATION_SERVICE_PORT"),
+		//UserHost:               os.Getenv("USER_SERVICE_HOST"),
+		//UserPort:               os.Getenv("USER_SERVICE_PORT"),
+		//HTTPSServerKey:         os.Getenv("HTTPS_SERVER_KEY"),
+		//HTTPSServerCertificate: os.Getenv("HTTPS_SERVER_CERTIFICATE"),
 	}
 }

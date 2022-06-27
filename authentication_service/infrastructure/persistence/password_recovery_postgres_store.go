@@ -19,7 +19,6 @@ func NewPasswordRecoveryPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, logg
 	err := db.AutoMigrate(&domain.PasswordRecovery{})
 	if err != nil {
 		loggerError.Logger.Errorf("Password_recovery_postgres_store: - failed method   ")
-
 		return nil, err
 	}
 	return &PasswordRecoveryPostgresStore{db: db,
@@ -32,7 +31,6 @@ func (store *PasswordRecoveryPostgresStore) GetByRecoveryCode(recoveryCode strin
 	passwords, err := store.GetAll()
 	if err != nil {
 		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: NUWC ")
-
 		return nil, errors.New("[PasswordRecoveryPostgresStore-GetByRecoveryCode(confToken)]: There's no user.")
 	}
 	for _, p := range *passwords {
@@ -46,7 +44,6 @@ func (store *PasswordRecoveryPostgresStore) GetByRecoveryCode(recoveryCode strin
 		return nil, errors.New("ERR - [ConfirmationTokenPostgresStore-GetByConfirmationToken(confToken)]: Can't find user with this token: " + recoveryCode)
 	}
 	store.loggerInfo.Logger.Infof("Password_recovery_postgres_store: FUWRC ")
-
 	return password, nil
 }
 
@@ -55,7 +52,6 @@ func (store *PasswordRecoveryPostgresStore) GetByUserId(id int) (*domain.Passwor
 	passwords, err := store.GetAll()
 	if err != nil {
 		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: NUUI  " + strconv.Itoa(id))
-
 		return nil, errors.New("[PasswordRecoveryPostgresStore-GetByUserId(id)]: There's no user.")
 	}
 	for _, p := range *passwords {
@@ -74,7 +70,6 @@ func (store *PasswordRecoveryPostgresStore) Insert(passwordRecovery *domain.Pass
 	result := store.db.Create(passwordRecovery)
 	if result.Error != nil {
 		store.loggerError.Logger.Errorf("Password_recovery_postgres_store: PSWRCNSD!")
-
 		ftm.Println("[PasswordRecoveryPostgresStore-Insert(passwordRecovery)]: Can't insert passwordRecovery.")
 		return errors.New("ERR - [PasswordRecoveryPostgresStore-Insert(passwordRecovery)]: Can't insert passwordRecovery. ")
 	}

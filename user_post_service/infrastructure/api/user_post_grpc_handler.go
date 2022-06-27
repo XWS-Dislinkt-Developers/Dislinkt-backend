@@ -46,13 +46,11 @@ func NewUserPostHandler(post_service *app_post.UserPostService, loggerInfo *logg
 	}
 }
 
-//USER
 func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_post.CreateUserPostRequest) (*pb_post.CreateUserPostResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	//var creatorUserId = claims.Id
 
 	userPost := mapNewUserPost(request.UserPost, claims.Id)
 	err := handler.post_service.Create(userPost)
@@ -70,7 +68,6 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 }
 
 func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetResponse, error) {
-	//return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow this method")
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -89,27 +86,24 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	}
 	return response, nil
 }
+
 func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
+
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	//PROVERA ULOGE
-	//if handler.auth_service.CheckIfUser(claims.Role) == false {
-	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
-	//}
+
 	IdLoggedUser := claims.Id
 
-	AllUserConnections := make([]int, 0)
+	//AllUserConnections := make([]int, 0)
 	feedPosts := make([]*domain.UserPost, 0)
-	resp, err := http.Get("http://localhost:8000/userConnections")
+	resp, err := http.Get("https://localhost:8000/userConnections")
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UDNHC | UI  " + strconv.Itoa(claims.Id))
 		log.Fatalln(err)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FTFCFU | UI  " + strconv.Itoa(claims.Id))
 		log.Fatalln(err)
 	}
 	sb := string(body)
@@ -117,23 +111,28 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	var responsenew ResponseNew
 	err = json.Unmarshal(body, &responsenew)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FWDJ | UI  " + strconv.Itoa(claims.Id))
 		fmt.Printf("There was an error decoding the json. err = %s", err)
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGP | UI  " + strconv.Itoa(claims.Id))
-	AllConnections, _ := handler.conn_service.GetAll()
+	//var temp Connection
+	var temp string
+	for _, p := range responsenew.UserConnections {
 
-	for _, userConnection := range AllConnections {
-		if userConnection.UserId == IdLoggedUser {
-			AllUserConnections = userConnection.Connections
-		}
-	}
+		id, _ := strconv.Atoi(p.UserId)
+		if IdLoggedUser == id {
 
-	for _, idConnection := range AllUserConnections {
-		Posts, _ := handler.post_service.GetUserPosts(idConnection)
-		for _, c := range Posts {
-			feedPosts = append(feedPosts, c)
+			for _, k := range p.Connections {
+				err = json.Unmarshal(k, &temp)
+				if err == nil {
+					id2, _ := strconv.Atoi(temp)
+					Posts, _ := handler.post_service.GetUserPosts(id2)
+					for _, c := range Posts {
+						feedPosts = append(feedPosts, c)
+					}
+				}
+			}
+
 		}
+
 	}
 
 	response := &pb_post.GetAllResponse{
@@ -146,15 +145,12 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	return response, nil
 
 }
+
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
-	//PROVERA ULOGE
-	//if handler.auth_service.CheckIfUser(claims.Role) == false {
-	//	return nil, status.Error(codes.Unauthenticated, "Your role doesn't allow you this method.")
-	//}
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
@@ -172,7 +168,6 @@ func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.Get
 	return response, nil
 }
 
-// TODO:AddReactionToUserPost
 func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, request *pb_post.AddReactionRequest) (*pb_post.GetResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
@@ -194,7 +189,6 @@ func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, reque
 
 }
 
-//TODO:AddCommentToUserPost()
 func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
@@ -255,7 +249,6 @@ type ResponseNew struct {
 	UserConnections []UserConnection `json:"userConnections"`
 }
 
-//json.RawMessage
 type UserConnection struct {
 	UserId      string            `json:"userId"`
 	Private     bool              `json:"private"`

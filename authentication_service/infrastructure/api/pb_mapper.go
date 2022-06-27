@@ -8,12 +8,9 @@ import (
 func mapUser(user *domain.User) *pb.User {
 	userPb := &pb.User{
 		Id:       int64(user.ID),
-		Name:     user.Name,
 		Username: user.Username,
 		Password: user.Password,
 		Email:    user.Email,
-		Address:  user.Address,
-		Gender:   user.Gender,
 	}
 	return userPb
 }

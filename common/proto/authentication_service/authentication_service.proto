@@ -7,11 +7,6 @@ package authentication;
 import "google/api/annotations.proto";
 
 service AuthenticationService{
-        rpc GetAll(GetAllRequest) returns(GetAllResponse) {
-        	option (google.api.http) = {
-			          get: "/users"
-          };
-        }
         rpc Register(RegisterRequest) returns (RegisterResponse) {
                 option (google.api.http) = {
                         post: "/register"
@@ -31,24 +26,6 @@ service AuthenticationService{
                 };
         }
         rpc Validate(ValidateRequest) returns (ValidateResponse) {}
-        rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
-                option (google.api.http) = {
-                        post: "/updatePersonalData"
-                        body:"updateUserData"
-                };
-        }
-        rpc UpdateUserWorkEducation(UpdateUserWAERequest) returns (UpdateUserWAEResponse) {
-                option (google.api.http) = {
-                        post: "/updateWorkAndEducation"
-                        body:"updateUserData"
-                };
-        }
-        rpc UpdateUserSkillsInterests(UpdateUserSAIRequest) returns (UpdateUserSAIResponse) {
-                option (google.api.http) = {
-                        post: "/updateSkillsInterests"
-                        body:"updateUserData"
-                };
-        }
         rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
                 option (google.api.http) = {
                         get: "/confirmAccount/{token}"
@@ -99,6 +76,7 @@ message PasswordlessLogRequest {
 message PasswordRecoveryResponse {
         int64 status = 1;
         string error = 2;
+        string email = 3;
 }
 
 message  ChangePasswordWithCodeRequest{
@@ -124,7 +102,8 @@ message  ConfirmAccountRequest {
 }
 
 message  ConfirmAccountResponse {
-        string response = 1;
+        string email = 1;
+        string response = 2;
 }
 
 message UserData{
@@ -196,8 +175,7 @@ message RegisterResponse {
         int64 status = 1;
         string error = 2;
 }
-      
-// Login
+
 message LoginRequest {
         UserData userData = 1;
 }
@@ -210,8 +188,7 @@ message LoginResponse {
         int64 id = 5;
         string role = 6;
 }
-      
-// Validate
+
 message ValidateRequest {
          string token = 1;
 }
@@ -222,7 +199,6 @@ message ValidateResponse {
         int64 userId = 3;
 }
 
-//Test
 message GetAllRequest {
 }
 
@@ -239,7 +215,7 @@ message User {
         string address = 6;
         string gender = 7;
 }
-//findUserByUsername
+
 message FindUserRequest {
         FindUser findUser = 1;
 }

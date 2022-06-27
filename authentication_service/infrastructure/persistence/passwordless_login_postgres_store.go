@@ -19,7 +19,6 @@ func NewPasswordlessLoginPostgresStore(db *gorm.DB, loggerInfo *logg.Logger, log
 	err := db.AutoMigrate(&domain.PasswordlessLogin{})
 	if err != nil {
 		loggerError.Logger.Errorf("Passwordless_login_postgres_store: NewPasswordlessLoginPostgresStore - failed method ")
-
 		return nil, err
 	}
 	return &PasswordlessLoginPostgresStore{db: db,
@@ -75,7 +74,6 @@ func (store *PasswordlessLoginPostgresStore) Insert(passwordlessLogin *domain.Pa
 	result := store.db.Create(passwordlessLogin)
 	if result.Error != nil {
 		store.loggerError.Logger.Errorf("Passwordless_login_postgres_store: CNSPSWL ")
-
 		ftm.Println("[PasswordlessLoginPostgresStore-Insert(passwordlessLogin)]: Can't insert passwordlessLogin.")
 		return errors.New("ERR - [PasswordlessLoginPostgresStore-Insert(passwordlessLogin)]: Can't insert passwordlessLogin. ")
 	}

@@ -44,14 +44,13 @@ func (server *Server) Start() {
 	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient, loggerInfo, loggerError)
 	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
 
-	userService := server.initUserService(userStore, conformationTokenStore, loggerInfo, loggerError)
 	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	//server.initCreateOrderHandler(userService, replyPublisher, commandSubscriber)
 
-	userHandler := server.initUserHandler(userService, authService, loggerInfo, loggerError)
+	userHandler := server.initUserHandler(authService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userHandler)
 }
@@ -126,10 +125,6 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	return subscriber
 }
 
-func (server *Server) initUserService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserService {
-	return application.NewUserService(store, storeConfToken, loggerInfo, loggerError)
-}
-
 func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.AuthService {
 	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError)
 }
@@ -141,8 +136,8 @@ func (server *Server) initAuthService(store domain.UserStore, storeConfToken dom
 // 	}
 // }
 
-func (server *Server) initUserHandler(service *application.UserService, authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
-	return api.NewUserHandler(service, authService, loggerInfo, loggerError)
+func (server *Server) initUserHandler(authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
+	return api.NewUserHandler(authService, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userHandler *api.UserHandler) {

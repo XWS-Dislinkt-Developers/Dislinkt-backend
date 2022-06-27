@@ -29,8 +29,10 @@ WORKDIR /root/
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 
+VOLUME /root/cert
+
 # Expose port 8000 to the outside world
-EXPOSE 8000
+EXPOSE 8001
 
 # Command to run the executable
 CMD ["./main"]

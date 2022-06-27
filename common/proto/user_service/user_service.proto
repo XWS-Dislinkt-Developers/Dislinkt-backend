@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/user_service";
+
+package user_service;
+
+import "google/api/annotations.proto";
+
+service UserService{
+  rpc ChangePassword(ChangePasswordReq) returns (ConfirmAccountResponse) {
+    option (google.api.http) = {
+      post: "/changePass"
+      body:"changePassword"
+    };
+  }
+  rpc CreateUser(RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/createUser"
+      body:"user"
+    };
+  }
+  rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
+    option (google.api.http) = {
+      get: "/confirmAccount/{email}"
+    };
+  }
+  rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
+    option (google.api.http) = {
+      post: "/updatePersonalData"
+      body:"updateUserData"
+    };
+  }
+  rpc UpdateUserWorkEducation(UpdateUserWAERequest) returns (UpdateUserWAEResponse) {
+    option (google.api.http) = {
+      post: "/updateWorkAndEducation"
+      body:"updateUserData"
+    };
+  }
+  rpc UpdateUserSkillsInterests(UpdateUserSAIRequest) returns (UpdateUserSAIResponse) {
+    option (google.api.http) = {
+      post: "/updateSkillsInterests"
+      body:"updateUserData"
+    };
+  }
+}
+
+message ConfirmAccountRequest{
+  string email = 1;
+}
+
+message ConfirmAccountResponse{
+  int64 status = 1;
+  string error = 2;
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string username = 3;
+  string password = 4;
+  string email = 5;
+  string address = 6;
+  string gender = 7;
+}
+
+message RegisterRequest {
+  User user=1;
+}
+
+message RegisterResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message ChangePasswordReq {
+  ChangePassword changePassword = 1;
+}
+
+message ChangePassword {
+  string email = 1;
+  string password = 2;
+}
+
+message UserData{
+  string username = 1;
+  string password = 2;
+}
+
+message UpdateUserData{
+  string username = 1;
+  string name = 2;
+  string phoneNumber = 3;
+  string email = 4;
+  string gender = 5;
+  string dateOfBirth = 6;
+  string biography = 7;
+}
+
+message UpdateUserSAI{
+  string skills = 1;
+  string interests = 2;
+}
+
+message UpdateUserWAE{
+  string work = 1;
+  string education = 2;
+}
+
+message UpdateUserSAIRequest {
+  UpdateUserSAI updateUserData=1;
+}
+
+message UpdateUserSAIResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message UpdateUserWAERequest {
+  UpdateUserWAE updateUserData=1;
+}
+
+message UpdateUserWAEResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message UpdatePersonalDataRequest {
+  UpdateUserData updateUserData=1;
+}
+
+message UpdatePersonalDataResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message LoginResponse {
+  int64 status = 1;
+  string error = 2;
+  string token = 3;
+  string username=4;
+  int64 id = 5;
+  string role = 6;
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated User users = 1;
+}
