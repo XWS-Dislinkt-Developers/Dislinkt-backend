@@ -148,6 +148,7 @@ func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllReque
 func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
+	user.UserId = int(request.User.UserId)
 	user.Username = request.User.Username
 	user.Name = request.User.Name
 	user.Email = request.User.Email

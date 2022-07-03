@@ -125,23 +125,27 @@ func (store *UserPostgresStore) UpdatePassword(userId int, password string) {
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCPSW | UI  " + strconv.Itoa(userId))
 }
 
-func (store *UserPostgresStore) Insert(user *domain.User) error {
+func (store *UserPostgresStore) Insert(user *domain.User) (error, *domain.User) {
 	_, err := store.GetByUsername(user.Username)
 	if err == nil {
 		store.loggerError.Logger.Errorf("User_postgres_store: UAR ")
 		ftm.Println("[UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
-		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username)
+		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username), nil
 	}
 
 	result := store.db.Create(user)
+
 	if result.Error != nil {
 		store.loggerError.Logger.Errorf("User_postgres_store: UCNBS ")
 
 		ftm.Println("[UserPostgresStore-Insert(user)]: Can't insert user.")
-		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. ")
+		return errors.New("ERR - [UserPostgresStore-Insert(user)]: Can't insert user. "), nil
 	}
 	store.loggerInfo.Logger.Infof("User_postgres_store: UIR ")
-	return nil
+
+	u, _ := store.GetByUsername(user.Username)
+
+	return nil, u
 }
 
 func (store *UserPostgresStore) GetAll() (*[]domain.User, error) {

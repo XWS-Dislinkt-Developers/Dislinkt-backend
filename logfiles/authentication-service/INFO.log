@@ -82,3 +82,36 @@ INFO | 2022-06-26 18:58:54 | Auth_service: ULI 1
 INFO | 2022-06-27 12:59:09 | User_postgres_store: UIR  
 INFO | 2022-06-27 12:59:09 | Confirmation_token_postgres_store: CTSD  
 INFO | 2022-06-27 12:59:10 | Auth_service: EFAS 
+INFO | 2022-07-03 18:16:29 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:16:29 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:16:33 | Auth_service: EFAS 
+INFO | 2022-07-03 18:17:19 | User_postgres_store: UCA | UI  2 
+INFO | 2022-07-03 18:17:19 | Confirmation_token_postgres_store: Delete - CTDFD | UI 2 
+INFO | 2022-07-03 18:17:19 | Auth_service: UCA | UI 2 
+INFO | 2022-07-03 18:32:27 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:32:27 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:32:30 | Auth_service: EFAS 
+INFO | 2022-07-03 18:34:30 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:34:30 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:34:32 | Auth_service: EFAS 
+INFO | 2022-07-03 18:34:57 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:34:57 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:34:58 | Auth_service: EFAS 
+INFO | 2022-07-03 18:53:18 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:53:18 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:53:21 | Auth_service: EFAS 
+INFO | 2022-07-03 18:59:41 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:01:25 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:26:40 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:26:40 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:28:27 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:28:27 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:29:38 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:29:38 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:29:39 | Auth_service: EFAS 
+INFO | 2022-07-03 19:36:11 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:36:11 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:36:13 | Auth_service: EFAS 
+INFO | 2022-07-03 19:38:41 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:38:41 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:38:43 | Auth_service: EFAS 

@@ -4,6 +4,7 @@ import "time"
 
 type User struct {
 	ID               int       `json:"id" ,gorm:"primaryKey,autoIncrement:true" `
+	UserId           int       `json:"userId"  `
 	Name             string    `json:"name" validate:"required,name"`
 	Username         string    `json:"username" ,gorm:"unique" validate:"required,username" `
 	Password         string    `json:"password"`

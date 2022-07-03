@@ -55,12 +55,13 @@ message ConfirmAccountResponse{
 
 message User {
   int64 id = 1;
-  string name = 2;
-  string username = 3;
-  string password = 4;
-  string email = 5;
-  string address = 6;
-  string gender = 7;
+  int64 userId = 2;
+  string name = 3;
+  string username = 4;
+  string password = 5;
+  string email = 6;
+  string address = 7;
+  string gender = 8;
 }
 
 message RegisterRequest {

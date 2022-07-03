@@ -286,11 +286,12 @@ func (service *AuthService) Get(id int) (*domain.User, error) {
 	return service.store.Get(id)
 }
 
-func (service *AuthService) Create(user *domain.User) {
-	err := service.store.Insert(user)
+func (service *AuthService) Create(user *domain.User) *domain.User {
+	err, u := service.store.Insert(user)
 	if err != nil {
 		println("Error in create method")
 	}
+	return u
 }
 
 func (service *AuthService) GetByUsername(username string) (*domain.User, error) {

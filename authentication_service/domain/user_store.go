@@ -1,7 +1,7 @@
 package domain
 
 type UserStore interface {
-	Insert(user *User) error
+	Insert(user *User) (error, *User)
 	Get(id int) (*User, error)
 	GetByUsername(username string) (*User, error)
 	GetAll() (*[]User, error)

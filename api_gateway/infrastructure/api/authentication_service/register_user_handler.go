@@ -50,7 +50,7 @@ func (handler *RegisterUserHandler) HandleRegisterUser(w http.ResponseWriter, r 
 	}
 
 	if response.Error == "" {
-		registerUserRequestUserPb := mapRegisterUserRequestUserPb(registerRequestJson)
+		registerUserRequestUserPb := mapRegisterUserRequestUserPb(registerRequestJson, response.UserId)
 		userClient := services.NewUserClient(handler.userClientAddress)
 		_, errUser := userClient.CreateUser(context.TODO(), registerUserRequestUserPb)
 		if errUser != nil {
@@ -78,9 +78,10 @@ func mapRegisterUserRequestPb(user *domain.User) *pb.RegisterRequest {
 	return registerUserRequestPb
 }
 
-func mapRegisterUserRequestUserPb(user *domain.User) *userPb.RegisterRequest {
+func mapRegisterUserRequestUserPb(user *domain.User, userId int64) *userPb.RegisterRequest {
 	registerUserRequestPb := &userPb.RegisterRequest{
 		User: &userPb.User{
+			UserId:   userId,
 			Name:     user.Name,
 			Username: user.Username,
 			Password: user.Password,
