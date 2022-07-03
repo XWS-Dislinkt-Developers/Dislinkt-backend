@@ -43,7 +43,7 @@ func (store *UserPostgresStore) ChangePassword(email, password string) {
 
 func (store *UserPostgresStore) Get(id int) (*domain.User, error) { // TODO: why not integer (id)??
 	var foundUser *domain.User
-	store.db.Where("ID = ?", id).First(foundUser)
+	store.db.Where("USER_ID = ?", id).First(foundUser)
 	if foundUser == nil {
 		ftm.Println("[UserPostgresStore-Get(id)]: Can't find user")
 		return nil, errors.New("ERR-[UserPostgresStore-Get(id)]: Can't find user ")
@@ -60,7 +60,7 @@ func (store *UserPostgresStore) GetById(id int) (*domain.User, error) {
 		return nil, errors.New("[UserPostgresStore-GetByUsername(username)]: There's no user.")
 	}
 	for _, user := range *users {
-		if user.ID == id {
+		if user.UserId == id {
 			return &user, nil
 		}
 	}
