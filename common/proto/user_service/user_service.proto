@@ -24,6 +24,12 @@ service UserService{
       get: "/confirmAccount/{email}"
     };
   }
+  rpc GetBySearch(GetBySearchRequest) returns (GetBySearchResponse){
+    option (google.api.http) = {
+      post: "/getUsersBySearch"
+      body:"name"
+    };
+  }
   rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
     option (google.api.http) = {
       post: "/updatePersonalData"
@@ -147,5 +153,17 @@ message GetAllRequest {
 }
 
 message GetAllResponse {
+  repeated User users = 1;
+}
+
+message SearchName {
+  string name = 1;
+}
+
+message GetBySearchRequest {
+  SearchName name = 1;
+}
+
+message GetBySearchResponse {
   repeated User users = 1;
 }

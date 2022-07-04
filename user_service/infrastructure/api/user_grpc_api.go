@@ -145,6 +145,27 @@ func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllReque
 	return response, nil
 }
 
+func (handler *UsersHandler) GetBySearch(ctx context.Context, request *pb.GetBySearchRequest) (*pb.GetBySearchResponse, error) {
+	users, err := handler.service.GetAll()
+	if err != nil || *users == nil {
+		return nil, err
+	}
+	response := &pb.GetBySearchResponse{
+		Users: []*pb.User{},
+	}
+	for _, user := range *users {
+		current := mapUser(&user)
+		//res1, _ := regexp.MatchString(request.Name.Name, current.Name)
+		if user.IsPrivateProfile == false {
+			isFound := strings.Contains(strings.ToLower(current.Name), strings.ToLower(request.Name.Name))
+			if isFound == true {
+				response.Users = append(response.Users, current)
+			}
+		}
+	}
+	return response, nil
+}
+
 func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
