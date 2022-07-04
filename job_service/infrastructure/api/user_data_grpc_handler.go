@@ -6,8 +6,8 @@ import (
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/job_service"
 	app_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/application"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/logger"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -18,14 +18,14 @@ type UserDataHandler struct {
 	pb_auth.UnimplementedAuthenticationServiceServer
 	auth_service *app_auth.AuthService
 
-	pb_connection.UnimplementedUserDataServiceServer
-	user_service *app_connection.UserDataService
+	pb_connection.UnimplementedJobServiceServer
+	user_service *app_connection.JobService
 
 	loggerInfo  *logg.Logger
 	loggerError *logg.Logger
 }
 
-func NewUserDataHandler(user_service *app_connection.UserDataService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserDataHandler {
+func NewUserDataHandler(user_service *app_connection.JobService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserDataHandler {
 	return &UserDataHandler{
 		user_service: user_service,
 		loggerInfo:   loggerInfo,
@@ -41,18 +41,18 @@ func (handler *UserDataHandler) GetAll(ctx context.Context, request *pb_connecti
 	}
 
 	response := &pb_connection.GetAllResponse{
-		UsersData: []*pb_connection.UserConnection{},
+		UserData: []*pb_connection.UserData{},
 	}
 	for _, UserConnection := range UsersData {
-		current := mapUserConnection(UserConnection)
-		response.UserConnections = append(response.UserConnections, current)
+		current := mapUserData(UserConnection)
+		response.UserData = append(response.UserData, current)
 	}
 	return response, nil
 }
 func (handler *UserDataHandler) GetDataByUserId(ctx context.Context, id int) (userData domain.UserData) {
-	UsersData, _ := handler.user_service.GetDataById(id)
+	UsersData, _ := handler.user_service.GetUserDataById(id)
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(id))
-	return UsersData
+	return *UsersData
 }
 
 func extractHeader(ctx context.Context, header string) (string, error) {

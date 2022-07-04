@@ -3,7 +3,6 @@ package persistence
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/logger"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -30,8 +29,9 @@ func NewUserDataMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, logg
 }
 
 func (store *UserDataMongoDBStore) GetByUserId(id int) (*domain.UserData, error) {
-	filter := bson.M{"user_id": id}
-	return store.filterOne(filter)
+	//filter := bson.M{"user_id": id}
+	//return store.filterOne(filter)
+	return nil, nil
 }
 
 func (store *UserDataMongoDBStore) GetAll() ([]*domain.UserData, error) {
@@ -46,14 +46,13 @@ func (store *UserDataMongoDBStore) GetByUserToken(token string) (*domain.UserDat
 	return nil, nil
 }
 
-func (store *UserDataMongoDBStore) Insert(userData *UserData) (*domain.UserData, error) {
+func (store *UserDataMongoDBStore) Insert(userData *domain.UserData) error {
 	//filter := bson.M{"user_id": id}
 	//return store.filterOne(filter)
-	return nil, nil
+	return nil
 }
 
-func (store *UserDataMongoDBStore) AddToken(userData *UserData, newToken string) (*domain.UserData, error) {
+func (store *UserDataMongoDBStore) AddToken(userData *domain.UserData, newToken string) {
 	//filter := bson.M{"user_id": id}
 	//return store.filterOne(filter)
-	return nil, nil
 }

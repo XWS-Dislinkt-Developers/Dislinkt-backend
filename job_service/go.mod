@@ -1,4 +1,4 @@
-module github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service
+module github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service
 
 go 1.18
 

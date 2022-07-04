@@ -12,19 +12,18 @@ type JobService struct {
 	loggerError *logg.Logger
 }
 
-func NewJobServiceService(userstore domain.UserDataStore, jobstore domain.JobOfferStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *JobService {
+func NewJobService(userstore domain.UserDataStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *JobService {
 	return &JobService{
 		userstore:   userstore,
-		jobstore:    jobstore,
 		loggerInfo:  loggerInfo,
 		loggerError: loggerError,
 	}
 }
 
-func (service *JobService) GetAll() ([]*domain.UserDataStore, error) {
+func (service *JobService) GetAll() ([]*domain.UserData, error) {
 	return service.userstore.GetAll()
 }
 
-func (service *JobService) GetUserDataById(idUser int) (*domain.UserDataStore, error) {
+func (service *JobService) GetUserDataById(idUser int) (*domain.UserData, error) {
 	return service.userstore.GetByUserId(idUser)
 }
