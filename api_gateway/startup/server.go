@@ -101,9 +101,10 @@ func (server *Server) initUserFeedHandler() {
 
 func (server *Server) Start() {
 
-	ch := handlers.CORS(handlers.AllowedOrigins([]string{"*"}),
+	ch := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
-		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin"}),
+		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin", "Authorization"}),
 	)
 
 	//HTTPS
