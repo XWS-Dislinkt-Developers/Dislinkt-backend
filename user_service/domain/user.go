@@ -1,6 +1,16 @@
 package domain
 
-import "time"
+import (
+	"github.com/golang-jwt/jwt"
+	"time"
+)
+
+type JwtClaims struct {
+	Id       int
+	Username string
+	Role     string
+	jwt.StandardClaims
+}
 
 type User struct {
 	ID               int       `json:"id" ,gorm:"primaryKey,autoIncrement:true" `

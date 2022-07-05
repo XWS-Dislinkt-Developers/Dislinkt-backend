@@ -30,6 +30,16 @@ service UserService{
       body:"name"
     };
   }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse){
+    option (google.api.http) = {
+      post: "/getUserById"
+    };
+  }
+
+
+
+
+
   rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
     option (google.api.http) = {
       post: "/updatePersonalData"
@@ -166,4 +176,13 @@ message GetBySearchRequest {
 
 message GetBySearchResponse {
   repeated User users = 1;
+}
+
+
+message GetUserRequest {
+
+}
+
+message GetUserResponse {
+  User user = 1;
 }

@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
@@ -9,6 +10,7 @@ import (
 	app_user "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/logger"
+	"github.com/golang-jwt/jwt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -145,6 +147,27 @@ func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllReque
 	return response, nil
 }
 
+func (handler *UsersHandler) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := validateToken(token)
+
+	user, err := handler.service.Get(claims.Id)
+	if err != nil || user == nil {
+		return nil, err
+	}
+	response := &pb.GetUserResponse{
+		User: &pb.User{},
+	}
+	current := mapUser(user)
+	//response.User = append(response.Users, current)
+	response.User = current
+	return response, nil
+
+}
+
 func (handler *UsersHandler) GetBySearch(ctx context.Context, request *pb.GetBySearchRequest) (*pb.GetBySearchResponse, error) {
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {
@@ -221,4 +244,31 @@ func extractHeader(ctx context.Context, header string) (string, error) {
 	}
 
 	return authHeaders[0], nil
+}
+
+func validateToken(signedToken string) (claims *domain.JwtClaims, err error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&domain.JwtClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte("Key"), nil
+		},
+	)
+
+	if err != nil {
+		return
+	}
+
+	claims, ok := token.Claims.(*domain.JwtClaims)
+
+	if !ok {
+		return nil, errors.New("couldn't parse claims")
+	}
+
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		return nil, errors.New("JWT is expired")
+	}
+
+	return claims, nil
+
 }
