@@ -55,6 +55,12 @@ service UserPostService{
       get: "/getUserPosts/{id}"
     };
   }
+
+  rpc GetPostsForLoggedUserProfile(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/getPostsForLoggedUser"
+    };
+  }
 }
 
 message GetUserPostsRequest {

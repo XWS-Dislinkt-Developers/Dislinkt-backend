@@ -111,3 +111,16 @@ func (service *UserPostService) UpdateReaction(reaction *domain.Reaction, userPo
 func (service *UserPostService) GetUserPosts(idUser int) ([]*domain.UserPost, error) {
 	return service.store.GetPostsByUserId(idUser)
 }
+
+func (service *UserPostService) GetPostsForLoggedUserProfile(idUser int) ([]*domain.UserPost, error) {
+	posts := make([]*domain.UserPost, 0)
+	allPosts, _ := service.GetAll()
+
+	for _, post := range allPosts {
+		if post.UserId == idUser {
+			posts = append(posts, post)
+		}
+	}
+
+	return posts, nil
+}

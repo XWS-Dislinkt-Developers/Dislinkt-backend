@@ -139,3 +139,7 @@ INFO | 2022-07-05 16:17:52 | User_connection_grpc_handler: GAC | UI 13
 INFO | 2022-07-05 16:19:37 | User_connection_grpc_handler: GAC | UI 13 
 INFO | 2022-07-05 16:20:15 | User_connection_grpc_handler: GAC | UI 13 
 INFO | 2022-07-05 16:20:41 | User_connection_grpc_handler: GAC | UI 13 
+INFO | 2022-07-05 17:26:04 | User_connection_mongodb_store: USCID | UI 13 
+INFO | 2022-07-05 17:26:04 | User_connection_mongodb_store: USCID | UI 12 
+INFO | 2022-07-05 17:26:04 | User_connection_mongodb_store: USCID | UI 14 
+INFO | 2022-07-05 17:26:04 | User_connection_mongodb_store: USCID | UI 4 
