@@ -115,3 +115,6 @@ INFO | 2022-07-03 19:36:13 | Auth_service: EFAS
 INFO | 2022-07-03 19:38:41 | User_postgres_store: UIR  
 INFO | 2022-07-03 19:38:41 | Confirmation_token_postgres_store: CTSD  
 INFO | 2022-07-03 19:38:43 | Auth_service: EFAS 
+INFO | 2022-07-05 00:08:26 | Auth_service: ULI 13 
+INFO | 2022-07-05 01:12:32 | Auth_service: ULI 13 
+INFO | 2022-07-05 01:47:58 | Auth_service: ULI 13 

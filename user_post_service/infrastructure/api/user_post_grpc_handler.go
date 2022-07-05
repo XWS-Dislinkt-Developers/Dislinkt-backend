@@ -147,17 +147,15 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 }
 
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	header, _ := extractHeader(ctx, "authorization")
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
 
 	userPosts, err := handler.post_service.GetAll()
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FGAPU | UI  " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI  " + strconv.Itoa(claims.Id))
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}
