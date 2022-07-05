@@ -9,6 +9,8 @@ import (
 	pbCPost "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"net/http"
+	"sort"
+	"strconv"
 )
 
 type UserFeedHandler struct {
@@ -24,18 +26,22 @@ func NewUserFeedHandler(postClientAddress, connectionClientAddress string) *User
 }
 
 func (handler *UserFeedHandler) Init(mux *runtime.ServeMux) {
-	err := mux.HandlePath("GET", "/userFeed", handler.HandleUserFeed)
+	err := mux.HandlePath("GET", "/userFeed/{idUser}", handler.HandleUserFeed)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+	idUser := pathParams["idUser"]
+	id, _ := strconv.ParseInt(idUser, 10, 64)
 
 	//TODO: endpoint koji iz servisa konekcija vraca sve konekcije za ulogovanog korisnika
 	connectinClient := services.NewConnectionClient(handler.connectionClientAddress)
 
-	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.GetAllRequest{})
+	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.FollowRequest{
+		IdUser: id,
+	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -70,7 +76,11 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 			}
 		}
 	}
-	
+
+	sort.Slice(feed, func(i, j int) bool {
+		return feed[i].CreatedAt.After(feed[j].CreatedAt)
+	})
+
 	ret := &domain.Fs{
 		Feed: feed,
 	}

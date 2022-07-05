@@ -81,14 +81,14 @@ func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_co
 	return response, nil
 }
 
-func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.GetAllRequest) (*pb_connection.Connections, error) {
+func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.Connections, error) {
 	//header, _ := extractHeader(ctx, "authorization")
 	//var prefix = "Bearer "
 	//var token = strings.TrimPrefix(header, prefix)
 	//claims, _ := handler.auth_service.ValidateToken(token)
 
-	UserConnection, _ := handler.connection_service.GetConnectionsById(13)
-	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(13))
+	UserConnection, _ := handler.connection_service.GetConnectionsById(int(request.IdUser))
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(int(request.IdUser)))
 
 	response := &pb_connection.Connections{
 		Connections: &pb_connection.Connection{

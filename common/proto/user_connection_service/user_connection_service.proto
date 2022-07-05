@@ -33,9 +33,9 @@ service UserConnectionService {
       put: "/decline/{idUser}"
     };
   };
-  rpc GetConnectionsByUser(GetAllRequest) returns (Connections){
+  rpc GetConnectionsByUser(FollowRequest) returns (Connections){
     option (google.api.http) = {
-      get: "/connections"
+      get: "/connections/{idUser}"
     };
   }
 }
