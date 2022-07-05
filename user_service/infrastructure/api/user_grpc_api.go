@@ -154,7 +154,7 @@ func (handler *UsersHandler) GetUser(ctx context.Context, request *pb.GetUserReq
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := validateToken(token)
 
-	user, err := handler.service.Get(claims.Id)
+	user, err := handler.service.GetById(claims.Id)
 	if err != nil || user == nil {
 		return nil, err
 	}
@@ -254,11 +254,9 @@ func validateToken(signedToken string) (claims *domain.JwtClaims, err error) {
 			return []byte("Key"), nil
 		},
 	)
-
 	if err != nil {
 		return
 	}
-
 	claims, ok := token.Claims.(*domain.JwtClaims)
 
 	if !ok {
