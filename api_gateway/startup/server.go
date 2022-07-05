@@ -69,6 +69,7 @@ func (server *Server) initCustomHandlers() {
 	server.initRegistrationHandler()
 	server.initPasswordRecoveryHandler()
 	server.initUserFeedHandler()
+	server.initUserFeedForPublicProfilesHandler()
 }
 
 func (server *Server) initAccountActivationHandler() {
@@ -97,6 +98,13 @@ func (server *Server) initUserFeedHandler() {
 	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
 	feedHandler := apiPost.NewUserFeedHandler(postEndpoint, connectionEndpoint)
 	feedHandler.Init(server.mux)
+}
+
+func (server *Server) initUserFeedForPublicProfilesHandler() {
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	feedUsersHandler := apiPost.NewUserFeedForPublicProfilesHandler(postEndpoint, userEndpoint)
+	feedUsersHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

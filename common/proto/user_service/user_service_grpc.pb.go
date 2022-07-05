@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: user_service.proto
+// source: user_service/user_service.proto
 
 package user_service
 
@@ -29,6 +29,7 @@ type UserServiceClient interface {
 	UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
+	GetAllPublicProfiles(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllPublicProfilesResponse, error)
 }
 
 type userServiceClient struct {
@@ -102,6 +103,15 @@ func (c *userServiceClient) UpdateUserSkillsInterests(ctx context.Context, in *U
 	return out, nil
 }
 
+func (c *userServiceClient) GetAllPublicProfiles(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllPublicProfilesResponse, error) {
+	out := new(GetAllPublicProfilesResponse)
+	err := c.cc.Invoke(ctx, "/user_service.UserService/GetAllPublicProfiles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -113,6 +123,7 @@ type UserServiceServer interface {
 	UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
+	GetAllPublicProfiles(context.Context, *GetAllRequest) (*GetAllPublicProfilesResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -140,6 +151,9 @@ func (UnimplementedUserServiceServer) UpdateUserWorkEducation(context.Context, *
 }
 func (UnimplementedUserServiceServer) UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserSkillsInterests not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllPublicProfiles(context.Context, *GetAllRequest) (*GetAllPublicProfilesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllPublicProfiles not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -280,6 +294,24 @@ func _UserService_UpdateUserSkillsInterests_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetAllPublicProfiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetAllPublicProfiles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_service.UserService/GetAllPublicProfiles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetAllPublicProfiles(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -315,7 +347,11 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateUserSkillsInterests",
 			Handler:    _UserService_UpdateUserSkillsInterests_Handler,
 		},
+		{
+			MethodName: "GetAllPublicProfiles",
+			Handler:    _UserService_GetAllPublicProfiles_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user_service.proto",
+	Metadata: "user_service/user_service.proto",
 }

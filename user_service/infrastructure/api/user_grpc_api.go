@@ -130,6 +130,20 @@ func (handler *UsersHandler) UpdateUserSkillsInterests(ctx context.Context, requ
 	}, nil
 }
 
+func (handler *UsersHandler) GetAllPublicProfiles(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllPublicProfilesResponse, error) {
+	users, err := handler.service.GetAllPublicProfiles()
+	if err != nil || *users == nil {
+		return nil, err
+	}
+	response := &pb.GetAllPublicProfilesResponse{
+		Users: &pb.Users{},
+	}
+	for _, user := range *users {
+		response.Users.UserId = append(response.Users.UserId, int64(user))
+	}
+	return response, nil
+}
+
 func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {

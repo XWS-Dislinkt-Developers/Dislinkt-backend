@@ -33,7 +33,7 @@ func (handler *UserFeedHandler) Init(mux *runtime.ServeMux) {
 }
 
 func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	idUser := pathParams["idUser"]
+	idUser := pathParams["idUser"] //ulogovani korisnik
 	id, _ := strconv.ParseInt(idUser, 10, 64)
 
 	//TODO: endpoint koji iz servisa konekcija vraca sve konekcije za ulogovanog korisnika
