@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/message_service";
+
+package message_service;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service MessageService {
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/messages"
+    };
+  };
+  rpc SendMessage(NewMessageRequest) returns (NewMessageResponse){
+    option (google.api.http) = {
+      post: "/sendMessage"
+      body: "message"
+    };
+  };
+  rpc GetMessageWithUser(GetMessageRequest) returns (GetMessageResponse){
+    option (google.api.http) = {
+      post: "/messages"
+      body: "otheruserid"
+    };
+  };
+
+
+}
+
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+
+}
+
+message NewMessageRequest {
+  Message message = 1;
+}
+
+message NewMessageResponse {
+  string response = 1;
+}
+
+message GetMessageRequest {
+  int64 otheruserid = 1;
+}
+
+message GetMessageResponse {
+  repeated Message messages = 1;
+}
+
+message Message {
+  int64 senderid = 1;
+  int64 receiverid = 2;
+  string content = 3;
+}
+
