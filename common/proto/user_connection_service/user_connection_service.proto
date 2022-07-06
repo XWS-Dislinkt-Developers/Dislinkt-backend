@@ -23,20 +23,21 @@ service UserConnectionService {
       put: "/unfollow/{idUser}"
     };
   };
-
-  //TODO: acceptConnectionRequest(izbrise iz liste request-ova, i doda u obe liste connection-a)
   rpc AcceptConnectionRequest(FollowRequest) returns (FollowResponse){
     option (google.api.http) = {
       put: "/accept/{idUser}"
     };
   };
-
-  //TODO: declineConnectionRequest(izbrise iz liste request-ova)
   rpc DeclineConnectionRequest(FollowRequest) returns (FollowResponse){
     option (google.api.http) = {
       put: "/decline/{idUser}"
     };
   };
+  rpc GetConnectionsByUser(FollowRequest) returns (Connections){
+    option (google.api.http) = {
+      get: "/connections/{idUser}"
+    };
+  }
 }
 
 message FollowRequest{
@@ -59,4 +60,12 @@ message UserConnection {
   bool private = 2;
   repeated int64 connections = 3;
   repeated int64 requests = 4;
+}
+
+message Connections {
+   Connection connections = 1;
+}
+
+message Connection {
+  repeated int64 connections = 1;
 }

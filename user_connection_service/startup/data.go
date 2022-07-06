@@ -6,15 +6,15 @@ import (
 
 var userConnections = []*domain.UserConnection{
 	{
-		UserId:  1,
+		UserId:  13,
 		Private: true,
 		Connections: []int{
-			3,
+			12, 14,
 		},
 		Requests: []int{4},
 	},
 	{
-		UserId:  2,
+		UserId:  12,
 		Private: false,
 		Connections: []int{
 			3, 4,
@@ -22,7 +22,7 @@ var userConnections = []*domain.UserConnection{
 		Requests: []int{},
 	},
 	{
-		UserId:  3,
+		UserId:  14,
 		Private: false,
 		Connections: []int{
 			2, 1,

@@ -130,9 +130,7 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 					}
 				}
 			}
-
 		}
-
 	}
 
 	response := &pb_post.GetAllResponse{
@@ -147,17 +145,35 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 }
 
 func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
+
+	userPosts, err := handler.post_service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	response := &pb_post.GetAllResponse{
+		UserPosts: []*pb_post.UserPost{},
+	}
+	for _, UserPost := range userPosts {
+		current := mapUserPost(UserPost)
+		response.UserPosts = append(response.UserPosts, current)
+	}
+	return response, nil
+}
+
+func (handler *UserPostHandler) GetPostsForLoggedUserProfile(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
 
-	userPosts, err := handler.post_service.GetAll()
+	userPosts, err := handler.post_service.GetPostsForLoggedUserProfile(claims.Id)
 	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: FGAPU | UI  " + strconv.Itoa(claims.Id))
 		return nil, err
 	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI  " + strconv.Itoa(claims.Id))
 	response := &pb_post.GetAllResponse{
 		UserPosts: []*pb_post.UserPost{},
 	}

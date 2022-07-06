@@ -46,7 +46,6 @@ func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*d
 	foundUser, _ := service.GetByUsername(dto.Username)
 	if foundUser != nil && foundUser.ID != userID {
 		service.loggerError.Logger.Error("User_service: USNAT  | UI " + strconv.Itoa(foundUser.ID))
-
 		return nil, errors.New("Username is already taken")
 	}
 
@@ -80,4 +79,17 @@ func (service *UserService) ChangePassword(email, password string) {
 func (service *UserService) HashPassword(password string) string {
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), 5)
 	return string(bytes)
+}
+
+func (service *UserService) GetAllPublicProfiles() (*[]int, error) {
+	users := make([]int, 0)
+	allUsers, _ := service.store.GetAll()
+
+	for _, user := range *allUsers {
+		if user.IsPrivateProfile != true && user.IsItConfirmed == true {
+			users = append(users, user.UserId)
+		}
+	}
+
+	return &users, nil
 }

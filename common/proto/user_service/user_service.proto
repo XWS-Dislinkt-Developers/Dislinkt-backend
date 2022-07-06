@@ -58,6 +58,19 @@ service UserService{
       body:"updateUserData"
     };
   }
+  rpc GetAllPublicProfiles(GetAllRequest) returns (GetAllPublicProfilesResponse){
+    option (google.api.http) = {
+      get: "/getPublicProfiles"
+    };
+  }
+}
+
+message  GetAllPublicProfilesResponse{
+  Users users = 1;
+}
+
+message Users{
+  repeated int64 userId = 1;
 }
 
 message ConfirmAccountRequest{

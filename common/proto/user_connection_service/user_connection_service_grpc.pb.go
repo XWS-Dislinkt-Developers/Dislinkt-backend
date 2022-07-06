@@ -25,10 +25,9 @@ type UserConnectionServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
 	Unfollow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	//TODO: acceptConnectionRequest(izbrise iz liste request-ova, i doda u obe liste connection-a)
 	AcceptConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	//TODO: declineConnectionRequest(izbrise iz liste request-ova)
 	DeclineConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
+	GetConnectionsByUser(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*Connections, error)
 }
 
 type userConnectionServiceClient struct {
@@ -84,6 +83,15 @@ func (c *userConnectionServiceClient) DeclineConnectionRequest(ctx context.Conte
 	return out, nil
 }
 
+func (c *userConnectionServiceClient) GetConnectionsByUser(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*Connections, error) {
+	out := new(Connections)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetConnectionsByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserConnectionServiceServer is the server API for UserConnectionService service.
 // All implementations must embed UnimplementedUserConnectionServiceServer
 // for forward compatibility
@@ -91,10 +99,9 @@ type UserConnectionServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	Follow(context.Context, *FollowRequest) (*FollowResponse, error)
 	Unfollow(context.Context, *FollowRequest) (*FollowResponse, error)
-	//TODO: acceptConnectionRequest(izbrise iz liste request-ova, i doda u obe liste connection-a)
 	AcceptConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error)
-	//TODO: declineConnectionRequest(izbrise iz liste request-ova)
 	DeclineConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error)
+	GetConnectionsByUser(context.Context, *FollowRequest) (*Connections, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -116,6 +123,9 @@ func (UnimplementedUserConnectionServiceServer) AcceptConnectionRequest(context.
 }
 func (UnimplementedUserConnectionServiceServer) DeclineConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeclineConnectionRequest not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) GetConnectionsByUser(context.Context, *FollowRequest) (*Connections, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsByUser not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -220,6 +230,24 @@ func _UserConnectionService_DeclineConnectionRequest_Handler(srv interface{}, ct
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserConnectionService_GetConnectionsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).GetConnectionsByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/GetConnectionsByUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).GetConnectionsByUser(ctx, req.(*FollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserConnectionService_ServiceDesc is the grpc.ServiceDesc for UserConnectionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -246,6 +274,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeclineConnectionRequest",
 			Handler:    _UserConnectionService_DeclineConnectionRequest_Handler,
+		},
+		{
+			MethodName: "GetConnectionsByUser",
+			Handler:    _UserConnectionService_GetConnectionsByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

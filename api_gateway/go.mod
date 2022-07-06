@@ -5,7 +5,9 @@ go 1.18
 replace github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common => ../common
 
 require (
+	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service v0.0.0-20220508215230-00f28c4f6d5f
 	github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common v0.0.0-20220508215230-00f28c4f6d5f
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/handlers v1.5.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	google.golang.org/grpc v1.46.0

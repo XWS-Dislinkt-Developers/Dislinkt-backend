@@ -9,7 +9,7 @@ import (
 var userPosts = []*domain.UserPost{
 	{
 		Id:        GetObjectId("507f1f77bcf86cd799439011"),
-		UserId:    1,
+		UserId:    12,
 		CreatedAt: time.Now(),
 		Text:      "First post!",
 		ImagePath: "imagepath..",
@@ -51,7 +51,7 @@ var userPosts = []*domain.UserPost{
 	},
 	{
 		Id:        GetObjectId("507f1f77bcf86cd799439012"),
-		UserId:    1,
+		UserId:    14,
 		CreatedAt: time.Now(),
 		Text:      "Second post!",
 		ImagePath: "imagepath..",
@@ -73,7 +73,7 @@ var userPosts = []*domain.UserPost{
 	},
 	{
 		Id:        GetObjectId("6276eb70d31c8f2272d2fbe5"),
-		UserId:    2,
+		UserId:    13,
 		CreatedAt: time.Now(),
 		Text:      "New post!",
 		ImagePath: "imagepath..",

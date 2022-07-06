@@ -31,6 +31,7 @@ type UserPostServiceClient interface {
 	// TODO: AddCommentToUserPost
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	GetUserPosts(ctx context.Context, in *GetUserPostsRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetPostsForLoggedUserProfile(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 }
 
 type userPostServiceClient struct {
@@ -104,6 +105,15 @@ func (c *userPostServiceClient) GetUserPosts(ctx context.Context, in *GetUserPos
 	return out, nil
 }
 
+func (c *userPostServiceClient) GetPostsForLoggedUserProfile(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+	out := new(GetAllResponse)
+	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/GetPostsForLoggedUserProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserPostServiceServer is the server API for UserPostService service.
 // All implementations must embed UnimplementedUserPostServiceServer
 // for forward compatibility
@@ -117,6 +127,7 @@ type UserPostServiceServer interface {
 	// TODO: AddCommentToUserPost
 	AddComment(context.Context, *AddCommentRequest) (*GetResponse, error)
 	GetUserPosts(context.Context, *GetUserPostsRequest) (*GetAllResponse, error)
+	GetPostsForLoggedUserProfile(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	mustEmbedUnimplementedUserPostServiceServer()
 }
 
@@ -144,6 +155,9 @@ func (UnimplementedUserPostServiceServer) AddComment(context.Context, *AddCommen
 }
 func (UnimplementedUserPostServiceServer) GetUserPosts(context.Context, *GetUserPostsRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserPosts not implemented")
+}
+func (UnimplementedUserPostServiceServer) GetPostsForLoggedUserProfile(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPostsForLoggedUserProfile not implemented")
 }
 func (UnimplementedUserPostServiceServer) mustEmbedUnimplementedUserPostServiceServer() {}
 
@@ -284,6 +298,24 @@ func _UserPostService_GetUserPosts_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserPostService_GetPostsForLoggedUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPostServiceServer).GetPostsForLoggedUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_post_service.UserPostService/GetPostsForLoggedUserProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPostServiceServer).GetPostsForLoggedUserProfile(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserPostService_ServiceDesc is the grpc.ServiceDesc for UserPostService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -318,6 +350,10 @@ var UserPostService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserPosts",
 			Handler:    _UserPostService_GetUserPosts_Handler,
+		},
+		{
+			MethodName: "GetPostsForLoggedUserProfile",
+			Handler:    _UserPostService_GetPostsForLoggedUserProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
