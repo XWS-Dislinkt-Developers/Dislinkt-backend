@@ -23,6 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type JobServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error)
+	PostJob(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error)
+	PostJobCompany(ctx context.Context, in *PostJobCompanyRequest, opts ...grpc.CallOption) (*PostJobCompanyResponse, error)
 }
 
 type jobServiceClient struct {
@@ -42,11 +45,41 @@ func (c *jobServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts .
 	return out, nil
 }
 
+func (c *jobServiceClient) GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error) {
+	out := new(GetTokenResponse)
+	err := c.cc.Invoke(ctx, "/job_service.JobService/GetToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobServiceClient) PostJob(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error) {
+	out := new(PostJobResponse)
+	err := c.cc.Invoke(ctx, "/job_service.JobService/PostJob", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobServiceClient) PostJobCompany(ctx context.Context, in *PostJobCompanyRequest, opts ...grpc.CallOption) (*PostJobCompanyResponse, error) {
+	out := new(PostJobCompanyResponse)
+	err := c.cc.Invoke(ctx, "/job_service.JobService/PostJobCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility
 type JobServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error)
+	PostJob(context.Context, *PostJobRequest) (*PostJobResponse, error)
+	PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -56,6 +89,15 @@ type UnimplementedJobServiceServer struct {
 
 func (UnimplementedJobServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedJobServiceServer) GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetToken not implemented")
+}
+func (UnimplementedJobServiceServer) PostJob(context.Context, *PostJobRequest) (*PostJobResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostJob not implemented")
+}
+func (UnimplementedJobServiceServer) PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostJobCompany not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 
@@ -88,6 +130,60 @@ func _JobService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_GetToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).GetToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job_service.JobService/GetToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).GetToken(ctx, req.(*GetTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JobService_PostJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).PostJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job_service.JobService/PostJob",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).PostJob(ctx, req.(*PostJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _JobService_PostJobCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostJobCompanyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).PostJobCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job_service.JobService/PostJobCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).PostJobCompany(ctx, req.(*PostJobCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +194,18 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _JobService_GetAll_Handler,
+		},
+		{
+			MethodName: "GetToken",
+			Handler:    _JobService_GetToken_Handler,
+		},
+		{
+			MethodName: "PostJob",
+			Handler:    _JobService_PostJob_Handler,
+		},
+		{
+			MethodName: "PostJobCompany",
+			Handler:    _JobService_PostJobCompany_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

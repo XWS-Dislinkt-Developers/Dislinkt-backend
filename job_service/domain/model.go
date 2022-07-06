@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/golang-jwt/jwt"
+
 type UserData struct {
 	Id     int    `bson:"id"`
 	UserId int    `bson:"user_id"`
@@ -7,9 +9,17 @@ type UserData struct {
 }
 
 type JobOffer struct {
-	Id          int    `bson:"id"`
-	UserId      int    `bson:"user_id"`
-	Company     string `bson:"company"`
-	Position    string `bson:"position"`
-	Description string `bson:"description"`
+	Id              int    `bson:"id"`
+	UserId          int    `bson:"user_id"`
+	Company         string `bson:"company"`
+	Position        string `bson:"position"`
+	Description     string `bson:"description"`
+	ExperienceLevel string `bson:"experience_level"`
+}
+
+type JwtClaims struct {
+	Id       int
+	Username string
+	Role     string
+	jwt.StandardClaims
 }

@@ -42,11 +42,12 @@ func (server *Server) Start() {
 
 	mongoClient := server.initMongoClient()
 	userDataStore := server.initUserDataStore(mongoClient, loggerInfo, loggerError)
+	jobDataStore := server.initJobDataStore(mongoClient, loggerInfo, loggerError)
 	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
 	//replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
 	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
 
-	jobService := server.initJobService(userDataStore, loggerInfo, loggerError)
+	jobService := server.initJobService(userDataStore, jobDataStore, loggerInfo, loggerError)
 
 	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
@@ -74,6 +75,18 @@ func (server *Server) initUserDataStore(client *mongo.Client, loggerInfo *logg.L
 			log.Fatal(err)
 		}
 	}
+	return store
+}
+
+func (server *Server) initJobDataStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.JobOfferStore {
+	store := persistence.NewJobMongoDBStore(client, loggerInfo, loggerError)
+	//store.DeleteAll()
+	//for _, userConnection := range userData {
+	//	err := store.Insert(userConnection)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
+	//}
 	return store
 }
 
@@ -106,8 +119,8 @@ func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subs
 	return orchestrator
 }
 */
-func (server *Server) initJobService(store domain.UserDataStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.JobService {
-	return application.NewJobService(store, loggerInfo, loggerError)
+func (server *Server) initJobService(store domain.UserDataStore, jobstore domain.JobOfferStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.JobService {
+	return application.NewJobService(store, jobstore, loggerInfo, loggerError)
 }
 
 /*
