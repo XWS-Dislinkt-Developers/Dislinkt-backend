@@ -131,3 +131,11 @@ INFO | 2022-07-05 21:29:17 | Auth_service: ULI 3
 INFO | 2022-07-05 21:29:17 | Auth_service: ULI 3 
 INFO | 2022-07-05 21:41:10 | Auth_service: ULI 3 
 INFO | 2022-07-05 21:41:10 | Auth_service: ULI 3 
+INFO | 2022-07-06 10:55:50 | User_postgres_store: UIR  
+INFO | 2022-07-06 10:55:50 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-06 10:55:52 | Auth_service: EFAS 
+INFO | 2022-07-06 10:56:11 | User_postgres_store: UCA | UI  1 
+INFO | 2022-07-06 10:56:11 | Confirmation_token_postgres_store: Delete - CTDFD | UI 1 
+INFO | 2022-07-06 10:56:11 | Auth_service: UCA | UI 1 
+INFO | 2022-07-06 10:56:15 | Auth_service: ULI 1 
+INFO | 2022-07-06 10:56:15 | Auth_service: ULI 1 

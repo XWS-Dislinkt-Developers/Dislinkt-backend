@@ -52,3 +52,7 @@ type UpdateUserWAEDto struct {
 	Work      string `json:"work"`
 	Education string `json:"education"`
 }
+
+type UpdateUserPrivacyDto struct {
+	IsPrivateProfile bool `json:"isPrivateProfile"`
+}
