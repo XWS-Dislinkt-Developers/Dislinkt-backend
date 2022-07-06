@@ -3,6 +3,7 @@ package post_service
 import (
 	"context"
 	"encoding/json"
+	authService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/services"
 	pbConn "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
@@ -10,7 +11,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"net/http"
 	"sort"
-	"strconv"
+	"strings"
 )
 
 type UserFeedHandler struct {
@@ -26,21 +27,24 @@ func NewUserFeedHandler(postClientAddress, connectionClientAddress string) *User
 }
 
 func (handler *UserFeedHandler) Init(mux *runtime.ServeMux) {
-	err := mux.HandlePath("GET", "/userFeed/{idUser}", handler.HandleUserFeed)
+	err := mux.HandlePath("GET", "/userFeed", handler.HandleUserFeed)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
-	idUser := pathParams["idUser"] //ulogovani korisnik
-	id, _ := strconv.ParseInt(idUser, 10, 64)
+
+	header := r.Header.Get("Authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := authService.ValidateToken(token)
 
 	//TODO: endpoint koji iz servisa konekcija vraca sve konekcije za ulogovanog korisnika
 	connectinClient := services.NewConnectionClient(handler.connectionClientAddress)
 
 	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.FollowRequest{
-		IdUser: id,
+		IdUser: int64(claims.Id),
 	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
