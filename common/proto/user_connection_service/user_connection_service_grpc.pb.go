@@ -23,11 +23,13 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserConnectionServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	Unfollow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	AcceptConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	DeclineConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error)
-	GetConnectionsByUser(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*Connections, error)
+	Follow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	Unfollow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	AcceptConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	DeclineConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	GetConnectionsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*Connections, error)
+	BlockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	UnblockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 }
 
 type userConnectionServiceClient struct {
@@ -47,8 +49,8 @@ func (c *userConnectionServiceClient) GetAll(ctx context.Context, in *GetAllRequ
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) Follow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
-	out := new(FollowResponse)
+func (c *userConnectionServiceClient) Follow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/Follow", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +58,8 @@ func (c *userConnectionServiceClient) Follow(ctx context.Context, in *FollowRequ
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) Unfollow(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
-	out := new(FollowResponse)
+func (c *userConnectionServiceClient) Unfollow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/Unfollow", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -65,8 +67,8 @@ func (c *userConnectionServiceClient) Unfollow(ctx context.Context, in *FollowRe
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) AcceptConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
-	out := new(FollowResponse)
+func (c *userConnectionServiceClient) AcceptConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/AcceptConnectionRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,8 +76,8 @@ func (c *userConnectionServiceClient) AcceptConnectionRequest(ctx context.Contex
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) DeclineConnectionRequest(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*FollowResponse, error) {
-	out := new(FollowResponse)
+func (c *userConnectionServiceClient) DeclineConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/DeclineConnectionRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -83,9 +85,27 @@ func (c *userConnectionServiceClient) DeclineConnectionRequest(ctx context.Conte
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) GetConnectionsByUser(ctx context.Context, in *FollowRequest, opts ...grpc.CallOption) (*Connections, error) {
+func (c *userConnectionServiceClient) GetConnectionsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*Connections, error) {
 	out := new(Connections)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetConnectionsByUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userConnectionServiceClient) BlockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/BlockUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userConnectionServiceClient) UnblockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error) {
+	out := new(ConnectionsResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/UnblockUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,11 +117,13 @@ func (c *userConnectionServiceClient) GetConnectionsByUser(ctx context.Context, 
 // for forward compatibility
 type UserConnectionServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	Follow(context.Context, *FollowRequest) (*FollowResponse, error)
-	Unfollow(context.Context, *FollowRequest) (*FollowResponse, error)
-	AcceptConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error)
-	DeclineConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error)
-	GetConnectionsByUser(context.Context, *FollowRequest) (*Connections, error)
+	Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	Unfollow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	AcceptConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	DeclineConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	GetConnectionsByUser(context.Context, *UserIdRequest) (*Connections, error)
+	BlockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -112,20 +134,26 @@ type UnimplementedUserConnectionServiceServer struct {
 func (UnimplementedUserConnectionServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) Follow(context.Context, *FollowRequest) (*FollowResponse, error) {
+func (UnimplementedUserConnectionServiceServer) Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) Unfollow(context.Context, *FollowRequest) (*FollowResponse, error) {
+func (UnimplementedUserConnectionServiceServer) Unfollow(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Unfollow not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) AcceptConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error) {
+func (UnimplementedUserConnectionServiceServer) AcceptConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AcceptConnectionRequest not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) DeclineConnectionRequest(context.Context, *FollowRequest) (*FollowResponse, error) {
+func (UnimplementedUserConnectionServiceServer) DeclineConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeclineConnectionRequest not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) GetConnectionsByUser(context.Context, *FollowRequest) (*Connections, error) {
+func (UnimplementedUserConnectionServiceServer) GetConnectionsByUser(context.Context, *UserIdRequest) (*Connections, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConnectionsByUser not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) BlockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockUser not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnblockUser not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -159,7 +187,7 @@ func _UserConnectionService_GetAll_Handler(srv interface{}, ctx context.Context,
 }
 
 func _UserConnectionService_Follow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -171,13 +199,13 @@ func _UserConnectionService_Follow_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/user_connection_service.UserConnectionService/Follow",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).Follow(ctx, req.(*FollowRequest))
+		return srv.(UserConnectionServiceServer).Follow(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserConnectionService_Unfollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -189,13 +217,13 @@ func _UserConnectionService_Unfollow_Handler(srv interface{}, ctx context.Contex
 		FullMethod: "/user_connection_service.UserConnectionService/Unfollow",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).Unfollow(ctx, req.(*FollowRequest))
+		return srv.(UserConnectionServiceServer).Unfollow(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserConnectionService_AcceptConnectionRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -207,13 +235,13 @@ func _UserConnectionService_AcceptConnectionRequest_Handler(srv interface{}, ctx
 		FullMethod: "/user_connection_service.UserConnectionService/AcceptConnectionRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).AcceptConnectionRequest(ctx, req.(*FollowRequest))
+		return srv.(UserConnectionServiceServer).AcceptConnectionRequest(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserConnectionService_DeclineConnectionRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -225,13 +253,13 @@ func _UserConnectionService_DeclineConnectionRequest_Handler(srv interface{}, ct
 		FullMethod: "/user_connection_service.UserConnectionService/DeclineConnectionRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).DeclineConnectionRequest(ctx, req.(*FollowRequest))
+		return srv.(UserConnectionServiceServer).DeclineConnectionRequest(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _UserConnectionService_GetConnectionsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FollowRequest)
+	in := new(UserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -243,7 +271,43 @@ func _UserConnectionService_GetConnectionsByUser_Handler(srv interface{}, ctx co
 		FullMethod: "/user_connection_service.UserConnectionService/GetConnectionsByUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).GetConnectionsByUser(ctx, req.(*FollowRequest))
+		return srv.(UserConnectionServiceServer).GetConnectionsByUser(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserConnectionService_BlockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).BlockUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/BlockUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).BlockUser(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserConnectionService_UnblockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).UnblockUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/UnblockUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).UnblockUser(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -278,6 +342,14 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetConnectionsByUser",
 			Handler:    _UserConnectionService_GetConnectionsByUser_Handler,
+		},
+		{
+			MethodName: "BlockUser",
+			Handler:    _UserConnectionService_BlockUser_Handler,
+		},
+		{
+			MethodName: "UnblockUser",
+			Handler:    _UserConnectionService_UnblockUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

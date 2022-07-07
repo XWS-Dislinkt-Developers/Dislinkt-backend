@@ -39,7 +39,7 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 		} else {
 			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
-			service.store.AddConnections(UserConnection, LoggedUserConnection)
+			service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 		}
 	}
 }
@@ -68,7 +68,7 @@ func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
 
 	UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
 	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
-	service.store.AddConnections(UserConnection, LoggedUserConnection)
+	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 }
 
 func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, idUser int) {
@@ -80,7 +80,7 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 
 	UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 	LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
-	service.store.AddConnections(UserConnection, LoggedUserConnection)
+	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 }
 
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
@@ -88,6 +88,43 @@ func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int,
 
 	LoggedUserConnection.Requests = findAndDelete(LoggedUserConnection.Requests, idUser)
 	service.store.UpdateRequestConnection(LoggedUserConnection)
+}
+
+func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
+	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	UserConnection, _ := service.store.GetByUserId(idUser)
+
+	if !service.connectionDoesntExist(LoggedUserConnection, UserConnection) {
+		LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
+		UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
+		service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+	}
+	if !service.requestDoesntExist(LoggedUserConnection, UserConnection) {
+		UserConnection.Requests = findAndDelete(UserConnection.Requests, idLoggedUser)
+		service.store.UpdateRequestConnection(UserConnection)
+	}
+	LoggedUserConnection.Blocked = append(UserConnection.Blocked, idUser)
+	service.store.UpdateBlockedConnection(LoggedUserConnection)
+}
+
+func (service *UserConnectionService) UnblockUser(idLoggedUser int, idUser int) {
+	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	LoggedUserConnection.Blocked = findAndDelete(LoggedUserConnection.Blocked, idUser)
+	service.store.UpdateBlockedConnection(LoggedUserConnection)
+}
+
+func (service *UserConnectionService) BlockedDoesntExist(loggedUser *domain.UserConnection, user *domain.UserConnection) bool {
+	for _, c := range loggedUser.Blocked {
+		if c == user.UserId {
+			return false
+		}
+	}
+	for _, c := range user.Blocked {
+		if c == loggedUser.UserId {
+			return false
+		}
+	}
+	return true
 }
 
 func findAndDelete(s []int, item int) []int {

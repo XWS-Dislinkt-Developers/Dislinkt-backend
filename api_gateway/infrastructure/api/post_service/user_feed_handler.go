@@ -43,7 +43,7 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 	//TODO: endpoint koji iz servisa konekcija vraca sve konekcije za ulogovanog korisnika
 	connectinClient := services.NewConnectionClient(handler.connectionClientAddress)
 
-	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.FollowRequest{
+	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.UserIdRequest{
 		IdUser: int64(claims.Id),
 	})
 	if err != nil {

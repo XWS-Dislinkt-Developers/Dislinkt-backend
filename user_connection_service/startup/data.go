@@ -11,7 +11,9 @@ var userConnections = []*domain.UserConnection{
 		Connections: []int{
 			12, 14,
 		},
-		Requests: []int{4},
+		Requests:        []int{4},
+		WaitingResponse: []int{},
+		Blocked:         []int{},
 	},
 	{
 		UserId:  12,
@@ -19,7 +21,9 @@ var userConnections = []*domain.UserConnection{
 		Connections: []int{
 			3, 4,
 		},
-		Requests: []int{},
+		Requests:        []int{},
+		WaitingResponse: []int{},
+		Blocked:         []int{},
 	},
 	{
 		UserId:  14,
@@ -27,7 +31,9 @@ var userConnections = []*domain.UserConnection{
 		Connections: []int{
 			2, 1,
 		},
-		Requests: []int{},
+		Requests:        []int{},
+		WaitingResponse: []int{},
+		Blocked:         []int{},
 	},
 	{
 		UserId:  4,
@@ -35,6 +41,8 @@ var userConnections = []*domain.UserConnection{
 		Connections: []int{
 			2,
 		},
-		Requests: []int{},
+		Requests:        []int{},
+		WaitingResponse: []int{},
+		Blocked:         []int{},
 	},
 }
