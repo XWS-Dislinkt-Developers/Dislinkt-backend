@@ -35,7 +35,9 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	if service.connectionDoesntExist(LoggedUserConnection, UserConnection) && service.requestDoesntExist(LoggedUserConnection, UserConnection) {
 		if UserConnection.Private {
 			UserConnection.Requests = append(UserConnection.Requests, idLoggedUser)
+			LoggedUserConnection.WaitingResponse = append(LoggedUserConnection.WaitingResponse, idUser)
 			service.store.UpdateRequestConnection(UserConnection)
+			service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
 		} else {
 			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
@@ -81,6 +83,8 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 	UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 	LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
 	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+	UserConnection.WaitingResponse = append(UserConnection.WaitingResponse, idLoggedUser)
+	service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
 }
 
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {

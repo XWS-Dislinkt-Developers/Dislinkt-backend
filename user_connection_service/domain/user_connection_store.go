@@ -8,4 +8,5 @@ type UserConnectionStore interface {
 	UpdateRequestConnection(userConnection *UserConnection)
 	UpdateConnections(userConnection *UserConnection, loggedUserConnection *UserConnection)
 	UpdateBlockedConnection(connection *UserConnection)
+	UpdateWaitingResponseConnection(connection *UserConnection)
 }

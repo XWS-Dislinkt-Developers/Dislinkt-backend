@@ -81,6 +81,18 @@ func (store *UserConnectionMongoDBStore) UpdateRequestConnection(userConnection 
 	}
 }
 
+func (store *UserConnectionMongoDBStore) UpdateWaitingResponseConnection(userConnection *domain.UserConnection) {
+	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"waiting_response", userConnection.WaitingResponse}}}})
+	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTUCID | UI  " + strconv.Itoa(userConnection.UserId))
+
+		println("Failed update request connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USUCID | UI " + strconv.Itoa(userConnection.UserId))
+
+	}
+}
+
 func (store *UserConnectionMongoDBStore) UpdateBlockedConnection(userConnection *domain.UserConnection) {
 	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"blocked", userConnection.Blocked}}}})
 	if err != nil {
@@ -97,7 +109,6 @@ func (store *UserConnectionMongoDBStore) UpdateConnections(userConnection *domai
 		println("Failed update connection.")
 	} else {
 		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USSACID | UI " + strconv.Itoa(loggedUserConnection.UserId))
-
 	}
 }
 

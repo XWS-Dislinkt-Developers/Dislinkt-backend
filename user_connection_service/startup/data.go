@@ -11,9 +11,9 @@ var userConnections = []*domain.UserConnection{
 		Connections: []int{
 			12, 14,
 		},
-		Requests:        []int{4},
-		WaitingResponse: []int{},
-		Blocked:         []int{},
+		Requests:        []int{5},
+		WaitingResponse: []int{6, 7},
+		Blocked:         []int{9},
 	},
 	{
 		UserId:  12,

@@ -7,6 +7,11 @@ package user_service;
 import "google/api/annotations.proto";
 
 service UserService{
+  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/users"
+    };
+  }
   rpc ChangePassword(ChangePasswordReq) returns (ConfirmAccountResponse) {
     option (google.api.http) = {
       post: "/changePass"

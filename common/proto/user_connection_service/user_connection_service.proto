@@ -48,6 +48,11 @@ service UserConnectionService {
       put: "/unblock/{idUser}"
     };
   }
+  rpc GetById(UserIdRequest) returns (UserConnection){
+    option (google.api.http) = {
+      get: "/getConnectionForUser/{idUser}"
+    };
+  }
 }
 
 message UserIdRequest{

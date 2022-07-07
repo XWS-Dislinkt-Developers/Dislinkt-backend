@@ -33,6 +33,15 @@ func NewUserConnectionHandler(connection_service *app_connection.UserConnectionS
 	}
 }
 
+func (handler *UserConnectionHandler) GetById(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.UserConnection, error) {
+	UserConnection, err := handler.connection_service.GetConnectionsById(int(request.IdUser))
+	if err != nil {
+		return nil, err
+	}
+	response := mapUserConnection(UserConnection)
+	return response, nil
+}
+
 func (handler *UserConnectionHandler) GetAll(ctx context.Context, request *pb_connection.GetAllRequest) (*pb_connection.GetAllResponse, error) {
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {

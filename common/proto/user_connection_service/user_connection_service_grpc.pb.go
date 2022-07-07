@@ -30,6 +30,7 @@ type UserConnectionServiceClient interface {
 	GetConnectionsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*Connections, error)
 	BlockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	UnblockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
+	GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error)
 }
 
 type userConnectionServiceClient struct {
@@ -112,6 +113,15 @@ func (c *userConnectionServiceClient) UnblockUser(ctx context.Context, in *UserI
 	return out, nil
 }
 
+func (c *userConnectionServiceClient) GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error) {
+	out := new(UserConnection)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserConnectionServiceServer is the server API for UserConnectionService service.
 // All implementations must embed UnimplementedUserConnectionServiceServer
 // for forward compatibility
@@ -124,6 +134,7 @@ type UserConnectionServiceServer interface {
 	GetConnectionsByUser(context.Context, *UserIdRequest) (*Connections, error)
 	BlockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
+	GetById(context.Context, *UserIdRequest) (*UserConnection, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -154,6 +165,9 @@ func (UnimplementedUserConnectionServiceServer) BlockUser(context.Context, *User
 }
 func (UnimplementedUserConnectionServiceServer) UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnblockUser not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) GetById(context.Context, *UserIdRequest) (*UserConnection, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -312,6 +326,24 @@ func _UserConnectionService_UnblockUser_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserConnectionService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).GetById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/GetById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).GetById(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserConnectionService_ServiceDesc is the grpc.ServiceDesc for UserConnectionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -350,6 +382,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnblockUser",
 			Handler:    _UserConnectionService_UnblockUser_Handler,
+		},
+		{
+			MethodName: "GetById",
+			Handler:    _UserConnectionService_GetById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
