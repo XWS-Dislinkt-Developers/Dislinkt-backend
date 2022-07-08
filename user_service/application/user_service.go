@@ -38,6 +38,11 @@ func (service *UserService) GetById(id int) (*domain.User, error) {
 	return service.store.GetById(id)
 }
 
+func (service *UserService) IsProfilePrivate(id int) bool {
+	user, _ := service.store.GetById(id)
+	return user.IsPrivateProfile
+}
+
 func (service *UserService) GetByUsername(username string) (*domain.User, error) {
 	return service.store.GetByUsername(username)
 }

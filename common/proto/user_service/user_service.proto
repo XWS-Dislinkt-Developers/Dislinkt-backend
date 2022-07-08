@@ -40,11 +40,6 @@ service UserService{
       post: "/getUserById"
     };
   }
-
-
-
-
-
   rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
     option (google.api.http) = {
       post: "/updatePersonalData"
@@ -68,6 +63,20 @@ service UserService{
       get: "/getPublicProfiles"
     };
   }
+  rpc IsProfilePrivate(UserIdRequest) returns (IsProfilePrivateResponse){
+    option (google.api.http) = {
+      get: "/checkPrivacy/{idUser}"
+    };
+  }
+}
+
+message IsProfilePrivateResponse{
+  bool isProfilePrivate = 1;
+}
+
+
+message UserIdRequest{
+  int64 idUser = 1;
 }
 
 message  GetAllPublicProfilesResponse{

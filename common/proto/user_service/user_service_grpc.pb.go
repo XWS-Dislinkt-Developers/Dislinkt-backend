@@ -32,6 +32,7 @@ type UserServiceClient interface {
 	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
 	GetAllPublicProfiles(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllPublicProfilesResponse, error)
+	IsProfilePrivate(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*IsProfilePrivateResponse, error)
 }
 
 type userServiceClient struct {
@@ -132,6 +133,15 @@ func (c *userServiceClient) GetAllPublicProfiles(ctx context.Context, in *GetAll
 	return out, nil
 }
 
+func (c *userServiceClient) IsProfilePrivate(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*IsProfilePrivateResponse, error) {
+	out := new(IsProfilePrivateResponse)
+	err := c.cc.Invoke(ctx, "/user_service.UserService/IsProfilePrivate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -146,6 +156,7 @@ type UserServiceServer interface {
 	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
 	GetAllPublicProfiles(context.Context, *GetAllRequest) (*GetAllPublicProfilesResponse, error)
+	IsProfilePrivate(context.Context, *UserIdRequest) (*IsProfilePrivateResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -182,6 +193,9 @@ func (UnimplementedUserServiceServer) UpdateUserSkillsInterests(context.Context,
 }
 func (UnimplementedUserServiceServer) GetAllPublicProfiles(context.Context, *GetAllRequest) (*GetAllPublicProfilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllPublicProfiles not implemented")
+}
+func (UnimplementedUserServiceServer) IsProfilePrivate(context.Context, *UserIdRequest) (*IsProfilePrivateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsProfilePrivate not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -376,6 +390,24 @@ func _UserService_GetAllPublicProfiles_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_IsProfilePrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).IsProfilePrivate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_service.UserService/IsProfilePrivate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).IsProfilePrivate(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -422,6 +454,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllPublicProfiles",
 			Handler:    _UserService_GetAllPublicProfiles_Handler,
+		},
+		{
+			MethodName: "IsProfilePrivate",
+			Handler:    _UserService_IsProfilePrivate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

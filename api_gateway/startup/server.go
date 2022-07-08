@@ -75,6 +75,7 @@ func (server *Server) initCustomHandlers() {
 	server.initUserRequestsHandler()
 	server.initUserWaitingResponsesHandler()
 	server.initUserBlockedHandler()
+	server.initUserPostsForProfile()
 }
 
 func (server *Server) initAccountActivationHandler() {
@@ -138,6 +139,14 @@ func (server *Server) initUserBlockedHandler() {
 	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
 	requestsUsersHandler := apiConnection.NewUserBlockedHandler(userEndpoint, connectionEndpoint)
 	requestsUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserPostsForProfile() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	userPostsProfileHandler := apiPost.NewUserPostsProfileHandler(userEndpoint, postEndpoint, connectionEndpoint)
+	userPostsProfileHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

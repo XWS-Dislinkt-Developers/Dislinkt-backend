@@ -182,6 +182,14 @@ func (handler *UsersHandler) GetUser(ctx context.Context, request *pb.GetUserReq
 
 }
 
+func (handler *UsersHandler) IsProfilePrivate(ctx context.Context, request *pb.UserIdRequest) (*pb.IsProfilePrivateResponse, error) {
+	private := handler.service.IsProfilePrivate(int(request.IdUser))
+
+	return &pb.IsProfilePrivateResponse{
+		IsProfilePrivate: private,
+	}, nil
+}
+
 func (handler *UsersHandler) GetBySearch(ctx context.Context, request *pb.GetBySearchRequest) (*pb.GetBySearchResponse, error) {
 	users, err := handler.service.GetAll()
 	if err != nil || *users == nil {
