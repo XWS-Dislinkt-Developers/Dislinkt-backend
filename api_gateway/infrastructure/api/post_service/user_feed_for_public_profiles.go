@@ -25,7 +25,7 @@ func NewUserFeedForPublicProfilesHandler(postClientAddress, userClientAddress st
 }
 
 func (handler *UserFeedForPublicProfilesHandler) Init(mux *runtime.ServeMux) {
-	err := mux.HandlePath("GET", "/userFeed", handler.HandleUserFeed)
+	err := mux.HandlePath("GET", "/publicUserFeed", handler.HandleUserFeed)
 	if err != nil {
 		panic(err)
 	}

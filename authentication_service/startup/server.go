@@ -45,11 +45,6 @@ func (server *Server) Start() {
 	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
 
 	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError)
-
-	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
-	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
-	//server.initCreateOrderHandler(userService, replyPublisher, commandSubscriber)
-
 	userHandler := server.initUserHandler(authService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userHandler)
@@ -71,13 +66,13 @@ func (server *Server) initUserStore(client *gorm.DB, loggerInfo *logger.Logger, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	//store.DeleteAll()
-	//for _, User := range users {
-	//	err := store.Insert(User)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}
+	store.DeleteAll()
+	for _, User := range users {
+		errInsert, _ := store.Insert(User)
+		if errInsert != nil {
+			log.Fatal(errInsert)
+		}
+	}
 	return store
 }
 
