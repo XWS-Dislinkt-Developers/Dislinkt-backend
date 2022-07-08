@@ -51,6 +51,7 @@ func (handler *UsersHandler) UpdatePersonalData(ctx context.Context, request *pb
 	dto.Biography = request.UpdateUserData.Biography
 	dto.PhoneNumber = request.UpdateUserData.PhoneNumber
 	dto.Name = request.UpdateUserData.Name
+	dto.IsPrivateProfile = request.UpdateUserData.IsPrivateProfile
 	myDate, err := time.Parse("2006-01-02", request.UpdateUserData.DateOfBirth)
 	if err == nil {
 		dto.DateOfBirth = myDate

@@ -138,6 +138,7 @@ message UpdateUserData{
   string gender = 5;
   string dateOfBirth = 6;
   string biography = 7;
+  bool isPrivateProfile = 8;
 }
 
 message UpdateUserSAI{

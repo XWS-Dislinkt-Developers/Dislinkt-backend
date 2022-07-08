@@ -133,6 +133,7 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	user.PhoneNumber = dto.PhoneNumber
 	user.Biography = dto.Biography
 	user.DateOfBirth = dto.DateOfBirth
+	user.IsPrivateProfile = dto.IsPrivateProfile
 	store.db.Save(&user)
 	store.loggerInfo.Logger.Infof("User_postgres_store: UCDD | UI  " + strconv.Itoa(userID))
 

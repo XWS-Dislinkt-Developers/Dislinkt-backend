@@ -34,13 +34,14 @@ type User struct {
 }
 
 type UpdateUserDto struct {
-	Username    string    `json:"username" ,gorm:"unique" validate:"required,username" `
-	Name        string    `json:"name" validate:"required,name"`
-	PhoneNumber string    `json:"phoneNumber"`
-	Email       string    `json:"email" ,gorm:"unique" validate:"required,email"`
-	Gender      string    `json:"gender"`
-	DateOfBirth time.Time `json:"dateOfBirth"`
-	Biography   string    `json:"BateOfBirth"`
+	Username         string    `json:"username" ,gorm:"unique" validate:"required,username" `
+	Name             string    `json:"name" validate:"required,name"`
+	PhoneNumber      string    `json:"phoneNumber"`
+	Email            string    `json:"email" ,gorm:"unique" validate:"required,email"`
+	Gender           string    `json:"gender"`
+	DateOfBirth      time.Time `json:"dateOfBirth"`
+	Biography        string    `json:"BateOfBirth"`
+	IsPrivateProfile bool      `json:"isPrivateProfile"`
 }
 
 type UpdateUserSAIDto struct {
