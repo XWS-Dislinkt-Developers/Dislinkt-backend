@@ -6,6 +6,7 @@ import (
 	apiAuth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
 	apiConnection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/connection_service"
 	apiPost "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/post_service"
+	apiUsers "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/user_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
@@ -76,6 +77,7 @@ func (server *Server) initCustomHandlers() {
 	server.initUserWaitingResponsesHandler()
 	server.initUserBlockedHandler()
 	server.initUserPostsForProfile()
+	server.initSearchForLoggedUserHandler()
 }
 
 func (server *Server) initAccountActivationHandler() {
@@ -147,6 +149,13 @@ func (server *Server) initUserPostsForProfile() {
 	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
 	userPostsProfileHandler := apiPost.NewUserPostsProfileHandler(userEndpoint, postEndpoint, connectionEndpoint)
 	userPostsProfileHandler.Init(server.mux)
+}
+
+func (server *Server) initSearchForLoggedUserHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	searchUsersHandler := apiUsers.NewUserSearchForLoggedUserHandler(userEndpoint, connectionEndpoint)
+	searchUsersHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {
