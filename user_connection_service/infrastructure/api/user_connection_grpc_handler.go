@@ -33,6 +33,15 @@ func NewUserConnectionHandler(connection_service *app_connection.UserConnectionS
 	}
 }
 
+func (handler *UserConnectionHandler) GetById(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.UserConnection, error) {
+	UserConnection, err := handler.connection_service.GetConnectionsById(int(request.IdUser))
+	if err != nil {
+		return nil, err
+	}
+	response := mapUserConnection(UserConnection)
+	return response, nil
+}
+
 func (handler *UserConnectionHandler) GetAll(ctx context.Context, request *pb_connection.GetAllRequest) (*pb_connection.GetAllResponse, error) {
 	UserConnections, err := handler.connection_service.GetAll()
 	if err != nil {
@@ -55,7 +64,7 @@ func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context
 	return UserConnection.Connections
 }
 
-func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
+func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
@@ -71,7 +80,7 @@ func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_co
 		return nil, err
 	}
 	handler.loggerError.Logger.Errorf("User_connection_grpc_handler: SFU | UI " + strconv.Itoa(claims.Id))
-	response := &pb_connection.FollowResponse{
+	response := &pb_connection.ConnectionsResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
 	for _, UserConnection := range UserConnections {
@@ -81,11 +90,57 @@ func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_co
 	return response, nil
 }
 
-func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.Connections, error) {
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
+func (handler *UserConnectionHandler) BlockUser(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+
+	handler.connection_service.BlockUser(claims.Id, int(request.IdUser))
+
+	UserConnections, err := handler.connection_service.GetAll()
+	if err != nil {
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTFU | UI " + strconv.Itoa(claims.Id))
+		return nil, err
+	}
+	handler.loggerError.Logger.Errorf("User_connection_grpc_handler: SFU | UI " + strconv.Itoa(claims.Id))
+	response := &pb_connection.ConnectionsResponse{
+		UserConnections: []*pb_connection.UserConnection{},
+	}
+	for _, UserConnection := range UserConnections {
+		current := mapUserConnection(UserConnection)
+		response.UserConnections = append(response.UserConnections, current)
+	}
+	return response, nil
+}
+
+func (handler *UserConnectionHandler) UnblockUser(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
+
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+
+	handler.connection_service.UnblockUser(claims.Id, int(request.IdUser))
+
+	UserConnections, err := handler.connection_service.GetAll()
+	if err != nil {
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTFU | UI " + strconv.Itoa(claims.Id))
+		return nil, err
+	}
+	handler.loggerError.Logger.Errorf("User_connection_grpc_handler: SFU | UI " + strconv.Itoa(claims.Id))
+	response := &pb_connection.ConnectionsResponse{
+		UserConnections: []*pb_connection.UserConnection{},
+	}
+	for _, UserConnection := range UserConnections {
+		current := mapUserConnection(UserConnection)
+		response.UserConnections = append(response.UserConnections, current)
+	}
+	return response, nil
+}
+
+func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.Connections, error) {
 
 	UserConnection, _ := handler.connection_service.GetConnectionsById(int(request.IdUser))
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(int(request.IdUser)))
@@ -103,7 +158,7 @@ func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, 
 	return response, nil
 }
 
-func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
+func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
@@ -119,7 +174,7 @@ func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_
 		return nil, err
 	}
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SUFU | UI " + strconv.Itoa(claims.Id))
-	response := &pb_connection.FollowResponse{
+	response := &pb_connection.ConnectionsResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
 	for _, UserConnection := range UserConnections {
@@ -129,7 +184,7 @@ func (handler *UserConnectionHandler) Unfollow(ctx context.Context, request *pb_
 	return response, nil
 }
 
-func (handler *UserConnectionHandler) AcceptConnectionRequest(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
+func (handler *UserConnectionHandler) AcceptConnectionRequest(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
@@ -145,7 +200,7 @@ func (handler *UserConnectionHandler) AcceptConnectionRequest(ctx context.Contex
 	}
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SACCR | UI " + strconv.Itoa(claims.Id))
 
-	response := &pb_connection.FollowResponse{
+	response := &pb_connection.ConnectionsResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
 	for _, UserConnection := range UserConnections {
@@ -155,7 +210,7 @@ func (handler *UserConnectionHandler) AcceptConnectionRequest(ctx context.Contex
 	return response, nil
 }
 
-func (handler *UserConnectionHandler) DeclineConnectionRequest(ctx context.Context, request *pb_connection.FollowRequest) (*pb_connection.FollowResponse, error) {
+func (handler *UserConnectionHandler) DeclineConnectionRequest(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
@@ -172,7 +227,7 @@ func (handler *UserConnectionHandler) DeclineConnectionRequest(ctx context.Conte
 	}
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SDCR | UI " + strconv.Itoa(claims.Id))
 
-	response := &pb_connection.FollowResponse{
+	response := &pb_connection.ConnectionsResponse{
 		UserConnections: []*pb_connection.UserConnection{},
 	}
 	for _, UserConnection := range UserConnections {

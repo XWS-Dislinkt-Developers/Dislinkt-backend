@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	apiAuth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
+	apiConnection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/connection_service"
 	apiPost "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/post_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
@@ -70,6 +71,10 @@ func (server *Server) initCustomHandlers() {
 	server.initPasswordRecoveryHandler()
 	server.initUserFeedHandler()
 	server.initUserFeedForPublicProfilesHandler()
+	server.initUserConnectionsHandler()
+	server.initUserRequestsHandler()
+	server.initUserWaitingResponsesHandler()
+	server.initUserBlockedHandler()
 }
 
 func (server *Server) initAccountActivationHandler() {
@@ -105,6 +110,34 @@ func (server *Server) initUserFeedForPublicProfilesHandler() {
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
 	feedUsersHandler := apiPost.NewUserFeedForPublicProfilesHandler(postEndpoint, userEndpoint)
 	feedUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserConnectionsHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	connectionUsersHandler := apiConnection.NewUserConnectionsHandler(userEndpoint, connectionEndpoint)
+	connectionUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserRequestsHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	requestsUsersHandler := apiConnection.NewUserRequestHandler(userEndpoint, connectionEndpoint)
+	requestsUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserWaitingResponsesHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	connectionUsersHandler := apiConnection.NewUserWaitingResponseHandler(userEndpoint, connectionEndpoint)
+	connectionUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserBlockedHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	requestsUsersHandler := apiConnection.NewUserBlockedHandler(userEndpoint, connectionEndpoint)
+	requestsUsersHandler.Init(server.mux)
 }
 
 func (server *Server) Start() {

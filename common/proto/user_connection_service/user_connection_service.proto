@@ -13,38 +13,53 @@ service UserConnectionService {
       get: "/userConnections"
     };
   };
-  rpc Follow(FollowRequest) returns (FollowResponse){
+  rpc Follow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/follow/{idUser}"
     };
   };
-  rpc Unfollow(FollowRequest) returns (FollowResponse){
+  rpc Unfollow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/unfollow/{idUser}"
     };
   };
-  rpc AcceptConnectionRequest(FollowRequest) returns (FollowResponse){
+  rpc AcceptConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/accept/{idUser}"
     };
   };
-  rpc DeclineConnectionRequest(FollowRequest) returns (FollowResponse){
+  rpc DeclineConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/decline/{idUser}"
     };
   };
-  rpc GetConnectionsByUser(FollowRequest) returns (Connections){
+  rpc GetConnectionsByUser(UserIdRequest) returns (Connections){
     option (google.api.http) = {
       get: "/connections/{idUser}"
     };
   }
+  rpc BlockUser(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/block/{idUser}"
+    };
+  }
+  rpc UnblockUser(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/unblock/{idUser}"
+    };
+  }
+  rpc GetById(UserIdRequest) returns (UserConnection){
+    option (google.api.http) = {
+      get: "/getConnectionForUser/{idUser}"
+    };
+  }
 }
 
-message FollowRequest{
+message UserIdRequest{
   int64 idUser = 1;
 }
 
-message FollowResponse{
+message ConnectionsResponse{
   repeated UserConnection userConnections = 1;
 }
 
@@ -60,6 +75,8 @@ message UserConnection {
   bool private = 2;
   repeated int64 connections = 3;
   repeated int64 requests = 4;
+  repeated int64 waitingResponse = 5;
+  repeated int64 blocked = 6;
 }
 
 message Connections {

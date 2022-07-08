@@ -6,12 +6,20 @@ import (
 
 type User struct {
 	ID              int    `json:"id" ,gorm:"primaryKey,autoIncrement:true" `
+	UserId          int    `json:"userId"  `
 	Name            string `json:"name" validate:"required,name"`
 	Username        string `json:"username" ,gorm:"unique" validate:"required,username" `
 	Password        string `json:"password"`
 	Email           string `json:"email" ,gorm:"unique" validate:"required,email"`
 	ConfirmPassword string `json:"confirmPassword"`
 	Gender          string `json:"gender"`
+}
+
+type UserDTO struct {
+	ID       int
+	UserId   int
+	Name     string
+	Username string
 }
 
 type PasswordRecoveryDTO struct {
@@ -21,9 +29,9 @@ type PasswordRecoveryDTO struct {
 }
 
 type Reaction struct {
-	UserId   int  `bson:"user_id"`
-	Liked    bool `bson:"liked"`
-	Disliked bool `bson:"disliked"`
+	UserId   int
+	Liked    bool
+	Disliked bool
 }
 
 type Comment struct {
@@ -45,3 +53,8 @@ type UserPost struct {
 type Fs struct {
 	Feed []UserPost
 }
+
+type Users struct {
+	Users []UserDTO
+}
+

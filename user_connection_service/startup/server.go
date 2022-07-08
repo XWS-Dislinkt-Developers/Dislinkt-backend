@@ -42,15 +42,8 @@ func (server *Server) Start() {
 
 	mongoClient := server.initMongoClient()
 	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
-	//commandPublisher := server.initPublisher(server.config.CreateOrderCommandSubject)
-	//replySubscriber := server.initSubscriber(server.config.CreateOrderReplySubject, QueueGroup)
-	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
 
 	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
-
-	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
-	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
-	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
 	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, loggerInfo, loggerError)
 
@@ -77,47 +70,10 @@ func (server *Server) initUserConnectionStore(client *mongo.Client, loggerInfo *
 	return store
 }
 
-/*
-func (server *Server) initPublisher(subject string) saga.Publisher {
-	publisher, err := nats.NewNATSPublisher(
-		server.config.NatsHost, server.config.NatsPort,
-		server.config.NatsUser, server.config.NatsPass, subject)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return publisher
-}
-
-func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber {
-	subscriber, err := nats.NewNATSSubscriber(
-		server.config.NatsHost, server.config.NatsPort,
-		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return subscriber
-}
-
-func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subscriber saga.Subscriber) *application.CreateOrderOrchestrator {
-	orchestrator, err := application.NewCreateOrderOrchestrator(publisher, subscriber)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return orchestrator
-}
-*/
 func (server *Server) initUserConnectionService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserConnectionService {
 	return application.NewUserConnectionService(store, loggerInfo, loggerError)
 }
 
-/*
-func (server *Server) initCreateUserPostHandler(service *application.UserPostService) {
-	_, err := api.NewCreateUserPostHandler(service)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-*/
 func (server *Server) initUserConnectionHandler(service *application.UserConnectionService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserConnectionHandler {
 	return api.NewUserConnectionHandler(service, loggerInfo, loggerError)
 }
