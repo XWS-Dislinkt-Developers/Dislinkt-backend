@@ -10,6 +10,7 @@ import (
 	pbUser "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -63,11 +64,15 @@ func (handler *UserSearchForLoggedUserHandler) HandleUserSearch(w http.ResponseW
 	for _, u := range users.Users {
 		isFound := strings.Contains(strings.ToLower(u.Name), strings.ToLower(name))
 		if userIsNotBlocked(u.UserId, response.Blocked) && isFound {
+			private, _ := strconv.ParseBool(u.IsPrivateProfile)
 			user := domain.UserDTO{
-				ID:       int(u.Id),
-				UserId:   int(u.UserId),
-				Name:     u.Name,
-				Username: u.Username,
+				ID:               int(u.Id),
+				UserId:           int(u.UserId),
+				Name:             u.Name,
+				Username:         u.Username,
+				Gender:           u.Gender,
+				IsPrivateProfile: private,
+				Biography:        u.Biography,
 			}
 			userConnections = append(userConnections, user)
 		}

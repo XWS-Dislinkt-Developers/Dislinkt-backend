@@ -16,10 +16,13 @@ type User struct {
 }
 
 type UserDTO struct {
-	ID       int
-	UserId   int
-	Name     string
-	Username string
+	ID               int
+	UserId           int
+	Name             string
+	Username         string
+	Gender           string
+	IsPrivateProfile bool
+	Biography        string
 }
 
 type PasswordRecoveryDTO struct {
@@ -57,4 +60,3 @@ type Fs struct {
 type Users struct {
 	Users []UserDTO
 }
-
