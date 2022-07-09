@@ -5,6 +5,8 @@ option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/
 package user_service;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
 
 service UserService{
   rpc GetAll(GetAllRequest) returns(GetAllResponse) {
@@ -117,14 +119,15 @@ message User {
   string gender = 9;
   string dateOfBirth = 10;
   string biography = 11;
+  string phoneNumber = 12;
   // UpdateUserSAI
-  string skills = 12;
-  string interests = 13;
+  string skills = 13;
+  string interests = 14;
   // UpdateUserWAE
-  string work = 14;
-  string education = 15;
+  string work = 15;
+  string education = 16;
   // UpdateUserPrivacy
-  string isPrivateProfile = 16;
+  string isPrivateProfile = 17;
 }
 
 message RegisterRequest {
@@ -154,11 +157,12 @@ message UpdateUserData{
   string username = 1;
   string name = 2;
   string phoneNumber = 3;
-  string email = 4;
-  string gender = 5;
-  string dateOfBirth = 6;
-  string biography = 7;
-  bool isPrivateProfile = 8;
+  string address = 4;
+  string email = 5;
+  string gender = 6;
+  string dateOfBirth = 7;
+  string biography = 8;
+  bool isPrivateProfile = 9;
 }
 
 message UpdateUserSAI{

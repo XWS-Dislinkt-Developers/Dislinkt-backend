@@ -45,12 +45,13 @@ func (handler *UsersHandler) UpdatePersonalData(ctx context.Context, request *pb
 	claims, _ := handler.auth_service.ValidateToken(token)
 
 	var dto domain.UpdateUserDto
+	dto.Name = request.UpdateUserData.Name
 	dto.Username = request.UpdateUserData.Username
 	dto.Email = request.UpdateUserData.Email
 	dto.Gender = request.UpdateUserData.Gender
 	dto.Biography = request.UpdateUserData.Biography
+	dto.Address = request.UpdateUserData.Address
 	dto.PhoneNumber = request.UpdateUserData.PhoneNumber
-	dto.Name = request.UpdateUserData.Name
 	dto.IsPrivateProfile = request.UpdateUserData.IsPrivateProfile
 	myDate, err := time.Parse("2006-01-02", request.UpdateUserData.DateOfBirth)
 	if err == nil {
