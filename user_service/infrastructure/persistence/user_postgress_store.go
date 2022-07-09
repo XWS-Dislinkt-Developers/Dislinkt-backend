@@ -131,6 +131,7 @@ func (store *UserPostgresStore) UpdateUser(dto domain.UpdateUserDto, userID int)
 	user.Gender = dto.Gender
 	user.Email = dto.Email
 	user.PhoneNumber = dto.PhoneNumber
+	user.Address = dto.Address
 	user.Biography = dto.Biography
 	user.DateOfBirth = dto.DateOfBirth
 	user.IsPrivateProfile = dto.IsPrivateProfile

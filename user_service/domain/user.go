@@ -39,6 +39,7 @@ type UpdateUserDto struct {
 	PhoneNumber      string    `json:"phoneNumber"`
 	Email            string    `json:"email" ,gorm:"unique" validate:"required,email"`
 	Gender           string    `json:"gender"`
+	Address          string    `json:"address"`
 	DateOfBirth      time.Time `json:"dateOfBirth"`
 	Biography        string    `json:"BateOfBirth"`
 	IsPrivateProfile bool      `json:"isPrivateProfile"`

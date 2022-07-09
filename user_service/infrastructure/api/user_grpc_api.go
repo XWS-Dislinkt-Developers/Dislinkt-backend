@@ -45,12 +45,13 @@ func (handler *UsersHandler) UpdatePersonalData(ctx context.Context, request *pb
 	claims, _ := handler.auth_service.ValidateToken(token)
 
 	var dto domain.UpdateUserDto
+	dto.Name = request.UpdateUserData.Name
 	dto.Username = request.UpdateUserData.Username
 	dto.Email = request.UpdateUserData.Email
 	dto.Gender = request.UpdateUserData.Gender
 	dto.Biography = request.UpdateUserData.Biography
+	dto.Address = request.UpdateUserData.Address
 	dto.PhoneNumber = request.UpdateUserData.PhoneNumber
-	dto.Name = request.UpdateUserData.Name
 	dto.IsPrivateProfile = request.UpdateUserData.IsPrivateProfile
 	myDate, err := time.Parse("2006-01-02", request.UpdateUserData.DateOfBirth)
 	if err == nil {
@@ -178,6 +179,26 @@ func (handler *UsersHandler) GetUser(ctx context.Context, request *pb.GetUserReq
 	}
 	current := mapUser(user)
 	//response.User = append(response.Users, current)
+	response.User = current
+	return response, nil
+
+}
+
+func (handler *UsersHandler) GetUserById(ctx context.Context, request *pb.GetUserByIdRequest) (*pb.GetUserByIdResponse, error) {
+	/*
+		header, _ := extractHeader(ctx, "authorization")
+		var prefix = "Bearer "
+		var token = strings.TrimPrefix(header, prefix)
+		claims, _ := validateToken(token)
+	*/
+	user, err := handler.service.GetById(int(request.UserId))
+	if err != nil || user == nil {
+		return nil, err
+	}
+	response := &pb.GetUserByIdResponse{
+		User: &pb.User{},
+	}
+	current := mapUser(user)
 	response.User = current
 	return response, nil
 
