@@ -72,12 +72,12 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 		}, nil
 	}
 
-	if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(user.Password)) {
-		return &pb.RegisterResponse{
-			Status: http.StatusBadRequest,
-			Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
-		}, nil
-	}
+	//if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(user.Password)) {
+	//	return &pb.RegisterResponse{
+	//		Status: http.StatusBadRequest,
+	//		Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
+	//	}, nil
+	//}
 
 	registratedUser := handler.auth_service.Create(&user)
 

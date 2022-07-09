@@ -184,3 +184,14 @@ INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR
 INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
 INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
 INFO | 2022-07-08 02:07:29 | Auth_service: ULI 1 
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:25:30 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:25:30 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 03:25:31 | Auth_service: EFAS 
