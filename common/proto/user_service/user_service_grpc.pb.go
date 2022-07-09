@@ -28,6 +28,7 @@ type UserServiceClient interface {
 	ConfirmAccount(ctx context.Context, in *ConfirmAccountRequest, opts ...grpc.CallOption) (*ConfirmAccountResponse, error)
 	GetBySearch(ctx context.Context, in *GetBySearchRequest, opts ...grpc.CallOption) (*GetBySearchResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	GetUserById(ctx context.Context, in *GetUserByIdRequest, opts ...grpc.CallOption) (*GetUserByIdResponse, error)
 	UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(ctx context.Context, in *UpdateUserWAERequest, opts ...grpc.CallOption) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(ctx context.Context, in *UpdateUserSAIRequest, opts ...grpc.CallOption) (*UpdateUserSAIResponse, error)
@@ -97,6 +98,15 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opt
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserById(ctx context.Context, in *GetUserByIdRequest, opts ...grpc.CallOption) (*GetUserByIdResponse, error) {
+	out := new(GetUserByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_service.UserService/GetUserById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdatePersonalData(ctx context.Context, in *UpdatePersonalDataRequest, opts ...grpc.CallOption) (*UpdatePersonalDataResponse, error) {
 	out := new(UpdatePersonalDataResponse)
 	err := c.cc.Invoke(ctx, "/user_service.UserService/UpdatePersonalData", in, out, opts...)
@@ -152,6 +162,7 @@ type UserServiceServer interface {
 	ConfirmAccount(context.Context, *ConfirmAccountRequest) (*ConfirmAccountResponse, error)
 	GetBySearch(context.Context, *GetBySearchRequest) (*GetBySearchResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	GetUserById(context.Context, *GetUserByIdRequest) (*GetUserByIdResponse, error)
 	UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error)
 	UpdateUserWorkEducation(context.Context, *UpdateUserWAERequest) (*UpdateUserWAEResponse, error)
 	UpdateUserSkillsInterests(context.Context, *UpdateUserSAIRequest) (*UpdateUserSAIResponse, error)
@@ -181,6 +192,9 @@ func (UnimplementedUserServiceServer) GetBySearch(context.Context, *GetBySearchR
 }
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserById(context.Context, *GetUserByIdRequest) (*GetUserByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
 }
 func (UnimplementedUserServiceServer) UpdatePersonalData(context.Context, *UpdatePersonalDataRequest) (*UpdatePersonalDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalData not implemented")
@@ -318,6 +332,24 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_service.UserService/GetUserById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserById(ctx, req.(*GetUserByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdatePersonalData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdatePersonalDataRequest)
 	if err := dec(in); err != nil {
@@ -438,6 +470,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _UserService_GetUser_Handler,
+		},
+		{
+			MethodName: "GetUserById",
+			Handler:    _UserService_GetUserById_Handler,
 		},
 		{
 			MethodName: "UpdatePersonalData",

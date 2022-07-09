@@ -66,13 +66,15 @@ func (server *Server) initUserStore(client *gorm.DB, loggerInfo *logger.Logger, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	store.DeleteAll()
-	for _, User := range users {
-		errInsert, _ := store.Insert(User)
-		if errInsert != nil {
-			log.Fatal(errInsert)
+	/*
+		store.DeleteAll()
+		for _, User := range users {
+			errInsert, _ := store.Insert(User)
+			if errInsert != nil {
+				log.Fatal(errInsert)
+			}
 		}
-	}
+	*/
 	return store
 }
 

@@ -5,14 +5,17 @@ import (
 )
 
 var userData = []*domain.UserData{
-	{
-		Id:     1,
-		UserId: 1,
-		Token:  "asdasdasdsad",
-	},
-	{
-		Id:     2,
-		UserId: 2,
-		Token:  "vxzcsadwaeda",
-	},
+	/*
+		{
+			Id:     1,
+			UserId: 1,
+			Token:  "asdasdasdsad",
+		},
+		{
+			Id:     2,
+			UserId: 2,
+			Token:  "vxzcsadwaeda",
+		},
+
+	*/
 }

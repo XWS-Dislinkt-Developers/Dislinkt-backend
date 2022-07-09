@@ -183,6 +183,26 @@ func (handler *UsersHandler) GetUser(ctx context.Context, request *pb.GetUserReq
 
 }
 
+func (handler *UsersHandler) GetUserById(ctx context.Context, request *pb.GetUserByIdRequest) (*pb.GetUserByIdResponse, error) {
+	/*
+		header, _ := extractHeader(ctx, "authorization")
+		var prefix = "Bearer "
+		var token = strings.TrimPrefix(header, prefix)
+		claims, _ := validateToken(token)
+	*/
+	user, err := handler.service.GetById(int(request.UserId))
+	if err != nil || user == nil {
+		return nil, err
+	}
+	response := &pb.GetUserByIdResponse{
+		User: &pb.User{},
+	}
+	current := mapUser(user)
+	response.User = current
+	return response, nil
+
+}
+
 func (handler *UsersHandler) IsProfilePrivate(ctx context.Context, request *pb.UserIdRequest) (*pb.IsProfilePrivateResponse, error) {
 	private := handler.service.IsProfilePrivate(int(request.IdUser))
 

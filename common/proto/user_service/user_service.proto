@@ -40,6 +40,13 @@ service UserService{
       post: "/getUserById"
     };
   }
+
+  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse){
+    option (google.api.http) = {
+      post: "/getUserById/{userId}"
+    };
+  }
+
   rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
     option (google.api.http) = {
       post: "/updatePersonalData"
@@ -97,14 +104,27 @@ message ConfirmAccountResponse{
 }
 
 message User {
+  // Cannot be change
   int64 id = 1;
   int64 userId = 2;
-  string name = 3;
-  string username = 4;
-  string password = 5;
-  string email = 6;
-  string address = 7;
-  string gender = 8;
+  string role = 3;
+  // UpdateUser
+  string name = 4;
+  string username =5;
+  string password = 6;
+  string email = 7;
+  string address = 8;
+  string gender = 9;
+  string dateOfBirth = 10;
+  string biography = 11;
+  // UpdateUserSAI
+  string skills = 12;
+  string interests = 13;
+  // UpdateUserWAE
+  string work = 14;
+  string education = 15;
+  // UpdateUserPrivacy
+  string isPrivateProfile = 16;
 }
 
 message RegisterRequest {
@@ -170,7 +190,7 @@ message UpdateUserWAEResponse {
 }
 
 message UpdatePersonalDataRequest {
-  UpdateUserData updateUserData=1;
+  UpdateUserData updateUserData = 1;
 }
 
 message UpdatePersonalDataResponse {
@@ -212,5 +232,13 @@ message GetUserRequest {
 }
 
 message GetUserResponse {
+  User user = 1;
+}
+
+message GetUserByIdRequest {
+  int64 userId = 1;
+}
+
+message GetUserByIdResponse {
   User user = 1;
 }
