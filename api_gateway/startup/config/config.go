@@ -41,6 +41,8 @@ func NewConfig() *Config {
 		AuthenticationPort:     os.Getenv("AUTHENTICATION_SERVICE_PORT"),
 		UserHost:               os.Getenv("USER_SERVICE_HOST"),
 		UserPort:               os.Getenv("USER_SERVICE_PORT"),
+		UserConnectionHost:     os.Getenv("USER_CONNECTION_SERVICE_HOST"),
+		UserConnectionPort:     os.Getenv("USER_CONNECTION_SERVICE_PORT"),
 		HTTPSServerKey:         os.Getenv("HTTPS_SERVER_KEY"),
 		HTTPSServerCertificate: os.Getenv("HTTPS_SERVER_CERTIFICATE"),
 		UserPostHost:           os.Getenv("USER_POST_SERVICE_HOST"),
