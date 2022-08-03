@@ -29,5 +29,9 @@ func (service *MessageService) GetConnectionsById(idUser int) (*domain.Message, 
 }
 
 func (service *MessageService) Insert(mess *domain.Message) error {
-	return nil
+	return service.store.Insert(mess)
+}
+
+func (service *MessageService) GetMessageBySenderAndReceiver(idSender int, idReceiver int) ([]*domain.Message, error) {
+	return service.store.GetBySenderAndReceiver(idSender, idReceiver)
 }

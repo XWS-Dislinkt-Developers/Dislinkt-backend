@@ -30,13 +30,18 @@ func NewMessagesMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, logg
 }
 
 func (store *MessagesMongoDBStore) GetBySenderId(id int) (*domain.Message, error) {
-	filter := bson.M{"user_id": id}
+	filter := bson.M{"sender_id": id}
 	return store.filterOne(filter)
 }
 
 func (store *MessagesMongoDBStore) GetByReceiverId(id int) (*domain.Message, error) {
 	filter := bson.M{"receiver_id": id}
 	return store.filterOne(filter)
+}
+
+func (store *MessagesMongoDBStore) GetBySenderAndReceiver(idSender int, idReceiver int) ([]*domain.Message, error) {
+	filter := bson.M{"sender_id": idSender, "receiver_id": idReceiver}
+	return store.filter(filter)
 }
 
 func (store *MessagesMongoDBStore) GetAll() ([]*domain.Message, error) {
@@ -48,7 +53,7 @@ func (store *MessagesMongoDBStore) Insert(mess *domain.Message) error {
 	_, err := store.messagesStore.InsertOne(context.TODO(), mess)
 	store.loggerInfo.Logger.Infof("Message_mongodb_store: USCID | UI " + strconv.Itoa(mess.SenderId))
 	if err != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: UFTSCIDD | UI " + strconv.Itoa(mess.SenderId))
+		store.loggerError.Logger.Errorf("message_mongodb_store: UFTSCIDD | UI " + strconv.Itoa(mess.SenderId))
 		return err
 	}
 	//userConnection.Id = result.InsertedID.(primitive.ObjectID)

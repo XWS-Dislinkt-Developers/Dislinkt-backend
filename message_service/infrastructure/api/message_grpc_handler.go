@@ -8,9 +8,12 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/logger"
 	"github.com/golang-jwt/jwt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -52,12 +55,70 @@ func (handler *MessageHandler) GetMessagesByUserId(ctx context.Context, id int) 
 
 func (handler *MessageHandler) SendMessage(ctx context.Context, request *pb_message.NewMessageRequest) (*pb_message.NewMessageResponse, error) {
 
-	return nil, nil
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_message.NewMessageResponse{
+			Response: "User not loged in",
+		}, nil
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err := validateToken(token)
+	if err != nil {
+		return &pb_message.NewMessageResponse{
+			Response: "User token not valid",
+		}, nil
+	}
+
+	var newMessage = domain.Message{Id: 1, SenderId: claims.Id, ReceiverId: int(request.Message.Receiverid),
+		Content: request.Message.Content, Time: primitive.NewDateTimeFromTime(time.Now())}
+	err2 := handler.message_service.Insert(&newMessage)
+	if err2 != nil {
+		return nil, err2
+	}
+
+	return &pb_message.NewMessageResponse{
+		Response: "Message send",
+	}, nil
 }
 
 func (handler *MessageHandler) GetMessageWithUser(ctx context.Context, request *pb_message.GetMessageRequest) (*pb_message.GetMessageResponse, error) {
 
-	return nil, nil
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_message.GetMessageResponse{
+			Messages: nil,
+		}, errors.New("User not loged in.")
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err3 := validateToken(token)
+	println(claims.Id)
+	if err3 != nil {
+		return &pb_message.GetMessageResponse{
+			Messages: nil,
+		}, errors.New("User not loged in.")
+	}
+
+	num, _ := strconv.Atoi(request.Otheruserid.Otheruserid)
+	mess, err2 := handler.message_service.GetMessageBySenderAndReceiver(1, num)
+	if err2 != nil {
+		return &pb_message.GetMessageResponse{
+			Messages: nil,
+		}, nil
+	}
+
+	var all = []*pb_message.Message{}
+	for _, element := range mess {
+		var newm = pb_message.Message{Senderid: int64(element.SenderId), Receiverid: int64(element.ReceiverId), Content: element.Content,
+			Date: element.Time.Time().Format("2006-01-02 15:04:05")}
+		all = append(all, &newm)
+
+	}
+	return &pb_message.GetMessageResponse{
+		Messages: all,
+	}, nil
+
 }
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)

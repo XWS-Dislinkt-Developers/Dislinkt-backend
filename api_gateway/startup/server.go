@@ -9,6 +9,7 @@ import (
 	apiUsers "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/user_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	messageGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/message_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
 	userGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
@@ -62,6 +63,12 @@ func (server *Server) initHandlers() {
 	err4 := userGw.RegisterUserServiceHandlerFromEndpoint(context.TODO(), server.mux, userEndpoint, opts)
 	if err4 != nil {
 		panic(err4)
+	}
+
+	messageEndpoint := fmt.Sprintf("%s:%s", server.config.MessagesHost, server.config.MessagesPort)
+	err5 := messageGw.RegisterMessageServiceHandlerFromEndpoint(context.TODO(), server.mux, messageEndpoint, opts)
+	if err5 != nil {
+		panic(err5)
 	}
 
 }

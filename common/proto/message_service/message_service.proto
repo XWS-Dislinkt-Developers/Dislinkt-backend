@@ -46,7 +46,11 @@ message NewMessageResponse {
 }
 
 message GetMessageRequest {
-  int64 otheruserid = 1;
+  UserId otheruserid = 1;
+}
+
+message UserId {
+  string otheruserid = 1;
 }
 
 message GetMessageResponse {
@@ -57,5 +61,6 @@ message Message {
   int64 senderid = 1;
   int64 receiverid = 2;
   string content = 3;
+  string date = 4;
 }
 

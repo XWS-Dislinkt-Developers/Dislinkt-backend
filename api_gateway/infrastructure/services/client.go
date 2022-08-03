@@ -2,6 +2,7 @@ package services
 
 import (
 	authenticationService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	messageService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/message_service"
 	connectionService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	postService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
 	userService "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
@@ -22,10 +23,20 @@ func NewAuthenticationClient(address string) authenticationService.Authenticatio
 	return authenticationService.NewAuthenticationServiceClient(conn)
 }
 
+func NewMessageClient(address string) messageService.MessageServiceClient {
+	conn, err := getConnection(address)
+	if err != nil {
+		log.Fatalf("Failed to start gRPC connection to Authentication service: %v", err)
+		println("faled to start message service")
+	}
+	return messageService.NewMessageServiceClient(conn)
+}
+
 func NewUserClient(address string) userService.UserServiceClient {
 	conn, err := getConnection(address)
 	if err != nil {
 		log.Fatalf("Failed to start gRPC connection to User service: %v", err)
+
 	}
 	return userService.NewUserServiceClient(conn)
 }

@@ -12,7 +12,7 @@ type Config struct {
 
 func NewConfig() *Config {
 	return &Config{
-		Port:          "8008",
+		Port:          "8007",
 		MessageDBHost: "localhost",
 		MessageDBPort: "27017",
 		NatsHost:      "nats",
