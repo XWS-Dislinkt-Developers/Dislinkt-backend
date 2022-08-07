@@ -12,6 +12,7 @@ var users = []*domain.User{
 		Email:            "pera@gmail.com",
 		Address:          "kodpere10",
 		Gender:           "male",
+		Biography:        "Pera is a stable part time local activist who is obsessed with Gangnam style.",
 		IsItConfirmed:    true,
 		IsPrivateProfile: true,
 		UserId:           1,

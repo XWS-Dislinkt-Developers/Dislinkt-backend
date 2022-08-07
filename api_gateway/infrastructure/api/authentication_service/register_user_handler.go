@@ -13,14 +13,16 @@ import (
 )
 
 type RegisterUserHandler struct {
-	authClientAddress string
-	userClientAddress string
+	authClientAddress           string
+	userClientAddress           string
+	userConnectionClientAddress string
 }
 
-func NewRegisterUserHandler(authClientAddress, userClientAddress string) *RegisterUserHandler {
+func NewRegisterUserHandler(authClientAddress, userClientAddress, userConnectionClientAddress string) *RegisterUserHandler {
 	return &RegisterUserHandler{
-		authClientAddress: authClientAddress,
-		userClientAddress: userClientAddress,
+		authClientAddress:           authClientAddress,
+		userClientAddress:           userClientAddress,
+		userConnectionClientAddress: userConnectionClientAddress,
 	}
 }
 

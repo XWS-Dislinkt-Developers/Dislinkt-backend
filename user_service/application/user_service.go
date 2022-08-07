@@ -49,12 +49,11 @@ func (service *UserService) GetByUsername(username string) (*domain.User, error)
 
 func (service *UserService) UpdateUser(dto domain.UpdateUserDto, userID int) (*domain.User, error) {
 	foundUser, _ := service.GetByUsername(dto.Username)
-	if foundUser != nil && foundUser.ID != userID {
-		service.loggerError.Logger.Error("User_service: USNAT  | UI " + strconv.Itoa(foundUser.ID))
-		return nil, errors.New("Username is already taken")
+	if foundUser != nil && foundUser.UserId == userID {
+		return service.store.UpdateUser(dto, userID)
 	}
-
-	return service.store.UpdateUser(dto, userID)
+	service.loggerError.Logger.Error("User_service: USNAT  | UI " + strconv.Itoa(foundUser.ID))
+	return nil, errors.New("Username is already taken")
 }
 
 func (service *UserService) UpdateUserWAE(dto domain.UpdateUserWAEDto, userID int) (*domain.User, error) {

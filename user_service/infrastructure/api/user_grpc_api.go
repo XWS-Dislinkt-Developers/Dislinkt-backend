@@ -236,6 +236,7 @@ func (handler *UsersHandler) GetBySearch(ctx context.Context, request *pb.GetByS
 func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
+	user.ID = int(request.User.UserId)
 	user.UserId = int(request.User.UserId)
 	user.Username = request.User.Username
 	user.Name = request.User.Name

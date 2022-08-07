@@ -90,7 +90,8 @@ func (server *Server) initAccountActivationHandler() {
 func (server *Server) initRegistrationHandler() {
 	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
 	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
-	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint)
+	userConnectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint, userConnectionEndpoint)
 	registrationHandler.Init(server.mux)
 }
 

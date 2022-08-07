@@ -13,6 +13,14 @@ service UserConnectionService {
       get: "/userConnections"
     };
   };
+
+  rpc RegisterUserConnection(RegisterRequest) returns (UserConnection){
+    option (google.api.http) = {
+      put: "/register/{idUser}"
+    };
+  };
+
+
   rpc Follow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/follow/{idUser}"
@@ -58,6 +66,12 @@ service UserConnectionService {
 message UserIdRequest{
   int64 idUser = 1;
 }
+
+message RegisterRequest{
+  int64 idUser = 1;
+  bool isItPrivate = 2;
+}
+
 
 message ConnectionsResponse{
   repeated UserConnection userConnections = 1;
