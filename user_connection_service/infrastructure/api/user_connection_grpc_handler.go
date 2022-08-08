@@ -6,10 +6,12 @@ import (
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	app_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"net/http"
 	"strconv"
 	"strings"
 )
@@ -62,6 +64,18 @@ func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context
 	UserConnection, _ := handler.connection_service.GetConnectionsById(id)
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(id))
 	return UserConnection.Connections
+}
+
+func (handler *UserConnectionHandler) RegisterUserConnection(ctx context.Context, request *pb_connection.RegisterRequest) (*pb_connection.RegisterResponse, error) {
+	var userConnection domain.UserConnection
+	userConnection.UserId = int(request.IdUser)
+	userConnection.Private = request.IsItPrivate
+	handler.connection_service.RegisterUserConnection(&userConnection)
+
+	return &pb_connection.RegisterResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
 }
 
 func (handler *UserConnectionHandler) Follow(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {

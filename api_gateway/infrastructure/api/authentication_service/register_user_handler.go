@@ -6,6 +6,7 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/domain"
 	services "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/services"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	userConnectionPb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"io"
@@ -60,36 +61,60 @@ func (handler *RegisterUserHandler) HandleRegisterUser(w http.ResponseWriter, r 
 			w.Write([]byte(err.Error()))
 			return
 		}
+
+		registerUserConnectionRequestPb := mapRegisterUserConnectionRequestPb(registerRequestJson, response.UserId)
+		userConnectionClient := services.NewConnectionClient(handler.userConnectionClientAddress)
+		_, errUserConnection := userConnectionClient.RegisterUserConnection(context.TODO(), registerUserConnectionRequestPb)
+		if errUserConnection != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(ret)
+	return
 }
 
+// Authentication service mapper
 func mapRegisterUserRequestPb(user *domain.User) *pb.RegisterRequest {
-	registerUserRequestPb := &pb.RegisterRequest{
+	var registerUserRequestPb = &pb.RegisterRequest{
 		User: &pb.UserRegistrationData{
 			Name:            user.Name,
 			Username:        user.Username,
 			Password:        user.Password,
+			ConfirmPassword: user.ConfirmPassword,
 			Email:           user.Email,
 			Gender:          user.Gender,
-			ConfirmPassword: user.ConfirmPassword,
+			DateOfBirth:     user.DateOfBirth,
 		},
 	}
 	return registerUserRequestPb
 }
 
+// User service mapper
 func mapRegisterUserRequestUserPb(user *domain.User, userId int64) *userPb.RegisterRequest {
 	registerUserRequestPb := &userPb.RegisterRequest{
 		User: &userPb.User{
-			UserId:   userId,
-			Name:     user.Name,
-			Username: user.Username,
-			Password: user.Password,
-			Email:    user.Email,
-			Gender:   user.Gender,
+			UserId:      userId,
+			Name:        user.Name,
+			Username:    user.Username,
+			Password:    user.Password,
+			Email:       user.Email,
+			Gender:      user.Gender,
+			DateOfBirth: user.DateOfBirth,
 		},
+	}
+	return registerUserRequestPb
+}
+
+// UserConnection service mapper
+func mapRegisterUserConnectionRequestPb(user *domain.User, userId int64) *userConnectionPb.RegisterRequest {
+	registerUserRequestPb := &userConnectionPb.RegisterRequest{
+		IdUser:      userId,
+		IsItPrivate: false,
 	}
 	return registerUserRequestPb
 }

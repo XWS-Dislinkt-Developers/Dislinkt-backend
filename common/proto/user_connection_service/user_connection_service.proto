@@ -14,7 +14,7 @@ service UserConnectionService {
     };
   };
 
-  rpc RegisterUserConnection(RegisterRequest) returns (UserConnection){
+  rpc RegisterUserConnection(RegisterRequest) returns (RegisterResponse){
     option (google.api.http) = {
       put: "/register/{idUser}"
     };
@@ -72,6 +72,10 @@ message RegisterRequest{
   bool isItPrivate = 2;
 }
 
+message RegisterResponse {
+  int64 status = 1;
+  string error = 2;
+}
 
 message ConnectionsResponse{
   repeated UserConnection userConnections = 1;

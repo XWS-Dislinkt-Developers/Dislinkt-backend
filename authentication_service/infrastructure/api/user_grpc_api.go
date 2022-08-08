@@ -79,13 +79,13 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	//	}, nil
 	//}
 
-	registratedUser := handler.auth_service.Create(&user)
+	registeredUser := handler.auth_service.Create(&user)
 
 	handler.auth_service.SendEmailForUserAuthentication(&user)
 
 	return &pb.RegisterResponse{
 		Status: http.StatusCreated,
-		UserId: int64(registratedUser.ID),
+		UserId: int64(registeredUser.ID),
 	}, nil
 
 }

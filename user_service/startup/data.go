@@ -1,6 +1,11 @@
 package startup
 
-import "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
+import (
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/domain"
+	"time"
+)
+
+var myDate, err = time.Parse("2006-01-02T15:04", "1988-08-03T15:00")
 
 var users = []*domain.User{
 
@@ -12,7 +17,8 @@ var users = []*domain.User{
 		Email:            "pera@gmail.com",
 		Address:          "kodpere10",
 		Gender:           "male",
-		Biography:        "Pera is a stable part time local activist who is obsessed with Gangnam style.",
+		Biography:        "Pera is a C++ back-end developer who is obsessed with Gangnam style.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: true,
 		UserId:           1,
@@ -25,6 +31,8 @@ var users = []*domain.User{
 		Email:            "joka@gmail.com",
 		Address:          "kodjoke10",
 		Gender:           "female",
+		Biography:        "Joka is a Vue.js front-end developer who loves ABBA.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: false,
 		UserId:           2,
@@ -37,6 +45,8 @@ var users = []*domain.User{
 		Email:            "marko@gmail.com",
 		Address:          "bb10",
 		Gender:           "male",
+		Biography:        "Marko is a Data scientist who watches a lot of anime.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: false,
 		UserId:           3,
@@ -49,6 +59,8 @@ var users = []*domain.User{
 		Email:            "zeksa@gmail.com",
 		Address:          "bb10",
 		Gender:           "female",
+		Biography:        "Zeksa is a Python developer and she only loves programming.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: false,
 		UserId:           4,
@@ -61,6 +73,8 @@ var users = []*domain.User{
 		Email:            "sanja@gmail.com",
 		Address:          "bb10",
 		Gender:           "female",
+		Biography:        "Sanja is a student and she also works in a Coffee shop.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: true,
 		UserId:           5,
@@ -72,6 +86,8 @@ var users = []*domain.User{
 		Email:            "tanja@gmail.com",
 		Address:          "bb10",
 		Gender:           "female",
+		Biography:        "Tanja is a student and she wants to be a professor.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: true,
 		UserId:           6,
@@ -84,6 +100,8 @@ var users = []*domain.User{
 		Email:            "lale@gmail.com",
 		Address:          "bb10",
 		Gender:           "male",
+		Biography:        "Lale is a student and he loves to make short movies.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: true,
 		UserId:           7,
@@ -96,6 +114,8 @@ var users = []*domain.User{
 		Email:            "nena@gmail.com",
 		Address:          "bb10",
 		Gender:           "female",
+		Biography:        "Nena is a Spring Boot developer and she loves play water polo.",
+		DateOfBirth:      myDate,
 		IsItConfirmed:    true,
 		IsPrivateProfile: false,
 		UserId:           8,

@@ -133,6 +133,10 @@ func (store *UserPostgresStore) Insert(user *domain.User) (error, *domain.User) 
 		return errors.New("ERR - [UserPostgresStore-Insert(user)]: User is already registered: " + user.Username), nil
 	}
 
+	lastInsertedUser := domain.User{}
+	store.db.Last(&lastInsertedUser)
+	user.ID = lastInsertedUser.ID + 1
+
 	result := store.db.Create(user)
 
 	if result.Error != nil {
