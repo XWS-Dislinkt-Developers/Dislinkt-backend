@@ -27,6 +27,14 @@ func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.Us
 	return service.store.GetByUserId(idUser)
 }
 
+func (service *UserConnectionService) RegisterUserConnection(connection *domain.UserConnection) {
+	err := service.store.Insert(connection)
+	if err != nil {
+		service.loggerError.Logger.Error("User_connection_service: CNSU ")
+		println("Error in create method")
+	}
+}
+
 //user je korisnik sa kojim ulogovani korisnik zeli da ostvari konekciju
 func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)

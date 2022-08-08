@@ -236,12 +236,18 @@ func (handler *UsersHandler) GetBySearch(ctx context.Context, request *pb.GetByS
 func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
 	var user domain.User
+	user.ID = int(request.User.UserId)
 	user.UserId = int(request.User.UserId)
 	user.Username = request.User.Username
 	user.Name = request.User.Name
 	user.Email = request.User.Email
 	user.Password = handler.auth_service.HashPassword(request.User.Password)
 	user.Gender = request.User.Gender
+	myDate, err := time.Parse("2006-01-02", request.User.DateOfBirth)
+	if err == nil {
+		user.DateOfBirth = myDate
+	}
+
 	user.IsPrivateProfile = false
 	user.Role = "user"
 	handler.service.Create(&user)

@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserConnectionServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	RegisterUserConnection(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Follow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	Unfollow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	AcceptConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
@@ -44,6 +45,15 @@ func NewUserConnectionServiceClient(cc grpc.ClientConnInterface) UserConnectionS
 func (c *userConnectionServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
 	out := new(GetAllResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userConnectionServiceClient) RegisterUserConnection(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/RegisterUserConnection", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -127,6 +137,7 @@ func (c *userConnectionServiceClient) GetById(ctx context.Context, in *UserIdReq
 // for forward compatibility
 type UserConnectionServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	RegisterUserConnection(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	Unfollow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	AcceptConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
@@ -144,6 +155,9 @@ type UnimplementedUserConnectionServiceServer struct {
 
 func (UnimplementedUserConnectionServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) RegisterUserConnection(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterUserConnection not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
@@ -196,6 +210,24 @@ func _UserConnectionService_GetAll_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserConnectionServiceServer).GetAll(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserConnectionService_RegisterUserConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).RegisterUserConnection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/RegisterUserConnection",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).RegisterUserConnection(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -354,6 +386,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAll",
 			Handler:    _UserConnectionService_GetAll_Handler,
+		},
+		{
+			MethodName: "RegisterUserConnection",
+			Handler:    _UserConnectionService_RegisterUserConnection_Handler,
 		},
 		{
 			MethodName: "Follow",

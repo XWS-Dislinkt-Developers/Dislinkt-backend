@@ -11,6 +11,7 @@ type User struct {
 	Username        string `json:"username" ,gorm:"unique" validate:"required,username" `
 	Password        string `json:"password"`
 	Email           string `json:"email" ,gorm:"unique" validate:"required,email"`
+	DateOfBirth     string `json:"dateOfBirth"`
 	ConfirmPassword string `json:"confirmPassword"`
 	Gender          string `json:"gender"`
 }

@@ -163,8 +163,9 @@ message UserRegistrationData{
         string name = 2;
         string email = 3;
         string gender = 4;
-        string password = 5;
-        string confirmPassword = 6;
+        string dateOfBirth = 5;
+        string password = 6;
+        string confirmPassword = 7;
 }
 
 message RegisterRequest {
