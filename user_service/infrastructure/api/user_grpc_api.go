@@ -243,7 +243,7 @@ func (handler *UsersHandler) CreateUser(ctx context.Context, request *pb.Registe
 	user.Email = request.User.Email
 	user.Password = handler.auth_service.HashPassword(request.User.Password)
 	user.Gender = request.User.Gender
-	myDate, err := time.Parse("2006-01-02T15:04:05", request.User.DateOfBirth)
+	myDate, err := time.Parse("2006-01-02", request.User.DateOfBirth)
 	if err == nil {
 		user.DateOfBirth = myDate
 	}
