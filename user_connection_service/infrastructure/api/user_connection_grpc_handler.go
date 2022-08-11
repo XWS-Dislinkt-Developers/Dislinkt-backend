@@ -251,6 +251,33 @@ func (handler *UserConnectionHandler) DeclineConnectionRequest(ctx context.Conte
 	return response, nil
 }
 
+func (handler *UserConnectionHandler) CancelConnectionRequest(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.ConnectionsResponse, error) {
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+
+	handler.connection_service.CancelConnectionRequest(claims.Id, int(request.IdUser))
+
+	//Ovo je trenutno da nam vrati sve iz baze nakon unfollow-a, da bismo lakse ispratili na postmanu, posle nam ne treba
+	UserConnections, err := handler.connection_service.GetAll()
+	if err != nil {
+		handler.loggerError.Logger.Errorf("User_connection_grpc_handler: FTDCR | UI " + strconv.Itoa(claims.Id))
+
+		return nil, err
+	}
+	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: SDCR | UI " + strconv.Itoa(claims.Id))
+
+	response := &pb_connection.ConnectionsResponse{
+		UserConnections: []*pb_connection.UserConnection{},
+	}
+	for _, UserConnection := range UserConnections {
+		current := mapUserConnection(UserConnection)
+		response.UserConnections = append(response.UserConnections, current)
+	}
+	return response, nil
+}
+
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
