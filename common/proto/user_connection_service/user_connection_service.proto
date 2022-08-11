@@ -41,6 +41,11 @@ service UserConnectionService {
       put: "/decline/{idUser}"
     };
   };
+  rpc CancelConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/cancel/{idUser}"
+    };
+  };
   rpc GetConnectionsByUser(UserIdRequest) returns (Connections){
     option (google.api.http) = {
       get: "/connections/{idUser}"
