@@ -20,16 +20,18 @@ type UserConnectionHandler struct {
 	pb_auth.UnimplementedAuthenticationServiceServer
 	auth_service *app_auth.AuthService
 	pb_connection.UnimplementedUserConnectionServiceServer
-	connection_service *app_connection.UserConnectionService
-	loggerInfo         *logg.Logger
-	loggerError        *logg.Logger
+	connection_service   *app_connection.UserConnectionService
+	notificaiton_service *app_connection.NotificationService
+	loggerInfo           *logg.Logger
+	loggerError          *logg.Logger
 }
 
-func NewUserConnectionHandler(connection_service *app_connection.UserConnectionService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionHandler {
+func NewUserConnectionHandler(connection_service *app_connection.UserConnectionService, notification_service *app_connection.NotificationService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionHandler {
 	return &UserConnectionHandler{
-		connection_service: connection_service,
-		loggerInfo:         loggerInfo,
-		loggerError:        loggerError,
+		connection_service:   connection_service,
+		notificaiton_service: notification_service,
+		loggerInfo:           loggerInfo,
+		loggerError:          loggerError,
 	}
 }
 

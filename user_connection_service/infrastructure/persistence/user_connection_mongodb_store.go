@@ -10,22 +10,27 @@ import (
 )
 
 const (
-	DATABASE   = "userConnection"
-	COLLECTION = "userConnection"
+	DATABASE      = "userConnection"
+	COLLECTION    = "userConnection"
+	UCNDATABASE   = "userConnectionNotifications"
+	UCNCOLLECTION = "userConnectionNotifications"
 )
 
 type UserConnectionMongoDBStore struct {
-	userConnections *mongo.Collection
-	loggerInfo      *logg.Logger
-	loggerError     *logg.Logger
+	userConnections           *mongo.Collection
+	notificationMessagesStore *mongo.Collection
+	loggerInfo                *logg.Logger
+	loggerError               *logg.Logger
 }
 
 func NewUserConnectionMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.UserConnectionStore {
 	userConnections := client.Database(DATABASE).Collection(COLLECTION)
+	notificationMessagesStore := client.Database(UCNDATABASE).Collection(UCNCOLLECTION)
 	return &UserConnectionMongoDBStore{
-		userConnections: userConnections,
-		loggerInfo:      loggerInfo,
-		loggerError:     loggerError,
+		userConnections:           userConnections,
+		notificationMessagesStore: notificationMessagesStore,
+		loggerInfo:                loggerInfo,
+		loggerError:               loggerError,
 	}
 }
 
@@ -123,4 +128,42 @@ func decode(cursor *mongo.Cursor) (userConnections []*domain.UserConnection, err
 	}
 	err = cursor.Err()
 	return
+}
+
+func (store *UserConnectionMongoDBStore) filterNotification(filter interface{}) ([]*domain.Notification, error) {
+	cursor, err := store.notificationMessagesStore.Find(context.TODO(), filter)
+	defer cursor.Close(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+	return decodeNotification(cursor)
+}
+
+func decodeNotification(cursor *mongo.Cursor) (Notifications []*domain.Notification, err error) {
+	for cursor.Next(context.TODO()) {
+		var Notification domain.Notification
+		err = cursor.Decode(&Notification)
+		if err != nil {
+			return
+		}
+		Notifications = append(Notifications, &Notification)
+	}
+	err = cursor.Err()
+	return
+}
+
+func (store *UserConnectionMongoDBStore) InsertNotification(notification *domain.Notification) error {
+	_, err := store.notificationMessagesStore.InsertOne(context.TODO(), notification)
+	store.loggerInfo.Logger.Infof("User_connection_notification_mongodb_store: USCID | UI " + strconv.Itoa(notification.UserId))
+	if err != nil {
+		println("erorr while inserting notification")
+		return err
+	}
+	//message.Id = result.InsertedID.(primitive.ObjectID)
+	return nil
+}
+
+func (store *UserConnectionMongoDBStore) GetAllUserNotificationsByUserId(id int) ([]*domain.Notification, error) {
+	filteringUserNotifications := bson.M{"$or": []bson.M{{"user_id": id}}}
+	return store.filterNotification(filteringUserNotifications)
 }

@@ -42,7 +42,8 @@ func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
 	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
-	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, loggerInfo, loggerError)
+	userNotificationService := server.initNotificationService(userConnectionStore, loggerInfo, loggerError)
+	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, userNotificationService, loggerInfo, loggerError)
 	server.startGrpcServer(userConnectionHandler)
 }
 
@@ -69,9 +70,12 @@ func (server *Server) initUserConnectionStore(client *mongo.Client, loggerInfo *
 func (server *Server) initUserConnectionService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserConnectionService {
 	return application.NewUserConnectionService(store, loggerInfo, loggerError)
 }
+func (server *Server) initNotificationService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.NotificationService {
+	return application.NewNotificationService(store, loggerInfo, loggerError)
+}
 
-func (server *Server) initUserConnectionHandler(service *application.UserConnectionService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserConnectionHandler {
-	return api.NewUserConnectionHandler(service, loggerInfo, loggerError)
+func (server *Server) initUserConnectionHandler(service *application.UserConnectionService, notification_service *application.NotificationService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserConnectionHandler {
+	return api.NewUserConnectionHandler(service, notification_service, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userConnectionHandler *api.UserConnectionHandler) {

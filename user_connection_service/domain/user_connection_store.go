@@ -9,4 +9,7 @@ type UserConnectionStore interface {
 	UpdateConnections(userConnection *UserConnection, loggedUserConnection *UserConnection)
 	UpdateBlockedConnection(connection *UserConnection)
 	UpdateWaitingResponseConnection(connection *UserConnection)
+
+	GetAllUserNotificationsByUserId(id int) ([]*Notification, error)
+	InsertNotification(notification *Notification) error
 }
