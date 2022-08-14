@@ -12,4 +12,7 @@ type MessageStore interface {
 	Insert(message *Message) error
 	// CRUD - DELETE method(s)
 	DeleteAll()
+
+	GetAllUserNotificationsByUserId(id int) ([]*Notification, error)
+	InsertNotification(message *Notification) error
 }

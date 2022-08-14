@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"io"
 	"net/http"
 	"strings"
@@ -20,16 +21,18 @@ import (
 
 type MessageHandler struct {
 	pb_message.UnimplementedMessageServiceServer
-	message_service *app_message.MessageService
-	loggerInfo      *logg.Logger
-	loggerError     *logg.Logger
+	message_service      *app_message.MessageService
+	notificaiton_service *app_message.NotificationService
+	loggerInfo           *logg.Logger
+	loggerError          *logg.Logger
 }
 
-func NewMessageHandler(message_service *app_message.MessageService, loggerInfo *logg.Logger, loggerError *logg.Logger) *MessageHandler {
+func NewMessageHandler(message_service *app_message.MessageService, notification_service *app_message.NotificationService, loggerInfo *logg.Logger, loggerError *logg.Logger) *MessageHandler {
 	return &MessageHandler{
-		message_service: message_service,
-		loggerInfo:      loggerInfo,
-		loggerError:     loggerError,
+		message_service:      message_service,
+		notificaiton_service: notification_service,
+		loggerInfo:           loggerInfo,
+		loggerError:          loggerError,
 	}
 }
 
@@ -76,7 +79,15 @@ func (handler *MessageHandler) GetAllUsersMessagesByUserId(ctx context.Context, 
 func (handler *MessageHandler) SendMessage(ctx context.Context, request *pb_message.SendMessageRequest) (*pb_message.SendMessageResponse, error) {
 	//registerRequestJson, err := decodeBodyToSendMessageRequest(request.Message)
 	newMessage := mapNewMessage(request.Message)
+	newMessage.SenderId = int(request.Message.SenderId)
+	newMessage.ReceiverId = int(request.Message.ReceiverId)
+	var new_notif = domain.Notification{UserId: newMessage.ReceiverId, Content: "Dobili ste novu poruku", CreatedAt: timestamppb.Now().AsTime(), Seen: false}
+	handler.notificaiton_service.InsertNotification(&new_notif)
 	handler.message_service.Insert(newMessage)
+	all, _ := handler.notificaiton_service.GetAllUserNotificationsByUserId(newMessage.ReceiverId)
+	if all != nil {
+		println("nesto")
+	}
 	return &pb_message.SendMessageResponse{
 		Status: http.StatusOK,
 		Error:  "",

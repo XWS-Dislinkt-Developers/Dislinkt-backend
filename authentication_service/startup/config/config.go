@@ -21,12 +21,11 @@ func NewConfig() *Config {
 		UserDBPort: "5432",
 		UserDBName: "authentication",
 		UserDBUser: "postgres",
-		UserDBPass: "postgres",
+		UserDBPass: "admin",
 		NatsHost:   "nats",
 		NatsPort:   "4222",
 		NatsUser:   "ruser",
 		NatsPass:   "T0pS3cr3t",
-
 
 		/*
 			Port:       os.Getenv("AUTHENTICATION_SERVICE_PORT"),

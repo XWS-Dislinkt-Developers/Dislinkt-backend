@@ -39,7 +39,8 @@ func (server *Server) Start() {
 	mongoClient := server.initMongoClient()
 	messageStore := server.initMessageStore(mongoClient, loggerInfo, loggerError)
 	messageService := server.initMessageService(messageStore, loggerInfo, loggerError)
-	messageHandler := server.initMessageHandler(messageService, loggerInfo, loggerError)
+	notificationService := server.initNotificationService(messageStore, loggerInfo, loggerError)
+	messageHandler := server.initMessageHandler(messageService, notificationService, loggerInfo, loggerError)
 	server.startGrpcServer(messageHandler)
 }
 
@@ -65,8 +66,13 @@ func (server *Server) initMessageStore(client *mongo.Client, loggerInfo *logg.Lo
 func (server *Server) initMessageService(store domain.MessageStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.MessageService {
 	return application.NewMessageService(store, loggerInfo, loggerError)
 }
-func (server *Server) initMessageHandler(service *application.MessageService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.MessageHandler {
-	return api.NewMessageHandler(service, loggerInfo, loggerError)
+
+func (server *Server) initNotificationService(store domain.MessageStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.NotificationService {
+	return application.NewNotificationService(store, loggerInfo, loggerError)
+}
+
+func (server *Server) initMessageHandler(service *application.MessageService, notification_service *application.NotificationService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.MessageHandler {
+	return api.NewMessageHandler(service, notification_service, loggerInfo, loggerError)
 }
 
 // START GRPC HANDLER
