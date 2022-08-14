@@ -13,14 +13,16 @@ service UserConnectionService {
       get: "/userConnections"
     };
   };
-
   rpc RegisterUserConnection(RegisterRequest) returns (RegisterResponse){
     option (google.api.http) = {
       put: "/register/{idUser}"
     };
   };
-
-
+  rpc GetById(UserIdRequest) returns (UserConnection){
+    option (google.api.http) = {
+      get: "/getConnectionForUser/{idUser}"
+    };
+  }
   rpc Follow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/follow/{idUser}"
@@ -61,11 +63,14 @@ service UserConnectionService {
       put: "/unblock/{idUser}"
     };
   }
-  rpc GetById(UserIdRequest) returns (UserConnection){
-    option (google.api.http) = {
-      get: "/getConnectionForUser/{idUser}"
-    };
-  }
+
+}
+
+message GetAllRequest {
+}
+
+message GetAllResponse {
+  repeated UserConnection userConnections = 1;
 }
 
 message UserIdRequest{
@@ -83,13 +88,6 @@ message RegisterResponse {
 }
 
 message ConnectionsResponse{
-  repeated UserConnection userConnections = 1;
-}
-
-message GetAllRequest {
-}
-
-message GetAllResponse {
   repeated UserConnection userConnections = 1;
 }
 

@@ -2,27 +2,30 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	pb_message "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/message_service"
-	app_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/application"
+	app_message "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/message_service/logger"
 	"github.com/golang-jwt/jwt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"io"
+	"net/http"
+	"strings"
 	"time"
 )
 
 type MessageHandler struct {
 	pb_message.UnimplementedMessageServiceServer
-	message_service *app_connection.MessageService
-
-	loggerInfo  *logg.Logger
-	loggerError *logg.Logger
+	message_service *app_message.MessageService
+	loggerInfo      *logg.Logger
+	loggerError     *logg.Logger
 }
 
-func NewMessageHandler(message_service *app_connection.MessageService, loggerInfo *logg.Logger, loggerError *logg.Logger) *MessageHandler {
+func NewMessageHandler(message_service *app_message.MessageService, loggerInfo *logg.Logger, loggerError *logg.Logger) *MessageHandler {
 	return &MessageHandler{
 		message_service: message_service,
 		loggerInfo:      loggerInfo,
@@ -30,35 +33,57 @@ func NewMessageHandler(message_service *app_connection.MessageService, loggerInf
 	}
 }
 
-func (handler *MessageHandler) GetAll(ctx context.Context, request *pb_message.GetAllRequest) (*pb_message.GetAllResponse, error) {
-	_, err := handler.message_service.GetAll()
+// CRUD - READ method(s)
+func (handler *MessageHandler) GetAll(ctx context.Context, request *pb_message.GetAllRequest) (*pb_message.MessagesResponse, error) {
+	// TODO: This method will be never used?? - Maybe for Admin
+	allMessages, err := handler.message_service.GetAll()
 	if err != nil {
 		handler.loggerError.Logger.Errorf("message_grpc_handler: GetAll - failed method ")
 		return nil, err
 	}
-
-	response := &pb_message.GetAllResponse{}
-	//for _, UserConnection := range UserConnections {
-	//	current := mapUserConnection(UserConnection)
-	//	response.UserConnections = append(response.UserConnections, current)
-	//}
+	response := &pb_message.MessagesResponse{
+		Messages: []*pb_message.Message{},
+	}
+	for _, message := range allMessages {
+		current := mapMessage(message)
+		response.Messages = append(response.Messages, current)
+	}
 	return response, nil
 }
-func (handler *MessageHandler) GetMessagesByUserId(ctx context.Context, id int) (connections []int) {
-	//UserConnection, _ := handler.message_service.GetConnectionsById(id)
+func (handler *MessageHandler) GetAllUsersMessagesByUserId(ctx context.Context, request *pb_message.GetAllUsersMessagesRequest) (*pb_message.MessagesResponse, error) {
+	// TODO: LoggerInfo? - GetAllSendersMessagesByUserId
+	// TODO: authorizationLoggedUser as a separete method?
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := validateToken(token)
 
-	return nil
+	userMessages, err := handler.message_service.GetAllUsersMessagesByUserId(claims.Id)
+	if err != nil {
+		return nil, err
+	}
+	response := &pb_message.MessagesResponse{
+		Messages: []*pb_message.Message{},
+	}
+	for _, Messages := range userMessages {
+		current := mapMessage(Messages)
+		response.Messages = append(response.Messages, current)
+	}
+	return response, nil
 }
 
-func (handler *MessageHandler) SendMessage(ctx context.Context, request *pb_message.NewMessageRequest) (*pb_message.NewMessageResponse, error) {
-
-	return nil, nil
+// CRUD - CREATE method(s)
+func (handler *MessageHandler) SendMessage(ctx context.Context, request *pb_message.SendMessageRequest) (*pb_message.SendMessageResponse, error) {
+	//registerRequestJson, err := decodeBodyToSendMessageRequest(request.Message)
+	newMessage := mapNewMessage(request.Message)
+	handler.message_service.Insert(newMessage)
+	return &pb_message.SendMessageResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
 }
 
-func (handler *MessageHandler) GetMessageWithUser(ctx context.Context, request *pb_message.GetMessageRequest) (*pb_message.GetMessageResponse, error) {
-
-	return nil, nil
-}
+// Helper functions - extractHeader, validateToken
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -76,7 +101,6 @@ func extractHeader(ctx context.Context, header string) (string, error) {
 
 	return authHeaders[0], nil
 }
-
 func validateToken(signedToken string) (claims *domain.JwtClaims, err error) {
 	token, err := jwt.ParseWithClaims(
 		signedToken,
@@ -101,4 +125,15 @@ func validateToken(signedToken string) (claims *domain.JwtClaims, err error) {
 	}
 
 	return claims, nil
+}
+
+// Body decoders
+func decodeBodyToSendMessageRequest(r io.Reader) (*domain.Message, error) {
+	dec := json.NewDecoder(r)
+	dec.DisallowUnknownFields()
+	var sendMessageRequest domain.Message
+	if err := dec.Decode(&sendMessageRequest); err != nil {
+		return nil, err
+	}
+	return &sendMessageRequest, nil
 }

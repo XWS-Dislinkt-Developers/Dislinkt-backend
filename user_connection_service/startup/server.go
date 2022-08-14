@@ -39,14 +39,10 @@ const (
 func (server *Server) Start() {
 	loggerInfo := logger.InitializeLogger("connection-service", "INFO")
 	loggerError := logger.InitializeLogger("connection-service", "ERROR")
-
 	mongoClient := server.initMongoClient()
 	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
-
 	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
-
 	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, loggerInfo, loggerError)
-
 	server.startGrpcServer(userConnectionHandler)
 }
 

@@ -8,54 +8,46 @@ import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
 service MessageService {
-  rpc GetAll(GetAllRequest) returns(GetAllResponse) {
+  rpc GetAll(GetAllRequest) returns(MessagesResponse) {
     option (google.api.http) = {
       get: "/messages"
     };
   };
-  rpc SendMessage(NewMessageRequest) returns (NewMessageResponse){
+  rpc GetAllUsersMessagesByUserId(GetAllUsersMessagesRequest) returns(MessagesResponse) {
+    option (google.api.http) = {
+      get: "/messages/{idUser}"
+    };
+  };
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse){
     option (google.api.http) = {
       post: "/sendMessage"
       body: "message"
     };
   };
-  rpc GetMessageWithUser(GetMessageRequest) returns (GetMessageResponse){
-    option (google.api.http) = {
-      post: "/messages"
-      body: "otheruserid"
-    };
-  };
-
-
 }
 
-
-message GetAllRequest {
+// Requests
+message GetAllRequest {} // empty
+message GetAllUsersMessagesRequest{
+  int64 idUser = 1;
 }
-
-message GetAllResponse {
-
-}
-
-message NewMessageRequest {
+message SendMessageRequest {
   Message message = 1;
 }
 
-message NewMessageResponse {
-  string response = 1;
-}
-
-message GetMessageRequest {
-  int64 otheruserid = 1;
-}
-
-message GetMessageResponse {
+// Responses
+message MessagesResponse {
   repeated Message messages = 1;
 }
-
-message Message {
-  int64 senderid = 1;
-  int64 receiverid = 2;
-  string content = 3;
+message SendMessageResponse {
+  int64 status = 1;
+  string error = 2;
 }
 
+// Helper structs
+message Message {
+  int64 senderId = 1;
+  int64 receiverId = 2;
+  string content = 3;
+  google.protobuf.Timestamp createdAt = 4;
+}

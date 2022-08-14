@@ -10,6 +10,8 @@ type Config struct {
 	UserConnectionPort     string
 	UserHost               string
 	UserPort               string
+	MessageHost            string
+	MessagePort            string
 	HTTPSServerKey         string
 	HTTPSServerCertificate string
 }
@@ -30,6 +32,9 @@ func NewConfig() *Config {
 
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
+
+		MessageHost: "localhost",
+		MessagePort: "8008",
 
 		HTTPSServerKey:         ".cert/server.key",
 		HTTPSServerCertificate: ".cert/server.crt",

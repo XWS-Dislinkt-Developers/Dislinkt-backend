@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	DATABASE   = "messages"
-	COLLECTION = "messages"
+	DATABASE   = "userMessages"
+	COLLECTION = "userMessages"
 )
 
 type MessagesMongoDBStore struct {
@@ -29,56 +29,66 @@ func NewMessagesMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, logg
 	}
 }
 
-func (store *MessagesMongoDBStore) GetBySenderId(id int) (*domain.Message, error) {
-	filter := bson.M{"user_id": id}
-	return store.filterOne(filter)
-}
-
-func (store *MessagesMongoDBStore) GetByReceiverId(id int) (*domain.Message, error) {
-	filter := bson.M{"receiver_id": id}
-	return store.filterOne(filter)
-}
-
+// CRUD - READ method(s) - GetAll, GetAllUsersMessagesByUserId
 func (store *MessagesMongoDBStore) GetAll() ([]*domain.Message, error) {
-	filter := bson.D{{}}
-	return store.filter(filter)
+	noFiltering := bson.D{{}}
+	return store.filter(noFiltering)
+}
+func (store *MessagesMongoDBStore) GetAllUsersMessagesByUserId(id int) ([]*domain.Message, error) {
+	filteringUserMessages := bson.M{"$or": []bson.M{{"sender_id": id}, {"receiver_id": id}}}
+	return store.filter(filteringUserMessages)
 }
 
-func (store *MessagesMongoDBStore) Insert(mess *domain.Message) error {
-	_, err := store.messagesStore.InsertOne(context.TODO(), mess)
-	store.loggerInfo.Logger.Infof("Message_mongodb_store: USCID | UI " + strconv.Itoa(mess.SenderId))
+/*
+func (store *MessagesMongoDBStore) GetAllReceiversMessagesByUserId(id int) ([]*domain.Message, error) {
+	filteringReceiversMessages := bson.M{"receiver_id": id}
+	return store.filter(filteringReceiversMessages)
+}
+func (store *MessagesMongoDBStore) GetAllMessagesBetweenUsers(userId1, userId2 int) ([]*domain.Message, error) {
+	filteringMessagesBetweenUsers := bson.M{"$or": []bson.M{{"sender_id": userId1, "receiver_id": userId2}, {"sender_id": userId2, "receiver_id": userId1}}}
+	return store.filter(filteringMessagesBetweenUsers)
+}
+*/
+
+// CRUD - CREATE method(s) - Insert
+func (store *MessagesMongoDBStore) Insert(message *domain.Message) error {
+	_, err := store.messagesStore.InsertOne(context.TODO(), message)
+	store.loggerInfo.Logger.Infof("Message_mongodb_store: USCID | UI " + strconv.Itoa(message.SenderId))
 	if err != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: UFTSCIDD | UI " + strconv.Itoa(mess.SenderId))
+		store.loggerError.Logger.Errorf("Message_mongodb_store: UFTSCIDD | UI " + strconv.Itoa(message.SenderId))
 		return err
 	}
-	//userConnection.Id = result.InsertedID.(primitive.ObjectID)
+	//message.Id = result.InsertedID.(primitive.ObjectID)
 	return nil
 }
 
+// CRUD - DELETE method(s) - DeleteAll
+func (store *MessagesMongoDBStore) DeleteAll() {
+	store.messagesStore.DeleteMany(context.TODO(), bson.D{{}})
+}
+
+// Helper method(s) - filter, filterOne, decode
 func (store *MessagesMongoDBStore) filter(filter interface{}) ([]*domain.Message, error) {
 	cursor, err := store.messagesStore.Find(context.TODO(), filter)
 	defer cursor.Close(context.TODO())
-
 	if err != nil {
 		return nil, err
 	}
 	return decode(cursor)
 }
-
-func (store *MessagesMongoDBStore) filterOne(filter interface{}) (UserConnection *domain.Message, err error) {
+func (store *MessagesMongoDBStore) filterOne(filter interface{}) (Message *domain.Message, err error) {
 	result := store.messagesStore.FindOne(context.TODO(), filter)
-	err = result.Decode(&UserConnection)
+	err = result.Decode(&Message)
 	return
 }
-
-func decode(cursor *mongo.Cursor) (userConnections []*domain.Message, err error) {
+func decode(cursor *mongo.Cursor) (Messages []*domain.Message, err error) {
 	for cursor.Next(context.TODO()) {
-		var UserConnection domain.Message
-		err = cursor.Decode(&UserConnection)
+		var Message domain.Message
+		err = cursor.Decode(&Message)
 		if err != nil {
 			return
 		}
-		userConnections = append(userConnections, &UserConnection)
+		Messages = append(Messages, &Message)
 	}
 	err = cursor.Err()
 	return
