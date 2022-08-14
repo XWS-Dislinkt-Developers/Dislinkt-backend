@@ -19,12 +19,10 @@ import (
 type UserConnectionHandler struct {
 	pb_auth.UnimplementedAuthenticationServiceServer
 	auth_service *app_auth.AuthService
-
 	pb_connection.UnimplementedUserConnectionServiceServer
 	connection_service *app_connection.UserConnectionService
-
-	loggerInfo  *logg.Logger
-	loggerError *logg.Logger
+	loggerInfo         *logg.Logger
+	loggerError        *logg.Logger
 }
 
 func NewUserConnectionHandler(connection_service *app_connection.UserConnectionService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionHandler {

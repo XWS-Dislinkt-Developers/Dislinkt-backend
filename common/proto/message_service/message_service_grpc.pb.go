@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: message_service.proto
+// source: message_service/message_service.proto
 
 package message_service
 
@@ -22,9 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
-	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
-	SendMessage(ctx context.Context, in *NewMessageRequest, opts ...grpc.CallOption) (*NewMessageResponse, error)
-	GetMessageWithUser(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
+	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*MessagesResponse, error)
+	GetAllUsersMessagesByUserId(ctx context.Context, in *GetAllUsersMessagesRequest, opts ...grpc.CallOption) (*MessagesResponse, error)
+	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error)
 }
 
 type messageServiceClient struct {
@@ -35,8 +35,8 @@ func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
 	return &messageServiceClient{cc}
 }
 
-func (c *messageServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
-	out := new(GetAllResponse)
+func (c *messageServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*MessagesResponse, error) {
+	out := new(MessagesResponse)
 	err := c.cc.Invoke(ctx, "/message_service.MessageService/GetAll", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,18 +44,18 @@ func (c *messageServiceClient) GetAll(ctx context.Context, in *GetAllRequest, op
 	return out, nil
 }
 
-func (c *messageServiceClient) SendMessage(ctx context.Context, in *NewMessageRequest, opts ...grpc.CallOption) (*NewMessageResponse, error) {
-	out := new(NewMessageResponse)
-	err := c.cc.Invoke(ctx, "/message_service.MessageService/SendMessage", in, out, opts...)
+func (c *messageServiceClient) GetAllUsersMessagesByUserId(ctx context.Context, in *GetAllUsersMessagesRequest, opts ...grpc.CallOption) (*MessagesResponse, error) {
+	out := new(MessagesResponse)
+	err := c.cc.Invoke(ctx, "/message_service.MessageService/GetAllUsersMessagesByUserId", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) GetMessageWithUser(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
-	out := new(GetMessageResponse)
-	err := c.cc.Invoke(ctx, "/message_service.MessageService/GetMessageWithUser", in, out, opts...)
+func (c *messageServiceClient) SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*SendMessageResponse, error) {
+	out := new(SendMessageResponse)
+	err := c.cc.Invoke(ctx, "/message_service.MessageService/SendMessage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +66,9 @@ func (c *messageServiceClient) GetMessageWithUser(ctx context.Context, in *GetMe
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
-	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	SendMessage(context.Context, *NewMessageRequest) (*NewMessageResponse, error)
-	GetMessageWithUser(context.Context, *GetMessageRequest) (*GetMessageResponse, error)
+	GetAll(context.Context, *GetAllRequest) (*MessagesResponse, error)
+	GetAllUsersMessagesByUserId(context.Context, *GetAllUsersMessagesRequest) (*MessagesResponse, error)
+	SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -76,14 +76,14 @@ type MessageServiceServer interface {
 type UnimplementedMessageServiceServer struct {
 }
 
-func (UnimplementedMessageServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+func (UnimplementedMessageServiceServer) GetAll(context.Context, *GetAllRequest) (*MessagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedMessageServiceServer) SendMessage(context.Context, *NewMessageRequest) (*NewMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+func (UnimplementedMessageServiceServer) GetAllUsersMessagesByUserId(context.Context, *GetAllUsersMessagesRequest) (*MessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllUsersMessagesByUserId not implemented")
 }
-func (UnimplementedMessageServiceServer) GetMessageWithUser(context.Context, *GetMessageRequest) (*GetMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMessageWithUser not implemented")
+func (UnimplementedMessageServiceServer) SendMessage(context.Context, *SendMessageRequest) (*SendMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -116,8 +116,26 @@ func _MessageService_GetAll_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_GetAllUsersMessagesByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUsersMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).GetAllUsersMessagesByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/message_service.MessageService/GetAllUsersMessagesByUserId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).GetAllUsersMessagesByUserId(ctx, req.(*GetAllUsersMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MessageService_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NewMessageRequest)
+	in := new(SendMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -129,25 +147,7 @@ func _MessageService_SendMessage_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/message_service.MessageService/SendMessage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).SendMessage(ctx, req.(*NewMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_GetMessageWithUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).GetMessageWithUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/message_service.MessageService/GetMessageWithUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).GetMessageWithUser(ctx, req.(*GetMessageRequest))
+		return srv.(MessageServiceServer).SendMessage(ctx, req.(*SendMessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -164,14 +164,14 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MessageService_GetAll_Handler,
 		},
 		{
+			MethodName: "GetAllUsersMessagesByUserId",
+			Handler:    _MessageService_GetAllUsersMessagesByUserId_Handler,
+		},
+		{
 			MethodName: "SendMessage",
 			Handler:    _MessageService_SendMessage_Handler,
 		},
-		{
-			MethodName: "GetMessageWithUser",
-			Handler:    _MessageService_GetMessageWithUser_Handler,
-		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "message_service.proto",
+	Metadata: "message_service/message_service.proto",
 }

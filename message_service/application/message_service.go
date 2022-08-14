@@ -19,15 +19,28 @@ func NewMessageService(store domain.MessageStore, loggerInfo *logg.Logger, logge
 	}
 }
 
+// CRUD - READ method(s)
 func (service *MessageService) GetAll() ([]*domain.Message, error) {
 	return service.store.GetAll()
 }
-
-func (service *MessageService) GetConnectionsById(idUser int) (*domain.Message, error) {
-	return nil, nil
-	//return service.store.GetByUserId(idUser), nil
+func (service *MessageService) GetAllUsersMessagesByUserId(idUser int) ([]*domain.Message, error) {
+	return service.store.GetAllUsersMessagesByUserId(idUser)
 }
 
-func (service *MessageService) Insert(mess *domain.Message) error {
-	return nil
+/*
+func (service *MessageService) GetAllReceiversMessagesByUserId(idUser int) ([]*domain.Message, error) {
+	return service.store.GetAllReceiversMessagesByUserId(idUser)
+}
+func (service *MessageService) GetAllMessagesBetweenUsers(userId1, userId2 int) ([]*domain.Message, error) {
+	return service.store.GetAllMessagesBetweenUsers(userId1, userId2)
+}
+*/
+
+// CRUD - CREATE method(s)
+func (service *MessageService) Insert(message *domain.Message) {
+	err := service.store.Insert(message)
+	if err != nil {
+		service.loggerError.Logger.Error("Message_service: CNSU ")
+		println("Error in create method")
+	}
 }

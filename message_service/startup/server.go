@@ -36,17 +36,14 @@ const (
 func (server *Server) Start() {
 	loggerInfo := logger.InitializeLogger("message-service", "INFO")
 	loggerError := logger.InitializeLogger("message-service", "ERROR")
-
 	mongoClient := server.initMongoClient()
-	userConnectionStore := server.initMessageStore(mongoClient, loggerInfo, loggerError)
-
-	userConnectionService := server.initMessageService(userConnectionStore, loggerInfo, loggerError)
-
-	userConnectionHandler := server.initMessageHandler(userConnectionService, loggerInfo, loggerError)
-
-	server.startGrpcServer(userConnectionHandler)
+	messageStore := server.initMessageStore(mongoClient, loggerInfo, loggerError)
+	messageService := server.initMessageService(messageStore, loggerInfo, loggerError)
+	messageHandler := server.initMessageHandler(messageService, loggerInfo, loggerError)
+	server.startGrpcServer(messageHandler)
 }
 
+// INITIALIZE - Client, Store(Repository), Service, Handler(Controller)
 func (server *Server) initMongoClient() *mongo.Client {
 	client, err := persistence.GetClient(server.config.MessageDBHost, server.config.MessageDBPort)
 	if err != nil {
@@ -54,27 +51,25 @@ func (server *Server) initMongoClient() *mongo.Client {
 	}
 	return client
 }
-
 func (server *Server) initMessageStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.MessageStore {
 	store := persistence.NewMessagesMongoDBStore(client, loggerInfo, loggerError)
-	//store.DeleteAll()
-	//for _, userConnection := range userConnections {
-	//	err := store.Insert(userConnection)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}
+	store.DeleteAll()
+	for _, message := range messages {
+		err := store.Insert(message)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 	return store
 }
-
 func (server *Server) initMessageService(store domain.MessageStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.MessageService {
 	return application.NewMessageService(store, loggerInfo, loggerError)
 }
-
 func (server *Server) initMessageHandler(service *application.MessageService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.MessageHandler {
 	return api.NewMessageHandler(service, loggerInfo, loggerError)
 }
 
+// START GRPC HANDLER
 func (server *Server) startGrpcServer(userConnectionHandler *api.MessageHandler) {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", server.config.Port))
 	if err != nil {
