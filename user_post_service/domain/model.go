@@ -26,3 +26,10 @@ type UserPost struct {
 	Reactions []Reaction         `bson:"reactions"`
 	Comments  []Comment          `bson:"comments"`
 }
+
+type Notification struct {
+	UserId    int       `bson:"user_id"`
+	Content   string    `bson:"content"`
+	CreatedAt time.Time `bson:"created_at"`
+	Seen      bool      `bson:"seen"`
+}

@@ -11,22 +11,27 @@ import (
 )
 
 const (
-	DATABASE   = "userPost"
-	COLLECTION = "userPost"
+	DATABASE     = "userPost"
+	COLLECTION   = "userPost"
+	PNDATABASE   = "userPostNotifications"
+	PNCOLLECTION = "userPostNotifications"
 )
 
 type UserPostMongoDBStore struct {
-	userPosts   *mongo.Collection
-	loggerInfo  *logg.Logger
-	loggerError *logg.Logger
+	userPosts             *mongo.Collection
+	notificationPostStore *mongo.Collection
+	loggerInfo            *logg.Logger
+	loggerError           *logg.Logger
 }
 
 func NewUserPostMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.UserPostStore {
 	userPosts := client.Database(DATABASE).Collection(COLLECTION)
+	notificationPostStore := client.Database(PNDATABASE).Collection(PNCOLLECTION)
 	return &UserPostMongoDBStore{
-		userPosts:   userPosts,
-		loggerInfo:  loggerInfo,
-		loggerError: loggerError,
+		userPosts:             userPosts,
+		notificationPostStore: notificationPostStore,
+		loggerInfo:            loggerInfo,
+		loggerError:           loggerError,
 	}
 }
 
@@ -124,4 +129,42 @@ func decode(cursor *mongo.Cursor) (userPosts []*domain.UserPost, err error) {
 	}
 	err = cursor.Err()
 	return
+}
+
+func (store *UserPostMongoDBStore) filterNotification(filter interface{}) ([]*domain.Notification, error) {
+	cursor, err := store.notificationPostStore.Find(context.TODO(), filter)
+	defer cursor.Close(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+	return decodeNotification(cursor)
+}
+
+func decodeNotification(cursor *mongo.Cursor) (Notifications []*domain.Notification, err error) {
+	for cursor.Next(context.TODO()) {
+		var Notification domain.Notification
+		err = cursor.Decode(&Notification)
+		if err != nil {
+			return
+		}
+		Notifications = append(Notifications, &Notification)
+	}
+	err = cursor.Err()
+	return
+}
+
+func (store *UserPostMongoDBStore) InsertNotification(notification *domain.Notification) error {
+	_, err := store.notificationPostStore.InsertOne(context.TODO(), notification)
+	store.loggerInfo.Logger.Infof("Post_notification_mongodb_store: USCID | UI " + strconv.Itoa(notification.UserId))
+	if err != nil {
+		println("erorr while inserting notification")
+		return err
+	}
+	//message.Id = result.InsertedID.(primitive.ObjectID)
+	return nil
+}
+
+func (store *UserPostMongoDBStore) GetAllUserNotificationsByUserId(id int) ([]*domain.Notification, error) {
+	filteringUserNotifications := bson.M{"$or": []bson.M{{"user_id": id}}}
+	return store.filterNotification(filteringUserNotifications)
 }

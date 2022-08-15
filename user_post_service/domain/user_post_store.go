@@ -13,4 +13,6 @@ type UserPostStore interface {
 	UpdateReactions(userReaction *Reaction, userPost *UserPost)
 	AddReaction(userPost *UserPost)
 	GetPostsByUserId(idUser int) ([]*UserPost, error)
+	GetAllUserNotificationsByUserId(id int) ([]*Notification, error)
+	InsertNotification(notification *Notification) error
 }

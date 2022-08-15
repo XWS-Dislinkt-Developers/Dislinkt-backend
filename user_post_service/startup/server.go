@@ -50,7 +50,9 @@ func (server *Server) Start() {
 	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
 	// server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
 
-	userPostHandler := server.initUserPostHandler(userPostService, loggerInfo, loggerError)
+	notificationService := server.initNotificationService(userPostStore, loggerInfo, loggerError)
+
+	userPostHandler := server.initUserPostHandler(userPostService, notificationService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userPostHandler)
 }
@@ -108,6 +110,10 @@ func (server *Server) initUserPostService(store domain.UserPostStore, loggerInfo
 	return application.NewUserPostService(store, loggerInfo, loggerError)
 }
 
+func (server *Server) initNotificationService(store domain.UserPostStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.NotificationService {
+	return application.NewNotificationService(store, loggerInfo, loggerError)
+}
+
 /*
 func (server *Server) initCreateUserPostHandler(service *application.UserPostService) {
 	_, err := api.NewCreateUserPostHandler(service)
@@ -116,8 +122,8 @@ func (server *Server) initCreateUserPostHandler(service *application.UserPostSer
 	}
 }
 */
-func (server *Server) initUserPostHandler(service *application.UserPostService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserPostHandler {
-	return api.NewUserPostHandler(service, loggerInfo, loggerError)
+func (server *Server) initUserPostHandler(service *application.UserPostService, notification_service *application.NotificationService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserPostHandler {
+	return api.NewUserPostHandler(service, notification_service, loggerInfo, loggerError)
 }
 
 func (server *Server) startGrpcServer(userPostHandler *api.UserPostHandler) {

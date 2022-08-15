@@ -33,16 +33,19 @@ type UserPostHandler struct {
 	pb_conn.UnimplementedUserConnectionServiceServer
 	conn_service *app_conn.UserConnectionService
 
+	notificaiton_service *app_post.NotificationService
+
 	loggerInfo  *logg.Logger
 	loggerError *logg.Logger
 }
 
-func NewUserPostHandler(post_service *app_post.UserPostService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserPostHandler {
+func NewUserPostHandler(post_service *app_post.UserPostService, notification_service *app_post.NotificationService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserPostHandler {
 
 	return &UserPostHandler{
-		post_service: post_service,
-		loggerInfo:   loggerInfo,
-		loggerError:  loggerError,
+		post_service:         post_service,
+		notificaiton_service: notification_service,
+		loggerInfo:           loggerInfo,
+		loggerError:          loggerError,
 	}
 }
 
