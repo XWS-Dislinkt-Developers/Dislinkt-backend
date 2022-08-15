@@ -21,7 +21,7 @@ func NewConfig() *Config {
 		UserDBPort: "5432",
 		UserDBName: "authentication",
 		UserDBUser: "postgres",
-		UserDBPass: "admin",
+		UserDBPass: "postgres", // admin (ako si Mihajlo) :P
 		NatsHost:   "nats",
 		NatsPort:   "4222",
 		NatsUser:   "ruser",

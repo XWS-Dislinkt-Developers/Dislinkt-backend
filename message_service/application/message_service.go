@@ -27,15 +27,6 @@ func (service *MessageService) GetAllUsersMessagesByUserId(idUser int) ([]*domai
 	return service.store.GetAllUsersMessagesByUserId(idUser)
 }
 
-/*
-func (service *MessageService) GetAllReceiversMessagesByUserId(idUser int) ([]*domain.Message, error) {
-	return service.store.GetAllReceiversMessagesByUserId(idUser)
-}
-func (service *MessageService) GetAllMessagesBetweenUsers(userId1, userId2 int) ([]*domain.Message, error) {
-	return service.store.GetAllMessagesBetweenUsers(userId1, userId2)
-}
-*/
-
 // CRUD - CREATE method(s)
 func (service *MessageService) Insert(message *domain.Message) {
 	err := service.store.Insert(message)
