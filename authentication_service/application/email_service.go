@@ -7,6 +7,13 @@ import (
 	"strconv"
 )
 
+type EmailService struct {
+}
+
+func NewEmailService() *EmailService {
+	return &EmailService{}
+}
+
 func (service *AuthService) sendRecoveryCodeEmail(user *domain.User, code string) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "dislinkt10@gmail.com")
@@ -45,7 +52,7 @@ func (service *AuthService) sendPasswordlessLoginEmail(user *domain.User, code s
 	service.loggerInfo.Logger.Infof("Auth_service: sendPasswordlessLoginEmail - EPSWLIS | UI " + strconv.Itoa(user.ID))
 }
 
-func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
+func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) (*domain.User, error) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "dislinkt10@gmail.com")
 	m.SetHeader("To", user.Email)
@@ -60,6 +67,8 @@ func (service *AuthService) SendEmailForUserAuthentication(user *domain.User) {
 	if err := d.DialAndSend(m); err != nil {
 		service.loggerError.Logger.Errorf("Auth_service: FSEFA")
 		panic(err)
+		return nil, err
 	}
 	service.loggerInfo.Logger.Infof("Auth_service: EFAS")
+	return user, nil
 }

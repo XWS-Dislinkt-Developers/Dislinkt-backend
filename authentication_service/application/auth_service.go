@@ -25,9 +25,10 @@ type AuthService struct {
 	passwordlessLoginStore domain.PasswordlessLoginStore
 	loggerInfo             *logg.Logger
 	loggerError            *logg.Logger
+	orchestrator           *RegisterUserOrchestrator
 }
 
-func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *AuthService {
+func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logg.Logger, loggerError *logg.Logger, orchestrator *RegisterUserOrchestrator) *AuthService {
 	return &AuthService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
@@ -35,6 +36,7 @@ func NewAuthService(store domain.UserStore, conformationTokenStore domain.Confir
 		passwordlessLoginStore: passwordlessLoginStore,
 		loggerInfo:             loggerInfo,
 		loggerError:            loggerError,
+		orchestrator:           orchestrator,
 	}
 }
 
@@ -296,4 +298,36 @@ func (service *AuthService) Create(user *domain.User) *domain.User {
 
 func (service *AuthService) GetByUsername(username string) (*domain.User, error) {
 	return service.store.GetByUsername(username)
+}
+
+//saga
+func (service *AuthService) Registration(user *domain.User) (*domain.User, error) {
+	user.Status = domain.Pending
+	err, u := service.store.Insert(user)
+	if err != nil {
+		println("Error in create method")
+	}
+	err = service.orchestrator.Start(user)
+	if err != nil {
+		user.Status = domain.Cancelled
+		_ = service.store.UpdateStatus(user)
+		return u, err
+	}
+
+	return u, err
+}
+
+func (service *AuthService) Approve(user *domain.User) error {
+	user.Status = domain.Approved
+	return service.store.UpdateStatus(user)
+
+}
+
+func (service *AuthService) CancelRegistration(user *domain.User) error {
+	user.Status = domain.Cancelled
+	return service.store.UpdateStatus(user)
+}
+
+func (service *AuthService) DeleteUser(user *domain.User) {
+	service.store.Delete(user)
 }

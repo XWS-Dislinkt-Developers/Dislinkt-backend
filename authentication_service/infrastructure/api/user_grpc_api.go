@@ -56,6 +56,7 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 			Error:  "Password mismatch",
 		}, nil
 	}
+
 	_, err := handler.auth_service.GetByUsername(user.Username)
 	if err == nil {
 		return &pb.RegisterResponse{
@@ -79,7 +80,10 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 		}, nil
 	}
 
-	registratedUser := handler.auth_service.Create(&user)
+	//odavde moze da krene saga
+	//ovde mogu da posaljem na registraciju zapravo
+	//registratedUser := handler.auth_service.Create(&user)
+	registratedUser, _ := handler.auth_service.Registration(&user)
 
 	handler.auth_service.SendEmailForUserAuthentication(&user)
 

@@ -44,11 +44,16 @@ func (server *Server) Start() {
 	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient, loggerInfo, loggerError)
 	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
 
-	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError)
+	commandPublisher := server.initPublisher(server.config.RegisterUserCommandSubject)
+	replySubscriber := server.initSubscriber(server.config.RegisterUserReplySubject, QueueGroup)
+	registerUserOrchestrator := server.initRegisterUserOrchestrator(commandPublisher, replySubscriber)
 
-	//commandSubscriber := server.initSubscriber(server.config.CreateOrderCommandSubject, QueueGroup)
-	//replyPublisher := server.initPublisher(server.config.CreateOrderReplySubject)
-	//server.initCreateOrderHandler(userService, replyPublisher, commandSubscriber)
+	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError, registerUserOrchestrator)
+
+	//ucesnik koji izvrsava svoje lokalne transakcije, prima komande od orkestratora i salje u odredjei kanal
+	commandSubscriber := server.initSubscriber(server.config.RegisterUserCommandSubject, QueueGroup)
+	replyPublisher := server.initPublisher(server.config.RegisterUserReplySubject)
+	server.initRegisterUserHandler(authService, replyPublisher, commandSubscriber)
 
 	userHandler := server.initUserHandler(authService, loggerInfo, loggerError)
 
@@ -71,13 +76,6 @@ func (server *Server) initUserStore(client *gorm.DB, loggerInfo *logger.Logger, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	//store.DeleteAll()
-	//for _, User := range users {
-	//	err := store.Insert(User)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}
 	return store
 }
 
@@ -125,16 +123,9 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	return subscriber
 }
 
-func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.AuthService {
-	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError)
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger, orchestrator *application.RegisterUserOrchestrator) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError, orchestrator)
 }
-
-// func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {
-// 	_, err := api.NewCreateOrderCommandHandler(service, publisher, subscriber)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
 
 func (server *Server) initUserHandler(authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
 	return api.NewUserHandler(authService, loggerInfo, loggerError)
@@ -155,5 +146,20 @@ func (server *Server) startGrpcServer(userHandler *api.UserHandler) {
 	authentication.RegisterAuthenticationServiceServer(grpcServer, userHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
+	}
+}
+
+func (server *Server) initRegisterUserOrchestrator(publisher saga.Publisher, subscriber saga.Subscriber) *application.RegisterUserOrchestrator {
+	orchestrator, err := application.NewRegisterUserOrchestrator(publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return orchestrator
+}
+
+func (server *Server) initRegisterUserHandler(service *application.AuthService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewRegisterUserCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

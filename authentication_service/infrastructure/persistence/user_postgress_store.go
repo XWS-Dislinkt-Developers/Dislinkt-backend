@@ -161,3 +161,17 @@ func (store *UserPostgresStore) DeleteAll() {
 	store.db.Session(&gorm.Session{AllowGlobalUpdate: true}).
 		Delete(&domain.User{})
 }
+
+func (store *UserPostgresStore) UpdateStatus(user *domain.User) error {
+	var foundUser domain.User
+	foundUser.ID = user.ID
+	store.db.First(&foundUser)
+	foundUser.Status = user.Status
+	store.db.Save(&foundUser)
+	return nil
+}
+func (store *UserPostgresStore) Delete(user *domain.User) {
+	var foundUser domain.User
+	foundUser.ID = user.ID
+	store.Delete(&foundUser)
+}
