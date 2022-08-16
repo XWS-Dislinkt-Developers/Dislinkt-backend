@@ -29,7 +29,7 @@ func mapUserPost(userPost *domain.UserPost) *pb_post.UserPost {
 	for _, comment := range userPost.Comments {
 		commentPb := &pb_post.Comment{
 			UserId:    int64(comment.UserId),
-			CreatedAt: timestamppb.New(userPost.CreatedAt),
+			CreatedAt: timestamppb.New(comment.CreatedAt),
 			Text:      comment.Text,
 		}
 		userPostPb.Comments = append(userPostPb.Comments, commentPb)
