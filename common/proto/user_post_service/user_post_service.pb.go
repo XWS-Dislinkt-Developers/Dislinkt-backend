@@ -123,7 +123,7 @@ type AddComment struct {
 	unknownFields protoimpl.UnknownFields
 
 	IdPost string `protobuf:"bytes,1,opt,name=idPost,proto3" json:"idPost,omitempty"`
-	Text   string `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Text   string `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"` //google.protobuf.Timestamp createdAt = 3;
 }
 
 func (x *AddComment) Reset() {

@@ -39,7 +39,7 @@ var userConnections = []*domain.UserConnection{
 		UserId:  4,
 		Private: false,
 		Connections: []int{
-			1, 2, 5, 7, 6,
+			1, 2, 7, 6,
 		},
 		Requests:        []int{},
 		WaitingResponse: []int{},

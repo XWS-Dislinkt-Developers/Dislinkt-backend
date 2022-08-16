@@ -44,6 +44,7 @@ func (service *UserPostService) Create(userPost *domain.UserPost) error {
 func (service *UserPostService) AddComment(comment *domain.Comment, idPost primitive.ObjectID) (*domain.UserPost, error) {
 	UserPost, _ := service.store.Get(idPost)
 	if comment.Text != "" {
+		// comment.CreatedAt = time.Now()
 		UserPost.Comments = append(UserPost.Comments, *comment)
 		service.loggerInfo.Logger.Infof("User_post_service: USANCTP | UI " + strconv.Itoa(UserPost.UserId))
 		service.store.UpdateComments(UserPost)

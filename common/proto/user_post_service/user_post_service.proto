@@ -75,6 +75,7 @@ message AddCommentRequest {
 message AddComment {
   string idPost = 1;
   string text = 2;
+  //google.protobuf.Timestamp createdAt = 3;
 }
 
 //TODO: AddCommentToUserPostResponse{...}
