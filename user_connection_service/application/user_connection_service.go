@@ -22,7 +22,6 @@ func NewUserConnectionService(store domain.UserConnectionStore, loggerInfo *logg
 func (service *UserConnectionService) GetAll() ([]*domain.UserConnection, error) {
 	return service.store.GetAll()
 }
-
 func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.UserConnection, error) {
 	return service.store.GetByUserId(idUser)
 }
@@ -35,7 +34,6 @@ func (service *UserConnectionService) RegisterUserConnection(connection *domain.
 	}
 }
 
-//user je korisnik sa kojim ulogovani korisnik zeli da ostvari konekciju
 func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -70,52 +68,6 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 		}
 	}
 }
-
-func (service *UserConnectionService) connectionDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
-	for _, c := range LoggedUserConnection.Connections {
-		if c == UserConnection.UserId {
-			return false
-		}
-	}
-	return true
-}
-
-func (service *UserConnectionService) requestDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
-	for _, c := range UserConnection.Requests {
-		if c == LoggedUserConnection.UserId {
-			return false
-		}
-	}
-	return true
-}
-
-func (service *UserConnectionService) requestDoesntExistForBlockingUsers(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
-	for _, c := range LoggedUserConnection.Requests {
-		if c == UserConnection.UserId {
-			return false
-		}
-	}
-	return true
-}
-
-func (service *UserConnectionService) waitingResponseDoesntExist(UserConnection *domain.UserConnection, LoggedUserConnection *domain.UserConnection) bool {
-	for _, c := range UserConnection.Requests {
-		if c == LoggedUserConnection.UserId {
-			return false
-		}
-	}
-	return true
-}
-
-func (service *UserConnectionService) waitingResponseDoesntExistForBlockingUsers(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
-	for _, c := range LoggedUserConnection.WaitingResponse {
-		if c == UserConnection.UserId {
-			return false
-		}
-	}
-	return true
-}
-
 func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -124,7 +76,6 @@ func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
 	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
 	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 }
-
 func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -139,7 +90,6 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 
 }
-
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -150,7 +100,6 @@ func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int,
 	service.store.UpdateWaitingResponseConnection(UserConnection)
 
 }
-
 func (service *UserConnectionService) CancelConnectionRequest(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -161,7 +110,6 @@ func (service *UserConnectionService) CancelConnectionRequest(idLoggedUser int, 
 	service.store.UpdateRequestConnection(UserConnection)
 
 }
-
 func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -188,7 +136,6 @@ func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
 		service.store.UpdateBlockedConnection(LoggedUserConnection)
 	}
 }
-
 func (service *UserConnectionService) UnblockUser(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 
@@ -196,6 +143,46 @@ func (service *UserConnectionService) UnblockUser(idLoggedUser int, idUser int) 
 	service.store.UpdateBlockedConnection(LoggedUserConnection)
 }
 
+func (service *UserConnectionService) connectionDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range LoggedUserConnection.Connections {
+		if c == UserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
+func (service *UserConnectionService) requestDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range UserConnection.Requests {
+		if c == LoggedUserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
+func (service *UserConnectionService) requestDoesntExistForBlockingUsers(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range LoggedUserConnection.Requests {
+		if c == UserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
+func (service *UserConnectionService) waitingResponseDoesntExist(UserConnection *domain.UserConnection, LoggedUserConnection *domain.UserConnection) bool {
+	for _, c := range UserConnection.Requests {
+		if c == LoggedUserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
+func (service *UserConnectionService) waitingResponseDoesntExistForBlockingUsers(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {
+	for _, c := range LoggedUserConnection.WaitingResponse {
+		if c == UserConnection.UserId {
+			return false
+		}
+	}
+	return true
+}
 func (service *UserConnectionService) BlockedDoesntExist(loggedUser *domain.UserConnection, user *domain.UserConnection) bool {
 	for _, c := range loggedUser.Blocked {
 		if c == user.UserId {

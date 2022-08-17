@@ -35,7 +35,6 @@ func (handler *UserFeedForPublicProfilesHandler) HandleUserFeed(w http.ResponseW
 
 	//TODO: endpoint koji iz servisa users vraca sve public profile
 	usersClient := services.NewUserClient(handler.userClientAddress)
-
 	response, err := usersClient.GetAllPublicProfiles(context.TODO(), &pbUser.GetAllRequest{})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -45,7 +44,6 @@ func (handler *UserFeedForPublicProfilesHandler) HandleUserFeed(w http.ResponseW
 
 	//TODO: endpoint koji vraca sve postove iz servisa postova
 	postClient := services.NewPostClient(handler.postClientAddress)
-
 	posts, errPost := postClient.GetAll(context.TODO(), &pbCPost.GetAllRequest{})
 	if errPost != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -65,7 +63,8 @@ func (handler *UserFeedForPublicProfilesHandler) HandleUserFeed(w http.ResponseW
 					ImagePath: p.ImagePath,
 					CreatedAt: p.CreatedAt.AsTime().Local(),
 					Comments:  getComments(p.Comments),
-					Reactions: getReactions(p.Reactions),
+					Likes:     converterInt64ToIntArray(p.Likes),
+					Dislikes:  converterInt64ToIntArray(p.Dislikes),
 				}
 				feed = append(feed, po)
 			}

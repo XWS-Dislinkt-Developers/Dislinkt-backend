@@ -97,7 +97,8 @@ func returnPosts(w http.ResponseWriter, posts *pbPost.GetAllResponse) {
 			ImagePath: p.ImagePath,
 			CreatedAt: p.CreatedAt.AsTime().Local(),
 			Comments:  getComments(p.Comments),
-			Reactions: getReactions(p.Reactions),
+			Likes:     converterInt64ToIntArray(p.Likes),
+			Dislikes:  converterInt64ToIntArray(p.Dislikes),
 		}
 		feed = append(feed, po)
 	}

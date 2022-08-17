@@ -32,11 +32,13 @@ type PasswordRecoveryDTO struct {
 	ConfirmPassword string
 }
 
+/*
 type Reaction struct {
 	UserId   int
 	Liked    bool
 	Disliked bool
 }
+*/
 
 type Comment struct {
 	UserId    int
@@ -50,7 +52,8 @@ type UserPost struct {
 	CreatedAt time.Time
 	Text      string
 	ImagePath string
-	Reactions []Reaction
+	Likes     []int
+	Dislikes  []int
 	Comments  []Comment
 }
 

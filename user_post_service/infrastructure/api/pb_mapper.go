@@ -15,16 +15,15 @@ func mapUserPost(userPost *domain.UserPost) *pb_post.UserPost {
 		CreatedAt: timestamppb.New(userPost.CreatedAt),
 		Text:      userPost.Text,
 		ImagePath: userPost.ImagePath,
-		Reactions: make([]*pb_post.Reaction, 0),
+		Likes:     make([]int64, 0),
+		Dislikes:  make([]int64, 0),
 		Comments:  make([]*pb_post.Comment, 0),
 	}
-	for _, reaction := range userPost.Reactions {
-		reactionPb := &pb_post.Reaction{
-			UserId:   int64(reaction.UserId),
-			Liked:    reaction.Liked,
-			Disliked: reaction.Disliked,
-		}
-		userPostPb.Reactions = append(userPostPb.Reactions, reactionPb)
+	for _, like := range userPost.Likes {
+		userPostPb.Likes = append(userPostPb.Likes, int64(like))
+	}
+	for _, dislike := range userPost.Dislikes {
+		userPostPb.Dislikes = append(userPostPb.Dislikes, int64(dislike))
 	}
 	for _, comment := range userPost.Comments {
 		commentPb := &pb_post.Comment{
@@ -40,33 +39,15 @@ func mapUserPost(userPost *domain.UserPost) *pb_post.UserPost {
 // UserPostMapper - Kad kreiramo userPost (zato su prazni nizovi: Reactions, Comments)
 func mapNewUserPost(userPostPb *pb_post.UserPost, userId int) *domain.UserPost {
 	userPost := &domain.UserPost{
-		Id:        GetObjectId(userPostPb.Id), // Ako sam dobro razumeo, generisace novi Id.
-		UserId:    userId,                     /*int(userPostPb.UserId)*/
+		Id:        GetObjectId(userPostPb.Id),
+		UserId:    userId,
 		Text:      userPostPb.Text,
 		ImagePath: userPostPb.ImagePath,
 		CreatedAt: timestamppb.Now().AsTime(), // Ovako cuvamo trenutno vreme
-		Reactions: make([]domain.Reaction, 0), // Kreira prazan niz
+		Likes:     make([]int, 0),             // Kreira prazan niz
+		Dislikes:  make([]int, 0),             // Kreira prazan niz
 		Comments:  make([]domain.Comment, 0),  // Kreira prazan niz
 	}
-	/*
-		-- Mislim da ovo ne treba
-			-- Kad se kreira user-post, nemamo comments ni reactions.
-		for _, reactionPb := range userPostPb.Reactions {
-			reaction := domain.Reaction{
-				UserId:   int(reactionPb.UserId),
-				IsItLike: reactionPb.IsItLike,
-			}
-			userPost.Reactions = append(userPost.Reactions, reaction)
-		}
-		for _, commentPb := range userPostPb.Comments {
-			comment := domain.Comment{
-				UserId:    int(commentPb.UserId),
-				CreatedAt: commentPb.CreatedAt.AsTime(),
-				Text:      commentPb.Text,
-			}
-			userPost.Comments = append(userPost.Comments, comment)
-		}
-	*/
 	return userPost
 }
 
@@ -81,13 +62,12 @@ func mapNewCommentToUserPost(userCommentPb *pb_post.AddCommentRequest, userId in
 	return comment
 }
 
-func mapNewReactionToUserPost(userReactionPb *pb_post.AddReactionRequest, userId int) *domain.Reaction {
-	reaction := &domain.Reaction{
-		UserId:   userId,
-		Liked:    userReactionPb.AddReaction.Liked,
-		Disliked: userReactionPb.AddReaction.Disliked,
+func converterInt64ToIntArray(likes []int64) []int {
+	ret := make([]int, 0)
+	for i := range likes {
+		ret[i] = int(likes[i])
 	}
-	return reaction
+	return ret
 }
 
 func GetObjectId(id string) primitive.ObjectID {

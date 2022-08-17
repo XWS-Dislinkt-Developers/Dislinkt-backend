@@ -25,9 +25,23 @@ func NewUserPostService(store domain.UserPostStore, loggerInfo *logg.Logger, log
 func (service *UserPostService) Get(id primitive.ObjectID) (*domain.UserPost, error) {
 	return service.store.Get(id)
 }
-
 func (service *UserPostService) GetAll() ([]*domain.UserPost, error) {
 	return service.store.GetAll()
+}
+func (service *UserPostService) GetUserPosts(idUser int) ([]*domain.UserPost, error) {
+	return service.store.GetPostsByUserId(idUser)
+}
+func (service *UserPostService) GetPostsForLoggedUserProfile(idUser int) ([]*domain.UserPost, error) {
+	posts := make([]*domain.UserPost, 0)
+	allPosts, _ := service.GetAll()
+
+	for _, post := range allPosts {
+		if post.UserId == idUser {
+			posts = append(posts, post)
+		}
+	}
+
+	return posts, nil
 }
 
 func (service *UserPostService) Create(userPost *domain.UserPost) error {
@@ -51,77 +65,69 @@ func (service *UserPostService) AddComment(comment *domain.Comment, idPost primi
 	}
 	return service.store.Get(idPost)
 }
-
-func (service *UserPostService) AddReaction(reaction *domain.Reaction, idPost primitive.ObjectID) (*domain.UserPost, error) {
-	UserPost, _ := service.store.Get(idPost)
-	userAlreadyReacted := false
-	for _, r := range UserPost.Reactions {
-		if r.UserId == reaction.UserId {
-			userAlreadyReacted = true
-		}
-	}
-	if userAlreadyReacted {
-		service.UpdateReaction(reaction, UserPost)
+func (service *UserPostService) Like(idLoggedUser int, idPost primitive.ObjectID) (*domain.UserPost, error) {
+	userPost, _ := service.store.Get(idPost)
+	if service.likedByUser(idLoggedUser, userPost) {
+		// If it's already liked, the post won't be liked neither disliked
+		userPost.Likes = findAndDelete(userPost.Likes, idLoggedUser)
+		service.store.UpdateLikes(userPost)
+	} else if service.dislikedByUser(idLoggedUser, userPost) {
+		// If it's already disliked, the post will be liked and won't be disliked
+		userPost.Dislikes = findAndDelete(userPost.Dislikes, idLoggedUser)
+		userPost.Likes = append(userPost.Likes, idLoggedUser)
+		service.store.UpdateLikes(userPost)
+		service.store.UpdateDislikes(userPost)
 	} else {
-		UserPost.Reactions = append(UserPost.Reactions, *reaction)
-		service.store.AddReaction(UserPost)
+		// If the post will be liked
+		userPost.Likes = append(userPost.Likes, idLoggedUser)
+		service.store.UpdateLikes(userPost)
 	}
-	service.loggerInfo.Logger.Infof("User_post_service: USANRTP | UI " + strconv.Itoa(UserPost.UserId))
+	return service.store.Get(idPost)
+}
+func (service *UserPostService) Dislike(idLoggedUser int, idPost primitive.ObjectID) (*domain.UserPost, error) {
+	userPost, _ := service.store.Get(idPost)
+	if service.dislikedByUser(idLoggedUser, userPost) {
+		// If it's already disliked, the post won't be liked neither disliked
+		userPost.Dislikes = findAndDelete(userPost.Likes, idLoggedUser)
+		service.store.UpdateDislikes(userPost)
+	} else if service.likedByUser(idLoggedUser, userPost) {
+		// If it's already liked, the post will be disliked and won't be liked
+		userPost.Likes = findAndDelete(userPost.Likes, idLoggedUser)
+		userPost.Dislikes = append(userPost.Dislikes, idLoggedUser)
+		service.store.UpdateLikes(userPost)
+		service.store.UpdateDislikes(userPost)
+	} else {
+		// If the post will be liked
+		userPost.Dislikes = append(userPost.Dislikes, idLoggedUser)
+		service.store.UpdateDislikes(userPost)
+	}
 	return service.store.Get(idPost)
 }
 
-func (service *UserPostService) UpdateReaction(reaction *domain.Reaction, userPost *domain.UserPost) {
-	var updatedReaction *domain.Reaction
-	for _, r := range userPost.Reactions {
-		if r.UserId == reaction.UserId {
-			if r.Liked && !r.Disliked && reaction.Liked && !reaction.Disliked {
-				r.Liked = false
-				updatedReaction = &r
-				break
-			}
-			if !r.Liked && r.Disliked && !reaction.Liked && reaction.Disliked {
-				r.Disliked = false
-				updatedReaction = &r
-				break
-			}
-			if !r.Liked && !r.Disliked && reaction.Liked && !reaction.Disliked {
-				r.Liked = true
-				updatedReaction = &r
-				break
-			}
-			if !r.Liked && !r.Disliked && !reaction.Liked && reaction.Disliked {
-				r.Disliked = true
-				updatedReaction = &r
-				break
-			}
-			if !reaction.Liked && !reaction.Disliked {
-				updatedReaction = &r
-				break
-			}
-			if reaction.Liked && reaction.Disliked {
-				updatedReaction = &r
-				break
-			}
-		}
-
-	}
-	service.loggerInfo.Logger.Infof("User_post_service: USANRTP | UI  " + strconv.Itoa(userPost.UserId))
-	service.store.UpdateReactions(updatedReaction, userPost)
-}
-
-func (service *UserPostService) GetUserPosts(idUser int) ([]*domain.UserPost, error) {
-	return service.store.GetPostsByUserId(idUser)
-}
-
-func (service *UserPostService) GetPostsForLoggedUserProfile(idUser int) ([]*domain.UserPost, error) {
-	posts := make([]*domain.UserPost, 0)
-	allPosts, _ := service.GetAll()
-
-	for _, post := range allPosts {
-		if post.UserId == idUser {
-			posts = append(posts, post)
+func (service *UserPostService) likedByUser(idLoggedUser int, userPost *domain.UserPost) bool {
+	for _, l := range userPost.Likes {
+		if l == idLoggedUser {
+			return true
 		}
 	}
+	return false
+}
+func (service *UserPostService) dislikedByUser(idLoggedUser int, userPost *domain.UserPost) bool {
+	for _, l := range userPost.Dislikes {
+		if l == idLoggedUser {
+			return true
+		}
+	}
+	return false
+}
 
-	return posts, nil
+func findAndDelete(s []int, item int) []int {
+	index := 0
+	for _, i := range s {
+		if i != item {
+			s[index] = i
+			index++
+		}
+	}
+	return s[:index]
 }
