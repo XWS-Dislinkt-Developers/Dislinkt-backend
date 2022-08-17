@@ -13,24 +13,9 @@ var userPosts = []*domain.UserPost{
 		UserId:    1,
 		CreatedAt: time.Now().Add(time.Duration(-25) * time.Hour), // Now - 25h,
 		Text:      "First post!",
-		ImagePath: "imagepath..",
-		Reactions: []domain.Reaction{
-			{
-				UserId:   2,
-				Liked:    true,
-				Disliked: false,
-			},
-			{
-				UserId:   3,
-				Liked:    false,
-				Disliked: true,
-			},
-			{
-				UserId:   4,
-				Liked:    true,
-				Disliked: false,
-			},
-		},
+		ImagePath: "",
+		Likes:     []int{1, 2, 4},
+		Dislikes:  []int{},
 		Comments: []domain.Comment{
 			{
 				UserId:    2,
@@ -40,12 +25,12 @@ var userPosts = []*domain.UserPost{
 			{
 				UserId:    2,
 				CreatedAt: time.Now().Add(time.Duration(-2) * time.Minute), // Now - 2min,
-				Text:      "Me again!",
+				Text:      "Me again! With a link now: https://youtu.be/dQw4w9WgXcQ",
 			},
 			{
 				UserId:    1,
 				CreatedAt: time.Now().Add(time.Duration(-1) * time.Minute), // Now - 1min,
-				Text:      "I can comment on my own post!!",
+				Text:      "I can comment on my own post!! 😋",
 			},
 		},
 	},
@@ -54,17 +39,11 @@ var userPosts = []*domain.UserPost{
 		Id:        GetObjectId("507f1f77bcf86cd799439012"),
 		UserId:    2,
 		CreatedAt: time.Now().Add(time.Duration(-5) * time.Hour), // Now - 5h,
-		Text:      "Second post!",
-		ImagePath: "imagepath..",
-
-		Reactions: []domain.Reaction{
-			{
-				UserId:   1,
-				Liked:    true,
-				Disliked: false,
-			},
-		},
-		Comments: []domain.Comment{},
+		Text:      "FTN repozitorijum - link: http://www.acs.uns.ac.rs/sr/repozitorijum",
+		ImagePath: "",
+		Likes:     []int{1},
+		Dislikes:  []int{},
+		Comments:  []domain.Comment{},
 	},
 	// UserPost - 03
 	{
@@ -72,40 +51,29 @@ var userPosts = []*domain.UserPost{
 		UserId:    4,
 		CreatedAt: time.Now().Add(time.Duration(-4) * time.Hour), // Now - 4h,
 		Text:      "New post!",
-		ImagePath: "imagepath..",
-
-		Reactions: []domain.Reaction{
-			{
-				UserId:   1,
-				Liked:    true,
-				Disliked: false,
-			},
-			{
-				UserId:   3,
-				Liked:    false,
-				Disliked: true,
-			},
-			{
-				UserId:   4,
-				Liked:    true,
-				Disliked: false,
-			},
-		},
+		ImagePath: "",
+		Likes:     []int{1, 4},
+		Dislikes:  []int{3},
 		Comments: []domain.Comment{
 			{
 				UserId:    3,
 				CreatedAt: time.Now().Add(time.Duration(-50) * time.Minute), // Now - 50sec,
-				Text:      "First comment!",
+				Text: "Don't forget to move your body! \n " +
+					"8min abs: https://www.youtube.com/watch?v=sWjTnBmCHTY \n" +
+					"8min legs: https://youtu.be/B0lF0gDzaAc \n" +
+					"8min arms: https://youtu.be/CxYT5cS4ljA \n" +
+					"8min buns: https://youtu.be/n538bSON2kA \n" +
+					"8min stretch: https://youtu.be/MzVdO8DJyao ",
 			},
 			{
 				UserId:    3,
 				CreatedAt: time.Now().Add(time.Duration(-40) * time.Minute), // Now - 40sec,
-				Text:      "Me again!",
+				Text:      "⠀           (\\ __ /)\n              (UwU)\n       ＿ノ ヽ ノ＼＿ \n  /　`/ ⌒Ｙ⌒ Ｙ　 \\\n( 　(三ヽ人　 /　　|\n|　ﾉ⌒＼ ￣￣ヽ　 ノ\nヽ＿＿＿＞､＿＿／\n         ｜( 王 ﾉ〈 \n         /ﾐ`ー―彡\\ \n       / ╰           ╯  \\",
 			},
 			{
 				UserId:    1,
 				CreatedAt: time.Now().Add(time.Duration(-20) * time.Minute), // Now - 20sec,
-				Text:      "I can comment on my own post!!",
+				Text:      "YEEEAA!! 💪💪💪💪💪",
 			},
 		},
 	},
@@ -114,26 +82,10 @@ var userPosts = []*domain.UserPost{
 		Id:        GetObjectId("6276eb70d31c8f2272d2fbe9"),
 		UserId:    1,
 		CreatedAt: time.Now().Add(time.Duration(-25) * time.Minute), // Now - 25min,
-		Text:      "Novi postic!",
-		ImagePath: "imagepath..",
-
-		Reactions: []domain.Reaction{
-			{
-				UserId:   5,
-				Liked:    true,
-				Disliked: false,
-			},
-			{
-				UserId:   3,
-				Liked:    false,
-				Disliked: true,
-			},
-			{
-				UserId:   4,
-				Liked:    true,
-				Disliked: false,
-			},
-		},
+		Text:      "Johnny Depp won! Objection! Hearsay! Here is a parody: https://youtu.be/mDT91ih6S5Q",
+		ImagePath: "",
+		Likes:     []int{5, 4},
+		Dislikes:  []int{3},
 		Comments: []domain.Comment{
 			{
 				UserId:    3,

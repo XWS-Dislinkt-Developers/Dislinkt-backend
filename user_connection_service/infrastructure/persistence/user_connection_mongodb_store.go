@@ -34,14 +34,53 @@ func NewUserConnectionMongoDBStore(client *mongo.Client, loggerInfo *logg.Logger
 	}
 }
 
+// USER CONNECTIONS
+
 func (store *UserConnectionMongoDBStore) GetByUserId(id int) (*domain.UserConnection, error) {
 	filter := bson.M{"user_id": id}
 	return store.filterOne(filter)
 }
-
 func (store *UserConnectionMongoDBStore) GetAll() ([]*domain.UserConnection, error) {
 	filter := bson.D{{}}
 	return store.filter(filter)
+}
+
+func (store *UserConnectionMongoDBStore) UpdateConnections(userConnection *domain.UserConnection, loggedUserConnection *domain.UserConnection) {
+	_, err1 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"connections", userConnection.Connections}}}})
+	_, err2 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": loggedUserConnection.UserId}, bson.D{{"$set", bson.D{{"connections", loggedUserConnection.Connections}}}})
+	if err1 != nil || err2 != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: UFACID | UI " + strconv.Itoa(loggedUserConnection.UserId))
+		println("Failed update connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USSACID | UI " + strconv.Itoa(loggedUserConnection.UserId))
+	}
+}
+func (store *UserConnectionMongoDBStore) UpdateRequestConnection(userConnection *domain.UserConnection) {
+	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"requests", userConnection.Requests}}}})
+	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTUCID | UI  " + strconv.Itoa(userConnection.UserId))
+		println("Failed update request connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USUCID | UI " + strconv.Itoa(userConnection.UserId))
+	}
+}
+func (store *UserConnectionMongoDBStore) UpdateWaitingResponseConnection(userConnection *domain.UserConnection) {
+	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"waiting_response", userConnection.WaitingResponse}}}})
+	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTUCID | UI  " + strconv.Itoa(userConnection.UserId))
+
+		println("Failed update request connection.")
+	} else {
+		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USUCID | UI " + strconv.Itoa(userConnection.UserId))
+
+	}
+}
+func (store *UserConnectionMongoDBStore) UpdateBlockedConnection(userConnection *domain.UserConnection) {
+	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"blocked", userConnection.Blocked}}}})
+	if err != nil {
+		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTBCID | UI  " + strconv.Itoa(userConnection.UserId))
+		println("Failed update blocked connection.")
+	}
 }
 
 func (store *UserConnectionMongoDBStore) Insert(userConnection *domain.UserConnection) error {
@@ -67,56 +106,11 @@ func (store *UserConnectionMongoDBStore) filter(filter interface{}) ([]*domain.U
 	}
 	return decode(cursor)
 }
-
 func (store *UserConnectionMongoDBStore) filterOne(filter interface{}) (UserConnection *domain.UserConnection, err error) {
 	result := store.userConnections.FindOne(context.TODO(), filter)
 	err = result.Decode(&UserConnection)
 	return
 }
-
-func (store *UserConnectionMongoDBStore) UpdateRequestConnection(userConnection *domain.UserConnection) {
-	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"requests", userConnection.Requests}}}})
-	if err != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTUCID | UI  " + strconv.Itoa(userConnection.UserId))
-
-		println("Failed update request connection.")
-	} else {
-		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USUCID | UI " + strconv.Itoa(userConnection.UserId))
-
-	}
-}
-
-func (store *UserConnectionMongoDBStore) UpdateWaitingResponseConnection(userConnection *domain.UserConnection) {
-	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"waiting_response", userConnection.WaitingResponse}}}})
-	if err != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTUCID | UI  " + strconv.Itoa(userConnection.UserId))
-
-		println("Failed update request connection.")
-	} else {
-		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USUCID | UI " + strconv.Itoa(userConnection.UserId))
-
-	}
-}
-
-func (store *UserConnectionMongoDBStore) UpdateBlockedConnection(userConnection *domain.UserConnection) {
-	_, err := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"blocked", userConnection.Blocked}}}})
-	if err != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: FTBCID | UI  " + strconv.Itoa(userConnection.UserId))
-		println("Failed update blocked connection.")
-	}
-}
-
-func (store *UserConnectionMongoDBStore) UpdateConnections(userConnection *domain.UserConnection, loggedUserConnection *domain.UserConnection) {
-	_, err1 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": userConnection.UserId}, bson.D{{"$set", bson.D{{"connections", userConnection.Connections}}}})
-	_, err2 := store.userConnections.UpdateOne(context.TODO(), bson.M{"user_id": loggedUserConnection.UserId}, bson.D{{"$set", bson.D{{"connections", loggedUserConnection.Connections}}}})
-	if err1 != nil || err2 != nil {
-		store.loggerError.Logger.Errorf("User_connection_mongodb_store: UFACID | UI " + strconv.Itoa(loggedUserConnection.UserId))
-		println("Failed update connection.")
-	} else {
-		store.loggerInfo.Logger.Infof("User_connection_mongodb_store: USSACID | UI " + strconv.Itoa(loggedUserConnection.UserId))
-	}
-}
-
 func decode(cursor *mongo.Cursor) (userConnections []*domain.UserConnection, err error) {
 	for cursor.Next(context.TODO()) {
 		var UserConnection domain.UserConnection
@@ -130,26 +124,11 @@ func decode(cursor *mongo.Cursor) (userConnections []*domain.UserConnection, err
 	return
 }
 
-func (store *UserConnectionMongoDBStore) filterNotification(filter interface{}) ([]*domain.Notification, error) {
-	cursor, err := store.notificationMessagesStore.Find(context.TODO(), filter)
-	defer cursor.Close(context.TODO())
-	if err != nil {
-		return nil, err
-	}
-	return decodeNotification(cursor)
-}
+// NOTIFICATIONS
 
-func decodeNotification(cursor *mongo.Cursor) (Notifications []*domain.Notification, err error) {
-	for cursor.Next(context.TODO()) {
-		var Notification domain.Notification
-		err = cursor.Decode(&Notification)
-		if err != nil {
-			return
-		}
-		Notifications = append(Notifications, &Notification)
-	}
-	err = cursor.Err()
-	return
+func (store *UserConnectionMongoDBStore) GetAllUserNotificationsByUserId(id int) ([]*domain.Notification, error) {
+	filteringUserNotifications := bson.M{"$or": []bson.M{{"user_id": id}}}
+	return store.filterNotification(filteringUserNotifications)
 }
 
 func (store *UserConnectionMongoDBStore) InsertNotification(notification *domain.Notification) error {
@@ -163,7 +142,23 @@ func (store *UserConnectionMongoDBStore) InsertNotification(notification *domain
 	return nil
 }
 
-func (store *UserConnectionMongoDBStore) GetAllUserNotificationsByUserId(id int) ([]*domain.Notification, error) {
-	filteringUserNotifications := bson.M{"$or": []bson.M{{"user_id": id}}}
-	return store.filterNotification(filteringUserNotifications)
+func (store *UserConnectionMongoDBStore) filterNotification(filter interface{}) ([]*domain.Notification, error) {
+	cursor, err := store.notificationMessagesStore.Find(context.TODO(), filter)
+	defer cursor.Close(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+	return decodeNotification(cursor)
+}
+func decodeNotification(cursor *mongo.Cursor) (Notifications []*domain.Notification, err error) {
+	for cursor.Next(context.TODO()) {
+		var Notification domain.Notification
+		err = cursor.Decode(&Notification)
+		if err != nil {
+			return
+		}
+		Notifications = append(Notifications, &Notification)
+	}
+	err = cursor.Err()
+	return
 }

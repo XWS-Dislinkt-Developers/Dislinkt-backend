@@ -32,7 +32,6 @@ func (handler *UserFeedHandler) Init(mux *runtime.ServeMux) {
 		panic(err)
 	}
 }
-
 func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
 
 	header := r.Header.Get("Authorization")
@@ -41,9 +40,8 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 	claims, _ := authService.ValidateToken(token)
 
 	//TODO: endpoint koji iz servisa konekcija vraca sve konekcije za ulogovanog korisnika
-	connectinClient := services.NewConnectionClient(handler.connectionClientAddress)
-
-	response, err := connectinClient.GetConnectionsByUser(context.TODO(), &pbConn.UserIdRequest{
+	connectionClient := services.NewConnectionClient(handler.connectionClientAddress)
+	response, err := connectionClient.GetConnectionsByUser(context.TODO(), &pbConn.UserIdRequest{
 		IdUser: int64(claims.Id),
 	})
 	if err != nil {
@@ -54,7 +52,6 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 
 	//TODO: endpoint koji vraca sve postove iz servisa postova
 	postClient := services.NewPostClient(handler.postClientAddress)
-
 	posts, errPost := postClient.GetAll(context.TODO(), &pbCPost.GetAllRequest{})
 	if errPost != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -74,7 +71,8 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 					ImagePath: p.ImagePath,
 					CreatedAt: p.CreatedAt.AsTime().Local(),
 					Comments:  getComments(p.Comments),
-					Reactions: getReactions(p.Reactions),
+					Likes:     converterInt64ToIntArray(p.Likes),
+					Dislikes:  converterInt64ToIntArray(p.Dislikes),
 				}
 				feed = append(feed, po)
 			}
@@ -92,24 +90,16 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 	w.WriteHeader(http.StatusOK)
 	w.Write(rt)
 }
-
-func getReactions(reactions []*pbCPost.Reaction) []domain.Reaction {
-	ret := make([]domain.Reaction, 0)
-
-	for _, r := range reactions {
-		reaction := domain.Reaction{
-			UserId:   int(r.UserId),
-			Disliked: r.Liked,
-			Liked:    r.Disliked,
-		}
-		ret = append(ret, reaction)
+func converterInt64ToIntArray(likes []int64) []int {
+	ret := make([]int, 0)
+	for i := range likes {
+		ret[i] = int(likes[i])
 	}
 	return ret
 }
 
 func getComments(comments []*pbCPost.Comment) []domain.Comment {
 	ret := make([]domain.Comment, 0)
-
 	for _, c := range comments {
 		comment := domain.Comment{
 			UserId:    int(c.UserId),

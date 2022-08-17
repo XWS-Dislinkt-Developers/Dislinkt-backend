@@ -49,27 +49,6 @@ func NewUserPostHandler(post_service *app_post.UserPostService, notification_ser
 	}
 }
 
-func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_post.CreateUserPostRequest) (*pb_post.CreateUserPostResponse, error) {
-	header, _ := extractHeader(ctx, "authorization")
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, _ := handler.auth_service.ValidateToken(token)
-
-	userPost := mapNewUserPost(request.UserPost, claims.Id)
-	err := handler.post_service.Create(userPost)
-
-	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UFCNP | UI  " + strconv.Itoa(claims.Id))
-		return nil, err
-	}
-
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USCNP | UI " + strconv.Itoa(claims.Id))
-
-	return &pb_post.CreateUserPostResponse{
-		UserPost: mapUserPost(userPost),
-	}, nil
-}
-
 func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetResponse, error) {
 	id := request.Id
 	objectId, err := primitive.ObjectIDFromHex(id)
@@ -89,7 +68,24 @@ func (handler *UserPostHandler) Get(ctx context.Context, request *pb_post.GetReq
 	}
 	return response, nil
 }
-
+func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
+	//header, _ := extractHeader(ctx, "authorization")
+	//var prefix = "Bearer "
+	//var token = strings.TrimPrefix(header, prefix)
+	//claims, _ := handler.auth_service.ValidateToken(token)
+	userPosts, err := handler.post_service.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	response := &pb_post.GetAllResponse{
+		UserPosts: []*pb_post.UserPost{},
+	}
+	for _, UserPost := range userPosts {
+		current := mapUserPost(UserPost)
+		response.UserPosts = append(response.UserPosts, current)
+	}
+	return response, nil
+}
 func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
@@ -146,27 +142,6 @@ func (handler *UserPostHandler) GetPostsForFeed(ctx context.Context, request *pb
 	return response, nil
 
 }
-
-func (handler *UserPostHandler) GetAll(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
-
-	userPosts, err := handler.post_service.GetAll()
-	if err != nil {
-		return nil, err
-	}
-	response := &pb_post.GetAllResponse{
-		UserPosts: []*pb_post.UserPost{},
-	}
-	for _, UserPost := range userPosts {
-		current := mapUserPost(UserPost)
-		response.UserPosts = append(response.UserPosts, current)
-	}
-	return response, nil
-}
-
 func (handler *UserPostHandler) GetPostsForLoggedUserProfile(ctx context.Context, request *pb_post.GetAllRequest) (*pb_post.GetAllResponse, error) {
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
@@ -186,26 +161,44 @@ func (handler *UserPostHandler) GetPostsForLoggedUserProfile(ctx context.Context
 	}
 	return response, nil
 }
+func (handler *UserPostHandler) GetUserPosts(ctx context.Context, request *pb_post.GetUserPostsRequest) (*pb_post.GetAllResponse, error) {
+	id := int(request.Id)
+	userPosts, err := handler.post_service.GetUserPosts(id)
+	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler:FGAPU  | UI  " + strconv.Itoa(id))
+		return nil, err
+	}
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI " + strconv.Itoa(id))
+	response := &pb_post.GetAllResponse{
+		UserPosts: []*pb_post.UserPost{},
+	}
+	for _, UserPost := range userPosts {
+		current := mapUserPost(UserPost)
+		response.UserPosts = append(response.UserPosts, current)
+	}
+	return response, nil
+}
 
-func (handler *UserPostHandler) AddReactionToUserPost(ctx context.Context, request *pb_post.AddReactionRequest) (*pb_post.GetResponse, error) {
+func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_post.CreateUserPostRequest) (*pb_post.CreateUserPostResponse, error) {
 
 	header, _ := extractHeader(ctx, "authorization")
 	var prefix = "Bearer "
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
 
-	newReaction := mapNewReactionToUserPost(request, claims.Id)
-	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
+	userPost := mapNewUserPost(request.UserPost, claims.Id)
+	err := handler.post_service.Create(userPost)
 
-	UserPost, _ := handler.post_service.AddReaction(newReaction, postId)
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANRTP | UI  " + strconv.Itoa(claims.Id))
-
-	UserPostPb := mapUserPost(UserPost)
-	response := &pb_post.GetResponse{
-		UserPost: UserPostPb,
+	if err != nil {
+		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UFCNP | UI  " + strconv.Itoa(claims.Id))
+		return nil, err
 	}
-	return response, nil
 
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USCNP | UI " + strconv.Itoa(claims.Id))
+
+	return &pb_post.CreateUserPostResponse{
+		UserPost: mapUserPost(userPost),
+	}, nil
 }
 
 func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post.AddCommentRequest) (*pb_post.GetResponse, error) {
@@ -228,24 +221,40 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 
 }
 
-func (handler *UserPostHandler) GetUserPosts(ctx context.Context, request *pb_post.GetUserPostsRequest) (*pb_post.GetAllResponse, error) {
-	id := int(request.Id)
-	userPosts, err := handler.post_service.GetUserPosts(id)
-	if err != nil {
-		handler.loggerError.Logger.Errorf("User_post_grpc_handler:FGAPU  | UI  " + strconv.Itoa(id))
-		return nil, err
-	}
-	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: UGHP | UI " + strconv.Itoa(id))
-	response := &pb_post.GetAllResponse{
-		UserPosts: []*pb_post.UserPost{},
-	}
-	for _, UserPost := range userPosts {
-		current := mapUserPost(UserPost)
-		response.UserPosts = append(response.UserPosts, current)
+func (handler *UserPostHandler) Like(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetResponse, error) {
+	// TODO: Add logger function
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
+
+	postId, _ := primitive.ObjectIDFromHex(request.Id)
+	UserPost, _ := handler.post_service.Like(claims.Id, postId)
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANCTP  | UI " + strconv.Itoa(claims.Id))
+
+	UserPostPb := mapUserPost(UserPost)
+	response := &pb_post.GetResponse{
+		UserPost: UserPostPb,
 	}
 	return response, nil
 }
+func (handler *UserPostHandler) Dislike(ctx context.Context, request *pb_post.GetRequest) (*pb_post.GetResponse, error) {
+	// TODO: Add logger function
+	header, _ := extractHeader(ctx, "authorization")
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, _ := handler.auth_service.ValidateToken(token)
 
+	postId, _ := primitive.ObjectIDFromHex(request.Id)
+	UserPost, _ := handler.post_service.Dislike(claims.Id, postId)
+	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANCTP  | UI " + strconv.Itoa(claims.Id))
+
+	UserPostPb := mapUserPost(UserPost)
+	response := &pb_post.GetResponse{
+		UserPost: UserPostPb,
+	}
+	return response, nil
+}
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -267,14 +276,12 @@ func extractHeader(ctx context.Context, header string) (string, error) {
 type ResponseNew struct {
 	UserConnections []UserConnection `json:"userConnections"`
 }
-
 type UserConnection struct {
 	UserId      string            `json:"userId"`
 	Private     bool              `json:"private"`
 	Connections []json.RawMessage `json:"connections"`
 	Requests    []json.RawMessage `json:"requests"`
 }
-
 type Connection struct {
 	con []string
 }

@@ -8,22 +8,29 @@ import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
 service UserPostService{
-
   rpc Get(GetRequest) returns(GetResponse) {
       option (google.api.http) = {
         get: "/userPost/{id}"
       };
   }
-
   rpc GetAll(GetAllRequest) returns(GetAllResponse) {
       option (google.api.http) = {
         get: "/userPosts"
       };
   }
-
   rpc GetPostsForFeed(GetAllRequest)  returns(GetAllResponse){
     option (google.api.http) = {
       get: "/feed"
+    };
+  }
+  rpc GetUserPosts (GetUserPostsRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/getUserPosts/{id}"
+    };
+  }
+  rpc GetPostsForLoggedUserProfile(GetAllRequest) returns(GetAllResponse) {
+    option (google.api.http) = {
+      get: "/getPostsForLoggedUser"
     };
   }
 
@@ -33,16 +40,6 @@ service UserPostService{
       body: "userPost"
     };
   }
-
-  // TODO: AddReactionToUserPost
-  rpc AddReactionToUserPost(AddReactionRequest) returns(GetResponse) {
-    option (google.api.http) = {
-      post: "/reaction"
-      body: "addReaction"
-    };
-  }
-
-  // TODO: AddCommentToUserPost
   rpc AddComment(AddCommentRequest) returns(GetResponse) {
     option (google.api.http) = {
       post: "/comment"
@@ -50,44 +47,34 @@ service UserPostService{
     };
   }
 
-  rpc GetUserPosts (GetUserPostsRequest) returns(GetAllResponse) {
+  rpc Like(GetRequest) returns(GetResponse) {
     option (google.api.http) = {
-      get: "/getUserPosts/{id}"
+      put: "/like/{id}"
     };
   }
-
-  rpc GetPostsForLoggedUserProfile(GetAllRequest) returns(GetAllResponse) {
+  rpc Dislike(GetRequest) returns(GetResponse) {
     option (google.api.http) = {
-      get: "/getPostsForLoggedUser"
+      put: "/dislike/{id}"
     };
   }
 }
 
+message GetRequest {
+  string id = 1;
+}
 message GetUserPostsRequest {
   int64 id = 1;
 }
 
-//TODO: AddCommentToUserPostRequest{...}
+
+
 message AddCommentRequest {
   AddComment addComment = 1;
-}
-
-message AddComment {
-  string idPost = 1;
-  string text = 2;
-  //google.protobuf.Timestamp createdAt = 3;
-}
-
-//TODO: AddCommentToUserPostResponse{...}
-
-message GetRequest {
-  string id = 1;
 }
 
 message GetResponse {
   UserPost userPost = 1;
 }
-
 message GetAllRequest {
 }
 
@@ -103,21 +90,6 @@ message CreateUserPostResponse {
   UserPost userPost = 1;
 }
 
-//TODO: AddReactionToUserPostRequest{...}
-message AddReactionRequest {
-  AddReaction addReaction = 1;
-}
-
-//TODO: AddReactionToUserPostResponse{...}
-
-/*
- -- Mislim da ovo nece trebati
-
-message NewUserPost {
-  repeated Reaction reactions = 1;
-  repeated Comment comments = 2;
-}
-*/
 
 message UserPost {
   string id = 1;
@@ -125,20 +97,9 @@ message UserPost {
   google.protobuf.Timestamp createdAt = 3;
   string text = 4;
   string imagePath = 5;
-  repeated Reaction reactions = 6;
-  repeated Comment comments = 7;
-}
-
-message Reaction {
-  int64  userId = 1;
-  bool liked = 2;
-  bool disliked = 3;
-}
-
-message AddReaction {
-  string  postId = 1;
-  bool liked = 2;
-  bool disliked = 3;
+  repeated int64 likes = 6;
+  repeated int64  dislikes = 7;
+  repeated Comment comments = 8;
 }
 
 message Comment {
@@ -146,3 +107,9 @@ message Comment {
   google.protobuf.Timestamp createdAt = 2;
   string text = 3;
 }
+
+message AddComment {
+  string idPost = 1;
+  string text = 2;
+}
+
