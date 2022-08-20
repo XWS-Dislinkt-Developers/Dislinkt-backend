@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: user_connection_service/user_connection_service.proto
+// source: user_connection_service.proto
 
 package user_connection_service
 
@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserConnectionServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	RegisterUserConnection(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error)
 	Follow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	Unfollow(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	AcceptConnectionRequest(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
@@ -32,7 +33,7 @@ type UserConnectionServiceClient interface {
 	GetConnectionsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*Connections, error)
 	BlockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	UnblockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
-	GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error)
+	GetAllNotifications(ctx context.Context, in *GetAllNotificationRequest, opts ...grpc.CallOption) (*GetAllNotificationResponse, error)
 }
 
 type userConnectionServiceClient struct {
@@ -55,6 +56,15 @@ func (c *userConnectionServiceClient) GetAll(ctx context.Context, in *GetAllRequ
 func (c *userConnectionServiceClient) RegisterUserConnection(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
 	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/RegisterUserConnection", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userConnectionServiceClient) GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error) {
+	out := new(UserConnection)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,9 +143,9 @@ func (c *userConnectionServiceClient) UnblockUser(ctx context.Context, in *UserI
 	return out, nil
 }
 
-func (c *userConnectionServiceClient) GetById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserConnection, error) {
-	out := new(UserConnection)
-	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetById", in, out, opts...)
+func (c *userConnectionServiceClient) GetAllNotifications(ctx context.Context, in *GetAllNotificationRequest, opts ...grpc.CallOption) (*GetAllNotificationResponse, error) {
+	out := new(GetAllNotificationResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/GetAllNotifications", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,6 +158,7 @@ func (c *userConnectionServiceClient) GetById(ctx context.Context, in *UserIdReq
 type UserConnectionServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	RegisterUserConnection(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	GetById(context.Context, *UserIdRequest) (*UserConnection, error)
 	Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	Unfollow(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	AcceptConnectionRequest(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
@@ -156,7 +167,7 @@ type UserConnectionServiceServer interface {
 	GetConnectionsByUser(context.Context, *UserIdRequest) (*Connections, error)
 	BlockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
-	GetById(context.Context, *UserIdRequest) (*UserConnection, error)
+	GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -169,6 +180,9 @@ func (UnimplementedUserConnectionServiceServer) GetAll(context.Context, *GetAllR
 }
 func (UnimplementedUserConnectionServiceServer) RegisterUserConnection(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUserConnection not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) GetById(context.Context, *UserIdRequest) (*UserConnection, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) Follow(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Follow not implemented")
@@ -194,8 +208,8 @@ func (UnimplementedUserConnectionServiceServer) BlockUser(context.Context, *User
 func (UnimplementedUserConnectionServiceServer) UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnblockUser not implemented")
 }
-func (UnimplementedUserConnectionServiceServer) GetById(context.Context, *UserIdRequest) (*UserConnection, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
+func (UnimplementedUserConnectionServiceServer) GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllNotifications not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -242,6 +256,24 @@ func _UserConnectionService_RegisterUserConnection_Handler(srv interface{}, ctx 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserConnectionServiceServer).RegisterUserConnection(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserConnectionService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).GetById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/GetById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).GetById(ctx, req.(*UserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -390,20 +422,20 @@ func _UserConnectionService_UnblockUser_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserConnectionService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserIdRequest)
+func _UserConnectionService_GetAllNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllNotificationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserConnectionServiceServer).GetById(ctx, in)
+		return srv.(UserConnectionServiceServer).GetAllNotifications(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user_connection_service.UserConnectionService/GetById",
+		FullMethod: "/user_connection_service.UserConnectionService/GetAllNotifications",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserConnectionServiceServer).GetById(ctx, req.(*UserIdRequest))
+		return srv.(UserConnectionServiceServer).GetAllNotifications(ctx, req.(*GetAllNotificationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -422,6 +454,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterUserConnection",
 			Handler:    _UserConnectionService_RegisterUserConnection_Handler,
+		},
+		{
+			MethodName: "GetById",
+			Handler:    _UserConnectionService_GetById_Handler,
 		},
 		{
 			MethodName: "Follow",
@@ -456,10 +492,10 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserConnectionService_UnblockUser_Handler,
 		},
 		{
-			MethodName: "GetById",
-			Handler:    _UserConnectionService_GetById_Handler,
+			MethodName: "GetAllNotifications",
+			Handler:    _UserConnectionService_GetAllNotifications_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user_connection_service/user_connection_service.proto",
+	Metadata: "user_connection_service.proto",
 }

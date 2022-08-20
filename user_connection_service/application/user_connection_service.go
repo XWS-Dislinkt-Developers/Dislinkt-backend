@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
+	"time"
 )
 
 type UserConnectionService struct {
@@ -44,11 +45,34 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
 			service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+			var temp = domain.Notification{
+				UserId:    idUser,
+				Content:   "You have new connection",
+				CreatedAt: time.Time{},
+				Seen:      false,
+			}
+			var temp2 = domain.Notification{
+				UserId:    idLoggedUser,
+				Content:   "You have new connection",
+				CreatedAt: time.Time{},
+				Seen:      false,
+			}
+			service.store.InsertNotification(&temp)
+			service.store.InsertNotification(&temp2)
 		} else if UserConnection.Private {
 			UserConnection.Requests = append(UserConnection.Requests, idLoggedUser)
 			LoggedUserConnection.WaitingResponse = append(LoggedUserConnection.WaitingResponse, idUser)
 			service.store.UpdateRequestConnection(UserConnection)
 			service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
+			var temp = domain.Notification{
+				UserId:    idUser,
+				Content:   "You have new request for connection",
+				CreatedAt: time.Time{},
+				Seen:      false,
+			}
+
+			service.store.InsertNotification(&temp)
+
 		} else {
 			if !service.waitingResponseDoesntExist(UserConnection, LoggedUserConnection) || !service.waitingResponseDoesntExist(LoggedUserConnection, UserConnection) {
 				UserConnection.WaitingResponse = findAndDelete(UserConnection.WaitingResponse, idLoggedUser)
@@ -88,6 +112,15 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 	UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 	LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
 	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+
+	var temp = domain.Notification{
+		UserId:    idUser,
+		Content:   "You request for connection is accepted",
+		CreatedAt: time.Time{},
+		Seen:      false,
+	}
+
+	service.store.InsertNotification(&temp)
 
 }
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
