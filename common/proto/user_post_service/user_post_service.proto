@@ -57,6 +57,12 @@ service UserPostService{
       put: "/dislike/{id}"
     };
   }
+
+  rpc GetAllNotifications(GetAllNotificationRequest) returns(GetAllNotificationResponse) {
+    option (google.api.http) = {
+      get: "/post_notifications"
+    };
+  };
 }
 
 message GetRequest {
@@ -112,4 +118,21 @@ message AddComment {
   string idPost = 1;
   string text = 2;
 }
+
+message GetAllNotificationRequest {
+
+}
+
+message NotificationResponse {
+  string content = 1;
+  string created = 2;
+
+}
+
+message GetAllNotificationResponse {
+
+  repeated NotificationResponse response = 1;
+
+}
+
 

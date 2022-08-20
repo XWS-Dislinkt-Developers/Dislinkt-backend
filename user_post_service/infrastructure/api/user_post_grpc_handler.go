@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
@@ -12,6 +13,7 @@ import (
 	app_post "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_post_service/logger"
+	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -21,6 +23,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type UserPostHandler struct {
@@ -211,6 +214,16 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 
 	postId, _ := primitive.ObjectIDFromHex(request.AddComment.IdPost)
 	UserPost, _ := handler.post_service.AddComment(newComment, postId)
+
+	var temp = domain.Notification{
+		UserId:    UserPost.UserId,
+		Content:   "Someone leave comment on you post: " + postId.String(),
+		CreatedAt: time.Time{},
+		Seen:      false,
+	}
+
+	handler.notificaiton_service.InsertNotification(&temp)
+
 	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANCTP  | UI " + strconv.Itoa(claims.Id))
 
 	UserPostPb := mapUserPost(UserPost)
@@ -231,6 +244,15 @@ func (handler *UserPostHandler) Like(ctx context.Context, request *pb_post.GetRe
 	postId, _ := primitive.ObjectIDFromHex(request.Id)
 	UserPost, _ := handler.post_service.Like(claims.Id, postId)
 	handler.loggerInfo.Logger.Infof("User_post_grpc_handler: USANCTP  | UI " + strconv.Itoa(claims.Id))
+
+	var temp = domain.Notification{
+		UserId:    UserPost.UserId,
+		Content:   "Someone liked you post: " + postId.String(),
+		CreatedAt: time.Time{},
+		Seen:      false,
+	}
+
+	handler.notificaiton_service.InsertNotification(&temp)
 
 	UserPostPb := mapUserPost(UserPost)
 	response := &pb_post.GetResponse{
@@ -273,6 +295,32 @@ func extractHeader(ctx context.Context, header string) (string, error) {
 	return authHeaders[0], nil
 }
 
+func validateToken(signedToken string) (claims *domain.JwtClaims, err error) {
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&domain.JwtClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte("Key"), nil
+		},
+	)
+
+	if err != nil {
+		return
+	}
+
+	claims, ok := token.Claims.(*domain.JwtClaims)
+
+	if !ok {
+		return nil, errors.New("couldn't parse claims")
+	}
+
+	if claims.ExpiresAt < time.Now().Local().Unix() {
+		return nil, errors.New("JWT is expired")
+	}
+
+	return claims, nil
+}
+
 type ResponseNew struct {
 	UserConnections []UserConnection `json:"userConnections"`
 }
@@ -284,4 +332,38 @@ type UserConnection struct {
 }
 type Connection struct {
 	con []string
+}
+
+func (handler *UserPostHandler) GetAllNotifications(ctx context.Context, request *pb_post.GetAllNotificationRequest) (*pb_post.GetAllNotificationResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_post.GetAllNotificationResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_post.GetAllNotificationResponse{}, err2
+	}
+	notifications, err3 := handler.notificaiton_service.GetAllUserNotificationsByUserId(claims.Id)
+
+	if err3 != nil {
+		return &pb_post.GetAllNotificationResponse{}, err3
+	}
+
+	response := &pb_post.GetAllNotificationResponse{
+		Response: []*pb_post.NotificationResponse{},
+	}
+
+	for _, n := range notifications {
+		current := &pb_post.NotificationResponse{
+			Created: "",
+			Content: n.Content,
+		}
+
+		response.Response = append(response.Response, current)
+	}
+
+	return response, nil
 }
