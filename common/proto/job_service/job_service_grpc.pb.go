@@ -26,6 +26,7 @@ type JobServiceClient interface {
 	GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error)
 	PostJob(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error)
 	PostJobCompany(ctx context.Context, in *PostJobCompanyRequest, opts ...grpc.CallOption) (*PostJobCompanyResponse, error)
+	GetJobOffers(ctx context.Context, in *GetJobOffersRequest, opts ...grpc.CallOption) (*GetJobOffersResponse, error)
 }
 
 type jobServiceClient struct {
@@ -72,6 +73,15 @@ func (c *jobServiceClient) PostJobCompany(ctx context.Context, in *PostJobCompan
 	return out, nil
 }
 
+func (c *jobServiceClient) GetJobOffers(ctx context.Context, in *GetJobOffersRequest, opts ...grpc.CallOption) (*GetJobOffersResponse, error) {
+	out := new(GetJobOffersResponse)
+	err := c.cc.Invoke(ctx, "/job_service.JobService/GetJobOffers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // JobServiceServer is the server API for JobService service.
 // All implementations must embed UnimplementedJobServiceServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type JobServiceServer interface {
 	GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error)
 	PostJob(context.Context, *PostJobRequest) (*PostJobResponse, error)
 	PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error)
+	GetJobOffers(context.Context, *GetJobOffersRequest) (*GetJobOffersResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedJobServiceServer) PostJob(context.Context, *PostJobRequest) (
 }
 func (UnimplementedJobServiceServer) PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostJobCompany not implemented")
+}
+func (UnimplementedJobServiceServer) GetJobOffers(context.Context, *GetJobOffersRequest) (*GetJobOffersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJobOffers not implemented")
 }
 func (UnimplementedJobServiceServer) mustEmbedUnimplementedJobServiceServer() {}
 
@@ -184,6 +198,24 @@ func _JobService_PostJobCompany_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _JobService_GetJobOffers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobOffersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServiceServer).GetJobOffers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/job_service.JobService/GetJobOffers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServiceServer).GetJobOffers(ctx, req.(*GetJobOffersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // JobService_ServiceDesc is the grpc.ServiceDesc for JobService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PostJobCompany",
 			Handler:    _JobService_PostJobCompany_Handler,
+		},
+		{
+			MethodName: "GetJobOffers",
+			Handler:    _JobService_GetJobOffers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

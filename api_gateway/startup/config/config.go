@@ -10,6 +10,8 @@ type Config struct {
 	UserConnectionPort     string
 	UserHost               string
 	UserPort               string
+	JobServiceHost         string
+	JobServicePort         string
 	MessageHost            string
 	MessagePort            string
 	HTTPSServerKey         string
@@ -32,6 +34,9 @@ func NewConfig() *Config {
 
 		UserConnectionHost: "localhost",
 		UserConnectionPort: "8004",
+
+		JobServiceHost: "localhost",
+		JobServicePort: "8005",
 
 		MessageHost: "localhost",
 		MessagePort: "8008",

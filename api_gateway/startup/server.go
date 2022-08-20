@@ -9,6 +9,7 @@ import (
 	apiUsers "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/user_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	jobServiceApi "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/job_service"
 	userMessageGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/message_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
@@ -69,6 +70,12 @@ func (server *Server) initHandlers() {
 	err5 := userMessageGw.RegisterMessageServiceHandlerFromEndpoint(context.TODO(), server.mux, userMessageEndpoint, opts)
 	if err5 != nil {
 		panic(err5)
+	}
+
+	jobServiceEndpoint := fmt.Sprintf("%s:%s", server.config.JobServiceHost, server.config.JobServicePort)
+	err6 := jobServiceApi.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobServiceEndpoint, opts)
+	if err6 != nil {
+		panic(err6)
 	}
 
 }

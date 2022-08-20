@@ -48,6 +48,10 @@ func (service *JobService) GetAllJobData() ([]*domain.JobOffer, error) {
 	return service.jobstore.GetAll()
 }
 
+func (service *JobService) GetJobDataByCompany(company string) ([]*domain.JobOffer, error) {
+	return service.jobstore.GetByCompany(company)
+}
+
 func (service *JobService) GetJobDataById(idUser int) (*domain.JobOffer, error) {
 	return service.jobstore.GetByUserId(idUser)
 }
