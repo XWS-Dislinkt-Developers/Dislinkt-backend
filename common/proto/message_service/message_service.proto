@@ -24,6 +24,11 @@ service MessageService {
       body: "message"
     };
   };
+  rpc GetAllNotifications(GetAllNotificationRequest) returns(GetAllNotificationResponse) {
+    option (google.api.http) = {
+      get: "/notifications"
+    };
+  };
 }
 
 // Requests
@@ -50,4 +55,20 @@ message Message {
   int64 receiverId = 2;
   string content = 3;
   google.protobuf.Timestamp createdAt = 4;
+}
+
+message GetAllNotificationRequest {
+
+}
+
+message NotificationResponse {
+  string content = 1;
+  string created = 2;
+
+}
+
+message GetAllNotificationResponse {
+
+  repeated NotificationResponse response = 1;
+
 }
