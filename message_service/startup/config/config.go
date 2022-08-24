@@ -19,5 +19,9 @@ func NewConfig() *Config {
 		NatsPort:      "4222",
 		NatsUser:      "ruser",
 		NatsPass:      "T0pS3cr3t",
+
+		//Port:          os.Getenv("MESSAGE_SERVICE_PORT"),
+		//MessageDBHost: os.Getenv("MESSAGE_SERVICE_DB_HOST"),
+		//MessageDBPort: os.Getenv("MONGO_DB_PORT"),
 	}
 }

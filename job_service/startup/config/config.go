@@ -19,5 +19,9 @@ func NewConfig() *Config {
 		NatsPort:             "4222",
 		NatsUser:             "ruser",
 		NatsPass:             "T0pS3cr3t",
+
+		//Port:                 os.Getenv("JOB_SERVICE_PORT"),
+		//UserConnectionDBHost: os.Getenv("JOB_SERVICE_DB_HOST"),
+		//UserConnectionDBPort: os.Getenv("MONGO_DB_PORT"),
 	}
 }

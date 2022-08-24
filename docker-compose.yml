@@ -76,6 +76,38 @@ services:
     networks:
       - network
 
+  job_service:
+    image: job_service
+    container_name: job_service
+    build:
+      context: .
+      dockerfile: ./job_service/Dockerfile
+    restart: on-failure
+    environment:
+      JOB_SERVICE_DB_HOST: ${JOB_SERVICE_DB_HOST}
+      MONGO_DB_PORT: ${MONGO_DB_PORT}
+      JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
+    depends_on:
+      - job_mongo_db
+    networks:
+      - network
+
+  message_service:
+    image: message_service
+    container_name: message_service
+    build:
+      context: .
+      dockerfile: ./message_service/Dockerfile
+    restart: on-failure
+    environment:
+      MESSAGE_SERVICE_DB_HOST: ${MESSAGE_SERVICE_DB_HOST}
+      MONGO_DB_PORT: ${MONGO_DB_PORT}
+      MESSAGE_SERVICE_PORT: ${MESSAGE_SERVICE_PORT}
+    depends_on:
+      - message_mongo_db
+    networks:
+      - network
+
   api_gateway:
     image: api_gateway
     container_name: api_gateway
@@ -97,6 +129,13 @@ services:
       USER_CONNECTION_SERVICE_PORT: ${USER_CONNECTION_SERVICE_PORT}
       HTTPS_SERVER_KEY: ${HTTPS_SERVER_KEY}
       HTTPS_SERVER_CERTIFICATE: ${HTTPS_SERVER_CERTIFICATE}
+
+      JOB_SERVICE_HOST: ${JOB_SERVICE_HOST}
+      JOB_SERVICE_PORT: ${JOB_SERVICE_PORT}
+
+      MESSAGE_SERVICE_HOST: ${MESSAGE_SERVICE_HOST}
+      MESSAGE_SERVICE_PORT: ${MESSAGE_SERVICE_PORT}
+
     networks:
       - network
     volumes:
@@ -139,6 +178,22 @@ services:
     restart: on-failure
     networks:
       - network
+
+
+  job_mongo_db:
+    image: mongo
+    container_name: job_mongo_db
+    restart: on-failure
+    networks:
+      - network
+
+  message_mongo_db:
+    image: mongo
+    container_name: message_mongo_db
+    restart: on-failure
+    networks:
+      - network
+
 
   nats:
     image: nats

@@ -21,11 +21,8 @@ func NewConfig() *Config {
 		NatsUser:       "ruser",
 		NatsPass:       "T0pS3cr3t",
 
-		/*
-			Port:           os.Getenv("USER_POST_SERVICE_PORT"),
-			UserPostDBHost: os.Getenv("USER_POST_DB_HOST"),
-			UserPostDBPort: os.Getenv("MONGO_DB_PORT"),
-
-		*/
+		//Port:           os.Getenv("USER_POST_SERVICE_PORT"),
+		//UserPostDBHost: os.Getenv("USER_POST_DB_HOST"),
+		//UserPostDBPort: os.Getenv("MONGO_DB_PORT"),
 	}
 }

@@ -27,19 +27,15 @@ func NewConfig() *Config {
 		NatsUser:   "ruser",
 		NatsPass:   "T0pS3cr3t",
 
-		/*
-			Port:       os.Getenv("AUTHENTICATION_SERVICE_PORT"),
-			UserDBHost: os.Getenv("AUTHENTICATION_DB_HOST"),
-			UserDBPort: os.Getenv("AUTHENTICATION_DB_PORT"),
-			UserDBName: os.Getenv("AUTHENTICATION_DB_NAME"),
-			UserDBUser: os.Getenv("AUTHENTICATION_DB_USER"),
-			UserDBPass: os.Getenv("AUTHENTICATION_DB_PASS"),
-			NatsHost:   os.Getenv("NATS_HOST"),
-			NatsPort:   os.Getenv("NATS_PORT"),
-			NatsUser:   os.Getenv("NATS_USER"),
-			NatsPass:   os.Getenv("NATS_PASS"),
-
-
-		*/
+		//Port:       os.Getenv("AUTHENTICATION_SERVICE_PORT"),
+		//UserDBHost: os.Getenv("AUTHENTICATION_DB_HOST"),
+		//UserDBPort: os.Getenv("AUTHENTICATION_DB_PORT"),
+		//UserDBName: os.Getenv("AUTHENTICATION_DB_NAME"),
+		//UserDBUser: os.Getenv("AUTHENTICATION_DB_USER"),
+		//UserDBPass: os.Getenv("AUTHENTICATION_DB_PASS"),
+		//NatsHost:   os.Getenv("NATS_HOST"),
+		//NatsPort:   os.Getenv("NATS_PORT"),
+		//NatsUser:   os.Getenv("NATS_USER"),
+		//NatsPass:   os.Getenv("NATS_PASS"),
 	}
 }
