@@ -1,4 +1,4 @@
-package create_order
+package register_user
 
 type Color struct {
 	Code string
@@ -20,14 +20,24 @@ type OrderDetails struct {
 	Address string
 }
 
+type UserDetails struct {
+	Id            int
+	Username      string
+	Password      string
+	Email         string
+	IsItConfirmed bool
+	Role          string
+}
+
+type RegisterUserCommandType int8
+
 type CreateOrderCommandType int8
 
 const (
-	UpdateInventory CreateOrderCommandType = iota
-	RollbackInventory
-	ApproveOrder
-	CancelOrder
-	ShipOrder
+	RegisterUser RegisterUserCommandType = iota
+	RollbackUser
+	ApproveUser
+	CancelUser
 	UnknownCommand
 )
 
@@ -36,11 +46,18 @@ type CreateOrderCommand struct {
 	Type  CreateOrderCommandType
 }
 
+type RegisterUserCommand struct {
+	User UserDetails
+	Type RegisterUserCommandType
+}
+
 type CreateOrderReplyType int8
 
+type RegisterUserReplyType int8
+
 const (
-	InventoryUpdated CreateOrderReplyType = iota
-	InventoryNotUpdated
+	UserSaved RegisterUserReplyType = iota
+	UserNotSaved
 	InventoryRolledBack
 	OrderShippingScheduled
 	OrderShippingNotScheduled
@@ -49,7 +66,12 @@ const (
 	UnknownReply
 )
 
+type RegisterUserReply struct {
+	User UserDetails
+	Type RegisterUserCommandType
+}
+
 type CreateOrderReply struct {
 	Order OrderDetails
-	Type  CreateOrderReplyType
+	Type  CreateOrderCommandType
 }

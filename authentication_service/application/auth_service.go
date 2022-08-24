@@ -297,3 +297,7 @@ func (service *AuthService) Create(user *domain.User) *domain.User {
 func (service *AuthService) GetByUsername(username string) (*domain.User, error) {
 	return service.store.GetByUsername(username)
 }
+
+func (service *AuthService) DeleteUser(user domain.User) error {
+	return service.store.DeleteUser(user.ID)
+}

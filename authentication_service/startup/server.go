@@ -40,6 +40,21 @@ func (server *Server) Start() {
 	postgresClient := server.initPostgresClient()
 
 	userStore := server.initUserStore(postgresClient, loggerInfo, loggerError)
+
+	//sage
+
+	//commandPublisher := server.initPublisher("auth.register.command") //server.config.CreateOrderCommandSubject)
+	//replySubscriber := server.initSubscriber("auth.register.reply", QueueGroup)
+	//createOrderOrchestrator := server.initCreateOrderOrchestrator(commandPublisher, replySubscriber)
+	//
+	//orderService := server.initOrderService(orderStore, createOrderOrchestrator)
+	//
+	//commandSubscriber := server.initSubscriber("auth.register.command", QueueGroup)
+	//replyPublisher := server.initPublisher("auth.register.reply")
+	//server.initCreateOrderHandler(orderService, replyPublisher, commandSubscriber)
+
+	//kraj sage
+
 	conformationTokenStore := server.initTokenConformationStore(postgresClient, loggerInfo, loggerError)
 	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient, loggerInfo, loggerError)
 	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
@@ -122,16 +137,24 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	return subscriber
 }
 
+func (server *Server) initCreateOrderOrchestrator(publisher saga.Publisher, subscriber saga.Subscriber) *application.RegisterUserOrchestrator {
+	orchestrator, err := application.NewRegisterUserOrchestrator(publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return orchestrator
+}
+
 func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.AuthService {
 	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError)
 }
 
-// func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {
-// 	_, err := api.NewCreateOrderCommandHandler(service, publisher, subscriber)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+func (server *Server) initCreateOrderHandler(service *application.AuthService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewRegisterUserCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func (server *Server) initUserHandler(authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
 	return api.NewUserHandler(authService, loggerInfo, loggerError)
