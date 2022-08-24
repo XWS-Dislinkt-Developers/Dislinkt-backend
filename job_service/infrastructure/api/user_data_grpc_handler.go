@@ -112,16 +112,16 @@ func (handler *UserDataHandler) GetJobOffers(ctx context.Context, request *pb_co
 		return &pb_connection.GetJobOffersResponse{}, err2
 	}
 
-	var temp = []pb_connection.JobOffersResponse{}
+	var temp = []*pb_connection.JobOffersResponse{}
 
 	for _, s := range jobs {
 		//fmt.Println(i, s)
-		temp = append(temp, pb_connection.JobOffersResponse{Company: s.Company, ExperienceLevel: s.ExperienceLevel,
+		temp = append(temp, &pb_connection.JobOffersResponse{Company: s.Company, ExperienceLevel: s.ExperienceLevel,
 			Position: s.Position, Description: s.Description, Requirements: s.Requirements})
 	}
 
 	//treba dodati return temp
-	return &pb_connection.GetJobOffersResponse{}, nil
+	return &pb_connection.GetJobOffersResponse{Offers: temp}, nil
 }
 
 func (handler *UserDataHandler) PostJobCompany(ctx context.Context, request *pb_connection.PostJobCompanyRequest) (*pb_connection.PostJobCompanyResponse, error) {
