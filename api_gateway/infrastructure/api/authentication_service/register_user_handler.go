@@ -3,14 +3,15 @@ package authentication_service
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/domain"
 	services "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/services"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	userConnectionPb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"io"
-	"net/http"
 )
 
 type RegisterUserHandler struct {
@@ -35,6 +36,13 @@ func (handler *RegisterUserHandler) Init(mux *runtime.ServeMux) {
 }
 
 func (handler *RegisterUserHandler) HandleRegisterUser(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+
+	println("[apigateway][orkeRegisterUserHandlerstrator]HandleRegisterUser")
+	println("[apigateway][orkeRegisterUserHandlerstrator]HandleRegisterUser")
+	println("[apigateway][orkeRegisterUserHandlerstrator]HandleRegisterUser")
+	println("[apigateway][orkeRegisterUserHandlerstrator]HandleRegisterUser")
+	println("[apigateway][orkeRegisterUserHandlerstrator]HandleRegisterUser")
+
 	registerRequestJson, err := decodeBodyToRegisterRequest(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

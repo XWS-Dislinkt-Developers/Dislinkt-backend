@@ -32,18 +32,29 @@ func (handler *RegisterUserCommandHandler) handle(command *events.RegisterUserCo
 	user := domain.User{ID: id}
 
 	switch command.Type {
-	case events.ApproveUser:
-		println("user approved", user.ID)
+	case events.UnknownCommand:
+		println("[Authservice]user approved", user.ID)
 		//err := handler.orderService.Approve(order)
 		//if err != nil {
 		//	return
 		//}
 		//reply.Type = events.OrderApproved
 	case events.RollbackUser:
+		println("[AuthService][register_user_handle.go] RollbackUser")
 		err := handler.authService.DeleteUser(user)
 		if err != nil {
+			println("[AuthService][register_user_handle.go]User is not deleted but it should be")
 			return
 		}
+		println("[AuthService][register_user_handle.go]User is deleted")
+	case events.RollbackUserConnection:
+		println("[AuthService][register_user_handle.go] RollbackUserConnection")
+		err := handler.authService.DeleteUser(user)
+		if err != nil {
+			println("[AuthService][register_user_handle.go]User is not deleted but it should be")
+			return
+		}
+		println("[AuthService][register_user_handle.go]User is deleted")
 	default:
 
 	}

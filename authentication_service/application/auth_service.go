@@ -4,15 +4,16 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
-	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
-	"github.com/golang-jwt/jwt"
-	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 	"unicode"
+
+	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct {
@@ -25,9 +26,11 @@ type AuthService struct {
 	passwordlessLoginStore domain.PasswordlessLoginStore
 	loggerInfo             *logg.Logger
 	loggerError            *logg.Logger
+
+	orchestrator *RegisterUserOrchestrator
 }
 
-func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *AuthService {
+func NewAuthService(store domain.UserStore, conformationTokenStore domain.ConfirmationTokenStore, passwordRecoveryStore domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logg.Logger, loggerError *logg.Logger, orchestrator *RegisterUserOrchestrator) *AuthService {
 	return &AuthService{
 		store:                  store,
 		conformationTokenStore: conformationTokenStore,
@@ -35,6 +38,7 @@ func NewAuthService(store domain.UserStore, conformationTokenStore domain.Confir
 		passwordlessLoginStore: passwordlessLoginStore,
 		loggerInfo:             loggerInfo,
 		loggerError:            loggerError,
+		orchestrator:           orchestrator,
 	}
 }
 
@@ -286,11 +290,38 @@ func (service *AuthService) Get(id int) (*domain.User, error) {
 	return service.store.Get(id)
 }
 
-func (service *AuthService) Create(user *domain.User) *domain.User {
+func (service *AuthService) Create(user *domain.User, gender string, dob string, name string) *domain.User {
 	err, u := service.store.Insert(user)
+
 	if err != nil {
 		println("Error in create method")
+		return nil
 	}
+	println("[auth_service][authservis]Create  se poziva i orkestartor start")
+	println("[auth_service][authservis]Create  se poziva i orkestartor start")
+	println("[auth_service][authservis]Create  se poziva i orkestartor start")
+	println("[auth_service][authservis]Create  se poziva i orkestartor start")
+	println("[auth_service][authservis]Create  se poziva i orkestartor start")
+	var temp = domain.UserRegisterData{
+		ID:            u.ID,
+		Name:          name,
+		Username:      u.Username,
+		Password:      u.Password,
+		Email:         u.Email,
+		IsItConfirmed: false,
+		Role:          u.Role,
+		Gender:        gender,
+		DateOfBirth:   dob,
+	}
+	println("[auth_service][authservis]Name je ")
+	println(temp.Name)
+	err = service.orchestrator.Start(&temp)
+	if err != nil {
+
+		_ = service.store.DeleteUser(user.ID)
+		return nil
+	}
+
 	return u
 }
 

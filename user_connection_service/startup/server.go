@@ -3,8 +3,9 @@ package startup
 import (
 	"fmt"
 	posting "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
+	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
-
 	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
@@ -43,6 +44,14 @@ func (server *Server) Start() {
 	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
 	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
 	userNotificationService := server.initNotificationService(userConnectionStore, loggerInfo, loggerError)
+
+	println("[USERSERVICE]Start():init user service")
+	commandSubscriber := server.initSubscriber("auth.register.command", QueueGroup)
+	replyPublisher := server.initPublisher("auth.register.reply")
+
+	println("[USERSERVICE]Start():sub i pob")
+	server.initRegisterUserHandler(userConnectionService, replyPublisher, commandSubscriber)
+
 	userConnectionHandler := server.initUserConnectionHandler(userConnectionService, userNotificationService, loggerInfo, loggerError)
 	server.startGrpcServer(userConnectionHandler)
 }
@@ -88,4 +97,57 @@ func (server *Server) startGrpcServer(userConnectionHandler *api.UserConnectionH
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+}
+
+func (server *Server) initRegisterUserHandler(service *application.UserConnectionService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewRegisterUserCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (server *Server) initPublisher(subject string) saga.Publisher {
+	publisher, err := nats.NewNATSPublisher(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject)
+	if err != nil {
+		log.Fatal(err)
+	}
+	println("[UserConnectionService][server.go]Publisher radi")
+	println("[UserConnectionService][server.go]Publisher radi")
+	println("[UserConnectionService][server.go]Publisher radi")
+	println("[UserConnectionService][server.go]Publisher radi")
+	println("[UserConnectionService][server.go]Publisher radi")
+	return publisher
+}
+
+func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber {
+	subscriber, err := nats.NewNATSSubscriber(
+		server.config.NatsHost, server.config.NatsPort,
+		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
+	if err != nil {
+
+		println("[UserConnectionService][server.go]Subscriber NE radi")
+		println("[UserConnectionService][server.go]Subscriber NE radi")
+		println("[UserConnectionService][server.go]Subscriber NE radi")
+		println("[UserConnectionService][server.go]Subscriber NE radi")
+		println("[UserConnectionService][server.go]Subscriber NE radi")
+		println("[UserConnectionService][server.go]server.config.NatsHost", server.config.NatsHost)
+		println("[UserConnectionService][server.go]server.config.NatsPort", server.config.NatsPort)
+		println("[UserConnectionService][server.go]server.config.NatsUser", server.config.NatsUser)
+		println("[UserConnectionService][server.go]server.config.NatsPass", server.config.NatsPass)
+		println(server.config.NatsHost)
+		println(server.config.NatsPort)
+		println(server.config.NatsUser)
+		println(server.config.NatsPass)
+		log.Fatal(err)
+	}
+
+	println("[UserConnectionService][server.go]Subscriber radi")
+	println("[UserConnectionService][server.go]Subscriber radi")
+	println("[UserConnectionService][server.go]Subscriber radi")
+	println("[UserConnectionService][server.go]Subscriber radi")
+	println("[UserConnectionService][server.go]Subscriber radi")
+
+	return subscriber
 }

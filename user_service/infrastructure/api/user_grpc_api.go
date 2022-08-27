@@ -3,6 +3,10 @@ package api
 import (
 	"context"
 	"errors"
+	"net/http"
+	"strings"
+	"time"
+
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
@@ -14,9 +18,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"net/http"
-	"strings"
-	"time"
 )
 
 type UsersHandler struct {
@@ -150,6 +151,13 @@ func (handler *UsersHandler) GetAllPublicProfiles(ctx context.Context, request *
 
 func (handler *UsersHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	users, err := handler.service.GetAll()
+
+	println("[handler *UserHandler]GetAll")
+	println("[handler *UserHandler]GetAll")
+	println("[handler *UserHandler]GetAll")
+	println("[handler *UserHandler]GetAll")
+	println("[handler *UserHandler]GetAll")
+
 	if err != nil || *users == nil {
 		return nil, err
 	}

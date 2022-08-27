@@ -3,6 +3,7 @@ package application
 import (
 	domain "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	events "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/register_user"
+
 	//events "github.com/tamararankovic/microservices_demo/common/saga/register_user"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	//saga "github.com/tamararankovic/microservices_demo/common/saga/messaging"
@@ -43,17 +44,26 @@ func NewRegisterUserOrchestrator(publisher saga.Publisher, subscriber saga.Subsc
 	return o, nil
 }
 
-func (o *RegisterUserOrchestrator) Start(user *domain.User) error {
+func (o *RegisterUserOrchestrator) Start(user *domain.UserRegisterData) error {
+
+	println("[auth_service][orkestrator]pocinje orkestrator")
+	println("[auth_service][orkestrator]pocinje orkestrator")
+	println("[auth_service][orkestrator]pocinje orkestrator")
+	println("[auth_service][orkestrator]pocinje orkestrator")
+	println("[auth_service][orkestrator]pocinje orkestrator")
 
 	event := &events.RegisterUserCommand{
 		Type: events.RegisterUser,
 		User: events.UserDetails{
 			Id:            user.ID,
+			Name:          user.Name,
 			Username:      user.Username,
 			Password:      user.Password,
 			Email:         user.Email,
 			IsItConfirmed: user.IsItConfirmed,
 			Role:          user.Role,
+			Gender:        user.Gender,
+			DateOfBirth:   user.DateOfBirth,
 		},
 	}
 
@@ -80,29 +90,34 @@ func (o *RegisterUserOrchestrator) Start(user *domain.User) error {
 
 func (o *RegisterUserOrchestrator) handle(reply *events.RegisterUserReply) {
 	command := events.RegisterUserCommand{User: reply.User}
-	//command.Type = o.nextCommandType(reply.Type)
+	command.Type = o.nextCommandType(reply.Type)
 	if command.Type != events.UnknownCommand {
 		_ = o.commandPublisher.Publish(command)
 	}
 }
 
-//func (o *RegisterUserOrchestrator) nextCommandType(reply events.RegisterUserReplyType) events.RegisterUserCommandType {
-//	switch reply {
-//	case events.UserSaved:
-//		return events.ApproveUser
-//	case events.UserNotSaved:
-//		return events.RollbackUser
-//	//case events.InventoryUpdated:
-//	//	return events.ShipOrder
-//	//case events.InventoryNotUpdated:
-//	//	return events.CancelOrder
-//	//case events.InventoryRolledBack:
-//	//	return events.CancelOrder
-//	//case events.OrderShippingScheduled:
-//	//	return events.ApproveOrder
-//	//case events.OrderShippingNotScheduled:
-//	//	return events.RollbackInventory
-//	default:
-//		return events.UnknownCommand
-//	}
-//}
+func (o *RegisterUserOrchestrator) nextCommandType(reply events.RegisterUserReplyType) events.RegisterUserCommandType {
+	switch reply {
+	case events.UserServiceUserSaved:
+		println("[Authservice][orkestrator]Primljen kod za UserServiceUserSaved salje kod ApproveUser")
+		return events.RegisterUserConnection
+	case events.UserServiceUserNotSaved:
+		println("[Authservice][orkestrator]Primljen kod za UserServiceUserNOTSaved salje kod RollbackUser")
+		return events.RollbackUser
+	case events.UserConnectionNOTSaved:
+		println("[Authservice][orkestrator]Primljen kod za UserConnectionNOTSaved salje kod RollbackUser")
+		return events.RollbackUserConnection
+	//case events.InventoryUpdated:
+	//	return events.ShipOrder
+	//case events.InventoryNotUpdated:
+	//	return events.CancelOrder
+	//case events.InventoryRolledBack:
+	//	return events.CancelOrder
+	//case events.OrderShippingScheduled:
+	//	return events.ApproveOrder
+	//case events.OrderShippingNotScheduled:
+	//	return events.RollbackInventory
+	default:
+		return events.UnknownCommand
+	}
+}

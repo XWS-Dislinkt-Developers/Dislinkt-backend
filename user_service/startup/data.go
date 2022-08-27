@@ -17,7 +17,6 @@ var nane_user08_date, _ = time.Parse("2006-01-02", "1999-08-03")
 var users = []*domain.User{
 
 	{
-		ID:               1,
 		Name:             "Pera",
 		Username:         "Pera",
 		Password:         "pera",
@@ -31,7 +30,6 @@ var users = []*domain.User{
 		UserId:           1,
 	},
 	{
-		ID:               2,
 		Name:             "Joka",
 		Username:         "Joka",
 		Password:         "joka",
@@ -45,7 +43,6 @@ var users = []*domain.User{
 		UserId:           2,
 	},
 	{
-		ID:               3,
 		Name:             "Marko",
 		Username:         "Marko",
 		Password:         "marko",
@@ -59,7 +56,6 @@ var users = []*domain.User{
 		UserId:           3,
 	},
 	{
-		ID:               4,
 		Name:             "Zeksa",
 		Username:         "Zeksa",
 		Password:         "zeksa",
@@ -73,7 +69,6 @@ var users = []*domain.User{
 		UserId:           4,
 	},
 	{
-		ID:               5,
 		Name:             "Sanja",
 		Username:         "Sanja",
 		Password:         "sanja",
@@ -86,7 +81,6 @@ var users = []*domain.User{
 		IsPrivateProfile: true,
 		UserId:           5,
 	}, {
-		ID:               6,
 		Name:             "Tanja",
 		Username:         "Tanja",
 		Password:         "tanja",
@@ -100,7 +94,6 @@ var users = []*domain.User{
 		UserId:           6,
 	},
 	{
-		ID:               7,
 		Name:             "Lale",
 		Username:         "Lale",
 		Password:         "lale",
@@ -114,7 +107,6 @@ var users = []*domain.User{
 		UserId:           7,
 	},
 	{
-		ID:               8,
 		Name:             "Nena",
 		Username:         "Nena",
 		Password:         "nena",

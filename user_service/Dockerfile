@@ -1,6 +1,11 @@
 # Start from the latest golang base image
 FROM golang:latest as builder
 
+
+
+
+
+
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -28,6 +33,10 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
+
+
+
+
 
 # Expose port 8000 to the outside world
 EXPOSE 8003

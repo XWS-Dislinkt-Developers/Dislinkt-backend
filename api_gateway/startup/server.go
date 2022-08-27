@@ -82,7 +82,7 @@ func (server *Server) initHandlers() {
 
 func (server *Server) initCustomHandlers() {
 	server.initAccountActivationHandler()
-	server.initRegistrationHandler()
+	//server.initRegistrationHandler()
 	server.initPasswordRecoveryHandler()
 	server.initUserFeedHandler()
 	server.initUserFeedForPublicProfilesHandler()

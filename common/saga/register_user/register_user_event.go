@@ -23,10 +23,13 @@ type OrderDetails struct {
 type UserDetails struct {
 	Id            int
 	Username      string
+	Name          string
 	Password      string
 	Email         string
 	IsItConfirmed bool
 	Role          string
+	Gender        string
+	DateOfBirth   string
 }
 
 type RegisterUserCommandType int8
@@ -36,7 +39,8 @@ type CreateOrderCommandType int8
 const (
 	RegisterUser RegisterUserCommandType = iota
 	RollbackUser
-	ApproveUser
+	RollbackUserConnection
+	RegisterUserConnection
 	CancelUser
 	UnknownCommand
 )
@@ -56,8 +60,10 @@ type CreateOrderReplyType int8
 type RegisterUserReplyType int8
 
 const (
-	UserSaved RegisterUserReplyType = iota
-	UserNotSaved
+	UserServiceUserSaved RegisterUserReplyType = iota
+	UserServiceUserNotSaved
+	UserCONNECTIONSaved
+	UserConnectionNOTSaved
 	InventoryRolledBack
 	OrderShippingScheduled
 	OrderShippingNotScheduled
@@ -68,7 +74,7 @@ const (
 
 type RegisterUserReply struct {
 	User UserDetails
-	Type RegisterUserCommandType
+	Type RegisterUserReplyType
 }
 
 type CreateOrderReply struct {
