@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: user_connection_service.proto
+// source: user_connection_service/user_connection_service.proto
 
 package user_connection_service
 
@@ -497,5 +497,5 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user_connection_service.proto",
+	Metadata: "user_connection_service/user_connection_service.proto",
 }

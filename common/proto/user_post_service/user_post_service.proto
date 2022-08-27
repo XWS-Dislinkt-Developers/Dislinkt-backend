@@ -125,8 +125,8 @@ message GetAllNotificationRequest {
 
 message NotificationResponse {
   string content = 1;
-  string created = 2;
-
+  google.protobuf.Timestamp createdAt = 2;
+  int64 senderId = 3;
 }
 
 message GetAllNotificationResponse {

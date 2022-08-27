@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -217,8 +218,9 @@ func (handler *UserPostHandler) AddComment(ctx context.Context, request *pb_post
 
 	var temp = domain.Notification{
 		UserId:    UserPost.UserId,
-		Content:   "Someone leave comment on you post: " + postId.String(),
-		CreatedAt: time.Time{},
+		SenderId:  newComment.UserId,
+		Content:   "You received a comment on your post. \n " + newComment.Text,
+		CreatedAt: timestamppb.Now().AsTime(),
 		Seen:      false,
 	}
 
@@ -247,8 +249,9 @@ func (handler *UserPostHandler) Like(ctx context.Context, request *pb_post.GetRe
 
 	var temp = domain.Notification{
 		UserId:    UserPost.UserId,
-		Content:   "Someone liked you post: " + postId.String(),
-		CreatedAt: time.Time{},
+		SenderId:  claims.Id,
+		Content:   "Your post got a like. \n " + UserPost.Text,
+		CreatedAt: timestamppb.Now().AsTime(),
 		Seen:      false,
 	}
 
@@ -358,8 +361,9 @@ func (handler *UserPostHandler) GetAllNotifications(ctx context.Context, request
 
 	for _, n := range notifications {
 		current := &pb_post.NotificationResponse{
-			Created: "",
-			Content: n.Content,
+			Content:   n.Content,
+			CreatedAt: timestamppb.New(n.CreatedAt),
+			SenderId:  int64(n.SenderId),
 		}
 
 		response.Response = append(response.Response, current)

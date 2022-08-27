@@ -135,7 +135,7 @@ func (store *UserConnectionMongoDBStore) InsertNotification(notification *domain
 	_, err := store.notificationMessagesStore.InsertOne(context.TODO(), notification)
 	store.loggerInfo.Logger.Infof("User_connection_notification_mongodb_store: USCID | UI " + strconv.Itoa(notification.UserId))
 	if err != nil {
-		println("erorr while inserting notification")
+		println("error while inserting notification")
 		return err
 	}
 	//message.Id = result.InsertedID.(primitive.ObjectID)

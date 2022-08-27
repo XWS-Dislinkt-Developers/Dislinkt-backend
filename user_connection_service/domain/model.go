@@ -16,6 +16,7 @@ type UserConnection struct {
 
 type Notification struct {
 	UserId    int       `bson:"user_id"`
+	SenderId  int       `bson:"sender_id"`
 	Content   string    `bson:"content"`
 	CreatedAt time.Time `bson:"created_at"`
 	Seen      bool      `bson:"seen"`
