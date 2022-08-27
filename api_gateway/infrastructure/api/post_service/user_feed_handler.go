@@ -61,6 +61,7 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 
 	//TODO: uzeti sve postove za svaku konekciju, sortirati ih po datumu i vratiti na front
 	feed := make([]domain.UserPost, 0)
+	response.Connections.Connections = append(response.Connections.Connections, int64(claims.Id)) // The user can see his own posts
 	for _, c := range response.Connections.Connections {
 		for _, p := range posts.UserPosts {
 			if c == p.UserId {
@@ -93,7 +94,7 @@ func (handler *UserFeedHandler) HandleUserFeed(w http.ResponseWriter, r *http.Re
 func converterInt64ToIntArray(likes []int64) []int {
 	ret := make([]int, 0)
 	for i := range likes {
-		ret[i] = int(likes[i])
+		ret = append(ret, int(likes[i]))
 	}
 	return ret
 }

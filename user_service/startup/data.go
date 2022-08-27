@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// birthdays
 var pera_user01_date, _ = time.Parse("2006-01-02", "1988-08-03")
 var joka_user02_date, _ = time.Parse("2006-01-02", "1988-08-05")
 var marko_user03_date, _ = time.Parse("2006-01-02", "1950-10-10")
@@ -14,8 +15,10 @@ var tanja_user06_date, _ = time.Parse("2006-01-02", "1988-12-12")
 var lale_user07_date, _ = time.Parse("2006-01-02", "1999-06-16")
 var nane_user08_date, _ = time.Parse("2006-01-02", "1999-08-03")
 
+// [ 1 -> 8 ] is users
+//Password for everyone: Pera12345*
 var users = []*domain.User{
-
+	// USERS
 	{
 		ID:               1,
 		Name:             "Pera",
@@ -126,5 +129,12 @@ var users = []*domain.User{
 		IsItConfirmed:    true,
 		IsPrivateProfile: false,
 		UserId:           8,
+	},
+	{
+		ID:            9,
+		Name:          "Admin",
+		Username:      "Admin",
+		IsItConfirmed: true,
+		UserId:        9,
 	},
 }
