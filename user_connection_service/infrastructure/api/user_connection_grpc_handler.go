@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"net/http"
 	"strconv"
 	"strings"
@@ -298,8 +299,9 @@ func (handler *UserConnectionHandler) GetAllNotifications(ctx context.Context, r
 
 	for _, n := range notifications {
 		current := &pb_connection.NotificationResponse{
-			Created: "",
-			Content: n.Content,
+			Content:   n.Content,
+			CreatedAt: timestamppb.New(n.CreatedAt),
+			SenderId:  int64(n.SenderId),
 		}
 
 		response.Response = append(response.Response, current)

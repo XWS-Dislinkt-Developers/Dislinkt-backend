@@ -78,8 +78,9 @@ func (handler *MessageHandler) GetAllNotifications(ctx context.Context, request 
 
 	for _, n := range notifications {
 		current := &pb_message.NotificationResponse{
-			Created: "",
-			Content: n.Content,
+			Content:   n.Content,
+			CreatedAt: timestamppb.New(n.CreatedAt),
+			SenderId:  int64(n.SenderId),
 		}
 
 		response.Response = append(response.Response, current)
@@ -116,8 +117,16 @@ func (handler *MessageHandler) SendMessage(ctx context.Context, request *pb_mess
 	newMessage := mapNewMessage(request.Message)
 	newMessage.SenderId = int(request.Message.SenderId)
 	newMessage.ReceiverId = int(request.Message.ReceiverId)
-	var new_notif = domain.Notification{UserId: newMessage.ReceiverId, Content: "Dobili ste novu poruku", CreatedAt: timestamppb.Now().AsTime(), Seen: false}
-	handler.notificaiton_service.InsertNotification(&new_notif)
+
+	var newNotification = domain.Notification{
+		UserId:    newMessage.ReceiverId,
+		SenderId:  newMessage.SenderId,
+		Content:   "You got a message: \n" + request.Message.Content,
+		CreatedAt: timestamppb.Now().AsTime(),
+		Seen:      false,
+	}
+	handler.notificaiton_service.InsertNotification(&newNotification)
+
 	handler.message_service.Insert(newMessage)
 	all, _ := handler.notificaiton_service.GetAllUserNotificationsByUserId(newMessage.ReceiverId)
 	if all != nil {

@@ -61,4 +61,12 @@ var users = []*domain.User{
 		IsItConfirmed: true,
 		Role:          "user",
 	},
+	{
+		ID:            9,
+		Username:      "Admin",
+		Password:      "$2a$10$jVyQ6miOTsttmNHwGStv1OF1Z1sjGDP41LmWz33QZoVe4VyYx9NdS",
+		Email:         "nena@gmail.com",
+		IsItConfirmed: true,
+		Role:          "admin",
+	},
 }

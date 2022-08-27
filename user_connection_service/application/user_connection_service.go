@@ -3,7 +3,7 @@ package application
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
-	"time"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type UserConnectionService struct {
@@ -49,14 +49,16 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 			service.store.UpdateConnections(UserConnection, LoggedUserConnection)
 			var temp = domain.Notification{
 				UserId:    idUser,
-				Content:   "You have new connection",
-				CreatedAt: time.Time{},
+				SenderId:  idLoggedUser,
+				Content:   "You have new connection.",
+				CreatedAt: timestamppb.Now().AsTime(),
 				Seen:      false,
 			}
 			var temp2 = domain.Notification{
 				UserId:    idLoggedUser,
-				Content:   "You have new connection",
-				CreatedAt: time.Time{},
+				SenderId:  idUser,
+				Content:   "You have new connection.",
+				CreatedAt: timestamppb.Now().AsTime(),
 				Seen:      false,
 			}
 			service.store.InsertNotification(&temp)
@@ -68,8 +70,9 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 			service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
 			var temp = domain.Notification{
 				UserId:    idUser,
-				Content:   "You have new request for connection",
-				CreatedAt: time.Time{},
+				SenderId:  idLoggedUser,
+				Content:   "You have new request for connection.",
+				CreatedAt: timestamppb.Now().AsTime(),
 				Seen:      false,
 			}
 
@@ -91,6 +94,23 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 			UserConnection.Connections = append(UserConnection.Connections, idLoggedUser)
 			LoggedUserConnection.Connections = append(LoggedUserConnection.Connections, idUser)
 			service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+			var temp = domain.Notification{
+				UserId:    idUser,
+				SenderId:  idLoggedUser,
+				Content:   "You have new connection.",
+				CreatedAt: timestamppb.Now().AsTime(),
+				Seen:      false,
+			}
+			var temp2 = domain.Notification{
+				UserId:    idLoggedUser,
+				SenderId:  idUser,
+				Content:   "You have new connection.",
+				CreatedAt: timestamppb.Now().AsTime(),
+				Seen:      false,
+			}
+			service.store.InsertNotification(&temp)
+			service.store.InsertNotification(&temp2)
+
 		}
 	}
 }
@@ -117,12 +137,20 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 
 	var temp = domain.Notification{
 		UserId:    idUser,
-		Content:   "You request for connection is accepted",
-		CreatedAt: time.Time{},
+		SenderId:  idLoggedUser,
+		Content:   "You have new connection.",
+		CreatedAt: timestamppb.Now().AsTime(),
 		Seen:      false,
 	}
-
+	var temp2 = domain.Notification{
+		UserId:    idLoggedUser,
+		SenderId:  idUser,
+		Content:   "You have new connection.",
+		CreatedAt: timestamppb.Now().AsTime(),
+		Seen:      false,
+	}
 	service.store.InsertNotification(&temp)
+	service.store.InsertNotification(&temp2)
 
 }
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
