@@ -63,6 +63,11 @@ service UserConnectionService {
       put: "/unblock/{idUser}"
     };
   }
+  rpc GetAllNotifications(GetAllNotificationRequest) returns(GetAllNotificationResponse) {
+    option (google.api.http) = {
+      get: "/con_notifications"
+    };
+  };
 
 }
 
@@ -106,4 +111,20 @@ message Connections {
 
 message Connection {
   repeated int64 connections = 1;
+}
+
+message GetAllNotificationRequest {
+
+}
+
+message NotificationResponse {
+  string content = 1;
+  string created = 2;
+
+}
+
+message GetAllNotificationResponse {
+
+  repeated NotificationResponse response = 1;
+
 }

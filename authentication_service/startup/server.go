@@ -2,6 +2,9 @@ package startup
 
 import (
 	"fmt"
+	"log"
+	"net"
+
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/infrastructure/api"
@@ -15,8 +18,6 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
-	"log"
-	"net"
 )
 
 type Server struct {
@@ -40,11 +41,24 @@ func (server *Server) Start() {
 	postgresClient := server.initPostgresClient()
 
 	userStore := server.initUserStore(postgresClient, loggerInfo, loggerError)
+
+	//sage
+
+	commandPublisher := server.initPublisher("auth.register.command") //server.config.CreateOrderCommandSubject)
+	replySubscriber := server.initSubscriber("auth.register.reply", QueueGroup)
+	createOrderOrchestrator := server.initRegisterUserOrchestrator(commandPublisher, replySubscriber)
+
+	//kraj sage
+
 	conformationTokenStore := server.initTokenConformationStore(postgresClient, loggerInfo, loggerError)
 	passwordRecoveryStore := server.initPasswordRecoveryStore(postgresClient, loggerInfo, loggerError)
 	passwordlessLoginStore := server.initPasswordlessLoginStore(postgresClient, loggerInfo, loggerError)
 
-	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError)
+	authService := server.initAuthService(userStore, conformationTokenStore, passwordRecoveryStore, passwordlessLoginStore, loggerInfo, loggerError, createOrderOrchestrator)
+	commandSubscriber := server.initSubscriber("auth.register.command", QueueGroup)
+	replyPublisher := server.initPublisher("auth.register.reply")
+	server.initRegisterUserHandler(authService, replyPublisher, commandSubscriber)
+
 	userHandler := server.initUserHandler(authService, loggerInfo, loggerError)
 
 	server.startGrpcServer(userHandler)
@@ -108,7 +122,17 @@ func (server *Server) initPublisher(subject string) saga.Publisher {
 		server.config.NatsUser, server.config.NatsPass, subject)
 	if err != nil {
 		log.Fatal(err)
+		println("[auth_service][server.go]Publisher   NE    radi")
+		println("[auth_service][server.go]Publisher   NE    radi")
+		println("[auth_service][server.go]Publisher   NE    radi")
+		println("[auth_service][server.go]Publisher   NE    radi")
+		println("[auth_service][server.go]Publisher   NE    radi")
 	}
+	println("[auth_service][server.go]Publisher radi")
+	println("[auth_service][server.go]Publisher radi")
+	println("[auth_service][server.go]Publisher radi")
+	println("[auth_service][server.go]Publisher radi")
+	println("[auth_service][server.go]Publisher radi")
 	return publisher
 }
 
@@ -118,20 +142,38 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
 	if err != nil {
 		log.Fatal(err)
+		println("[auth_service][server.go]Subscriber  NE  radi")
+		println("[auth_service][server.go]Subscriber  NE  radi")
+		println("[auth_service][server.go]Subscriber  NE  radi")
+		println("[auth_service][server.go]Subscriber  NE  radi")
+		println("[auth_service][server.go]Subscriber  NE  radi")
 	}
+	println("[auth_service][server.go]Subscriber radi")
+	println("[auth_service][server.go]Subscriber radi")
+	println("[auth_service][server.go]Subscriber radi")
+	println("[auth_service][server.go]Subscriber radi")
+	println("[auth_service][server.go]Subscriber radi")
 	return subscriber
 }
 
-func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.AuthService {
-	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError)
+func (server *Server) initRegisterUserOrchestrator(publisher saga.Publisher, subscriber saga.Subscriber) *application.RegisterUserOrchestrator {
+	orchestrator, err := application.NewRegisterUserOrchestrator(publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return orchestrator
 }
 
-// func (server *Server) initCreateOrderHandler(service *application.ProductService, publisher saga.Publisher, subscriber saga.Subscriber) {
-// 	_, err := api.NewCreateOrderCommandHandler(service, publisher, subscriber)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+func (server *Server) initAuthService(store domain.UserStore, storeConfToken domain.ConfirmationTokenStore, storePasswordRecovery domain.PasswordRecoveryStore, passwordlessLoginStore domain.PasswordlessLoginStore, loggerInfo *logger.Logger, loggerError *logger.Logger, orchestrator *application.RegisterUserOrchestrator) *application.AuthService {
+	return application.NewAuthService(store, storeConfToken, storePasswordRecovery, passwordlessLoginStore, loggerInfo, loggerError, orchestrator)
+}
+
+func (server *Server) initRegisterUserHandler(service *application.AuthService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewRegisterUserCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func (server *Server) initUserHandler(authService *application.AuthService, loggerInfo *logger.Logger, loggerError *logger.Logger) *api.UserHandler {
 	return api.NewUserHandler(authService, loggerInfo, loggerError)

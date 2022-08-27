@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"github.com/golang-jwt/jwt"
+	"time"
+)
 
 type UserConnection struct {
 	UserId          int   `bson:"user_id"`
@@ -16,4 +19,11 @@ type Notification struct {
 	Content   string    `bson:"content"`
 	CreatedAt time.Time `bson:"created_at"`
 	Seen      bool      `bson:"seen"`
+}
+
+type JwtClaims struct {
+	Id       int
+	Username string
+	Role     string
+	jwt.StandardClaims
 }

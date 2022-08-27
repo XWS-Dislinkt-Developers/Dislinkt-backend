@@ -2,6 +2,9 @@ package startup
 
 import (
 	"fmt"
+	"log"
+	"net"
+
 	user "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
@@ -13,8 +16,6 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/startup/config"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
-	"log"
-	"net"
 )
 
 type Server struct {
@@ -32,15 +33,24 @@ const (
 )
 
 func (server *Server) Start() {
+	println("[USERSERVICE]Start():pocetak")
 	loggerInfo := logger.InitializeLogger("user-service", "INFO")
 	loggerError := logger.InitializeLogger("user-service", "ERROR")
 
 	postgresClient := server.initPostgresClient()
-
+	println("[USERSERVICE]Start():init postgress")
 	userStore := server.initUserStore(postgresClient, loggerInfo, loggerError)
 	userService := server.initUserService(userStore, loggerInfo, loggerError)
-	userHandler := server.initUsersHandler(userService, loggerInfo, loggerError)
+	println("[USERSERVICE]Start():init user service")
+	commandSubscriber := server.initSubscriber("auth.register.command", QueueGroup)
+	replyPublisher := server.initPublisher("auth.register.reply")
 
+	println("[USERSERVICE]Start():sub i pob")
+	server.initRegisterUserHandler(userService, replyPublisher, commandSubscriber)
+	println("[USERSERVICE]Start():register handle")
+	userHandler := server.initUsersHandler(userService, loggerInfo, loggerError)
+	println("[USERSERVICE]Start():init user handle")
+	println("[USERSERVICE]Start():sad ide start")
 	server.startGrpcServer(userHandler)
 }
 
@@ -79,6 +89,11 @@ func (server *Server) initPublisher(subject string) saga.Publisher {
 	if err != nil {
 		log.Fatal(err)
 	}
+	println("[Userservice][server.go]Publisher radi")
+	println("[Userservice][server.go]Publisher radi")
+	println("[Userservice][server.go]Publisher radi")
+	println("[Userservice][server.go]Publisher radi")
+	println("[Userservice][server.go]Publisher radi")
 	return publisher
 }
 
@@ -87,8 +102,29 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 		server.config.NatsHost, server.config.NatsPort,
 		server.config.NatsUser, server.config.NatsPass, subject, queueGroup)
 	if err != nil {
+
+		println("[Userservice][server.go]Subscriber NE radi")
+		println("[Userservice][server.go]Subscriber NE radi")
+		println("[Userservice][server.go]Subscriber NE radi")
+		println("[Userservice][server.go]Subscriber NE radi")
+		println("[Userservice][server.go]Subscriber NE radi")
+		println("[Userservice][server.go]server.config.NatsHost", server.config.NatsHost)
+		println("[Userservice][server.go]server.config.NatsPort", server.config.NatsPort)
+		println("[Userservice][server.go]server.config.NatsUser", server.config.NatsUser)
+		println("[Userservice][server.go]server.config.NatsPass", server.config.NatsPass)
+		println(server.config.NatsHost)
+		println(server.config.NatsPort)
+		println(server.config.NatsUser)
+		println(server.config.NatsPass)
 		log.Fatal(err)
 	}
+
+	println("[Userservice][server.go]Subscriber radi")
+	println("[Userservice][server.go]Subscriber radi")
+	println("[Userservice][server.go]Subscriber radi")
+	println("[Userservice][server.go]Subscriber radi")
+	println("[Userservice][server.go]Subscriber radi")
+
 	return subscriber
 }
 
@@ -109,5 +145,12 @@ func (server *Server) startGrpcServer(usersHandler *api.UsersHandler) {
 	user.RegisterUserServiceServer(grpcServer, usersHandler)
 	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("failed to serve: %s", err)
+	}
+}
+
+func (server *Server) initRegisterUserHandler(service *application.UserService, publisher saga.Publisher, subscriber saga.Subscriber) {
+	_, err := api.NewRegisterUserCommandHandler(service, publisher, subscriber)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

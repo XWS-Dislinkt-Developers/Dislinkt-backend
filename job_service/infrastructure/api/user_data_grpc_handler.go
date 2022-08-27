@@ -93,8 +93,69 @@ func (handler *UserDataHandler) GetToken(ctx context.Context, request *pb_connec
 	}, nil
 }
 
-//PostJob
-//PostJobCompany
+func (handler *UserDataHandler) GetJobOffers(ctx context.Context, request *pb_connection.GetJobOffersRequest) (*pb_connection.GetJobOffersResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_connection.GetJobOffersResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	_, err2 := handler.auth_service.ValidateToken(token)
+	if err2 != nil {
+		return &pb_connection.GetJobOffersResponse{}, err2
+	}
+
+	jobs, err3 := handler.job_service.GetJobDataByCompany(request.Company)
+
+	if err3 != nil {
+		return &pb_connection.GetJobOffersResponse{}, err2
+	}
+
+	var temp = []*pb_connection.JobOffersResponse{}
+
+	for _, s := range jobs {
+		//fmt.Println(i, s)
+		temp = append(temp, &pb_connection.JobOffersResponse{Company: s.Company, ExperienceLevel: s.ExperienceLevel,
+			Position: s.Position, Description: s.Description, Requirements: s.Requirements})
+	}
+
+	//treba dodati return temp
+	return &pb_connection.GetJobOffersResponse{Offers: temp}, nil
+}
+
+func (handler *UserDataHandler) PostJobCompany(ctx context.Context, request *pb_connection.PostJobCompanyRequest) (*pb_connection.PostJobCompanyResponse, error) {
+
+	UsersData, err1 := handler.job_service.GetByUserToken(request.Data.Token)
+	if err1 != nil {
+		return &pb_connection.PostJobCompanyResponse{
+			Response: err1.Error(),
+		}, nil
+	}
+	if UsersData == nil {
+		return &pb_connection.PostJobCompanyResponse{
+			Response: "User token not valid",
+		}, nil
+	}
+
+	var temp = domain.JobOffer{
+		UserId:          UsersData.UserId,
+		Company:         request.Data.Company,
+		Position:        request.Data.Position,
+		Description:     request.Data.Description,
+		ExperienceLevel: request.Data.ExperienceLevel,
+		Requirements:    request.Data.Requirements,
+	}
+	err := handler.job_service.InsertJobData(&temp)
+	if err != nil {
+		return &pb_connection.PostJobCompanyResponse{
+			Response: err.Error(),
+		}, nil
+	}
+	return &pb_connection.PostJobCompanyResponse{
+		Response: "ok",
+	}, nil
+}
 
 func extractHeader(ctx context.Context, header string) (string, error) {
 	md, ok := metadata.FromIncomingContext(ctx)

@@ -11,5 +11,6 @@ type UserDataStore interface {
 type JobOfferStore interface {
 	GetByUserId(id int) (*JobOffer, error)
 	GetAll() ([]*JobOffer, error)
+	GetByCompany(company string) ([]*JobOffer, error)
 	Insert(jobData *JobOffer) error
 }

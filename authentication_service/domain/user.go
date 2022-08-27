@@ -8,3 +8,15 @@ type User struct {
 	IsItConfirmed bool   `json:"isItConfirmed"`
 	Role          string `json:"role""`
 }
+
+type UserRegisterData struct {
+	ID            int
+	Name          string
+	Username      string
+	Password      string
+	Email         string
+	IsItConfirmed bool
+	Role          string
+	Gender        string
+	DateOfBirth   string
+}

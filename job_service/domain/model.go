@@ -9,12 +9,12 @@ type UserData struct {
 }
 
 type JobOffer struct {
-	Id              int    `bson:"id"`
-	UserId          int    `bson:"user_id"`
-	Company         string `bson:"company"`
-	Position        string `bson:"position"`
-	Description     string `bson:"description"`
-	ExperienceLevel string `bson:"experience_level"`
+	UserId          int      `bson:"user_id"`
+	Company         string   `bson:"company"`
+	Position        string   `bson:"position"`
+	Description     string   `bson:"description"`
+	ExperienceLevel string   `bson:"experience_level"`
+	Requirements    []string `bson:"requirements"`
 }
 
 type JwtClaims struct {

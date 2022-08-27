@@ -53,6 +53,41 @@ func (handler *MessageHandler) GetAll(ctx context.Context, request *pb_message.G
 	}
 	return response, nil
 }
+
+func (handler *MessageHandler) GetAllNotifications(ctx context.Context, request *pb_message.GetAllNotificationRequest) (*pb_message.GetAllNotificationResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_message.GetAllNotificationResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_message.GetAllNotificationResponse{}, err2
+	}
+	notifications, err3 := handler.notificaiton_service.GetAllUserNotificationsByUserId(claims.Id)
+
+	if err3 != nil {
+		return &pb_message.GetAllNotificationResponse{}, err3
+	}
+
+	response := &pb_message.GetAllNotificationResponse{
+		Response: []*pb_message.NotificationResponse{},
+	}
+
+	for _, n := range notifications {
+		current := &pb_message.NotificationResponse{
+			Created: "",
+			Content: n.Content,
+		}
+
+		response.Response = append(response.Response, current)
+	}
+
+	return response, nil
+}
+
 func (handler *MessageHandler) GetAllUsersMessagesByUserId(ctx context.Context, request *pb_message.GetAllUsersMessagesRequest) (*pb_message.MessagesResponse, error) {
 	// TODO: LoggerInfo? - GetAllSendersMessagesByUserId
 	// TODO: authorizationLoggedUser as a separete method?

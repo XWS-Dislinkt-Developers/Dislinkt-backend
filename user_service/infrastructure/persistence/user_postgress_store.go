@@ -208,3 +208,8 @@ func (store *UserPostgresStore) DeleteAll() {
 	store.db.Session(&gorm.Session{AllowGlobalUpdate: true}).
 		Delete(&domain.User{})
 }
+
+func (store *UserPostgresStore) DeleteUser(id int) {
+	store.db.Session(&gorm.Session{AllowGlobalUpdate: true}).
+		Delete(&domain.User{UserId: id})
+}

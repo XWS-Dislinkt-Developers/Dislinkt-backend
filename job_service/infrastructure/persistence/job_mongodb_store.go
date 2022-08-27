@@ -39,6 +39,12 @@ func (store *JobMongoDBStore) GetAll() ([]*domain.JobOffer, error) {
 	return store.filter(filter)
 }
 
+func (store *JobMongoDBStore) GetByCompany(company string) ([]*domain.JobOffer, error) {
+
+	filter := bson.M{"company": company}
+	return store.filter(filter)
+}
+
 func (store *JobMongoDBStore) Insert(jobData *domain.JobOffer) error {
 	_, err := store.jobData.InsertOne(context.TODO(), jobData)
 	store.loggerInfo.Logger.Infof("Job_store_mongodb_store: USCID | UI " + strconv.Itoa(jobData.UserId))

@@ -23,14 +23,20 @@ service JobService {
   rpc PostJob(PostJobRequest) returns(PostJobResponse) {
     option (google.api.http) = {
       post: "/postJob"
-      body: "request"
+      body: "proposal"
     };
   };
 
   rpc PostJobCompany(PostJobCompanyRequest) returns(PostJobCompanyResponse) {
     option (google.api.http) = {
       post: "/postJobCompany"
-      body: "request"
+      body: "data"
+    };
+  };
+
+  rpc GetJobOffers(GetJobOffersRequest) returns(GetJobOffersResponse) {
+    option (google.api.http) = {
+      get: "/getOffer"
     };
   };
 
@@ -71,11 +77,35 @@ message PostJobResponse {
   string response = 1;
 }
 
+message CompanyJobProposal {
+  string company = 1;
+  string position = 2;
+  string description = 3;
+  string experienceLevel = 4;
+  repeated string requirements = 5;
+  string token = 6;
+}
+
 message PostJobCompanyRequest {
-  JobProposal proposal = 1;
-  string token = 2;
+    CompanyJobProposal data = 1;
 }
 
 message PostJobCompanyResponse {
   string response = 1;
+}
+
+message GetJobOffersRequest {
+   string company = 1;
+}
+
+message JobOffersResponse {
+  string company = 1;
+  string position = 2;
+  string description = 3;
+  string experienceLevel = 4;
+  repeated string requirements = 5;
+}
+
+message GetJobOffersResponse {
+    repeated JobOffersResponse offers = 1;
 }

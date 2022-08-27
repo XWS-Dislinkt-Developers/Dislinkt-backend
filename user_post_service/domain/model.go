@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
@@ -27,4 +28,11 @@ type Notification struct {
 	Content   string    `bson:"content"`
 	CreatedAt time.Time `bson:"created_at"`
 	Seen      bool      `bson:"seen"`
+}
+
+type JwtClaims struct {
+	Id       int
+	Username string
+	Role     string
+	jwt.StandardClaims
 }

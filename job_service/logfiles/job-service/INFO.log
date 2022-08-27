@@ -1,2 +1,8 @@
 INFO | 2022-07-06 22:21:37 | user_data_job_mongodb_store: USCID | UI 1 
 INFO | 2022-07-06 22:21:37 | user_data_job_mongodb_store: USCID | UI 2 
+INFO | 2022-08-24 13:27:23 | user_data_job_mongodb_store: USCID | UI 3 
+INFO | 2022-08-24 13:29:35 | user_data_job_mongodb_store: USCID | UI 6 
+INFO | 2022-08-24 13:30:20 | Job_store_mongodb_store: USCID | UI 6 
+INFO | 2022-08-24 16:08:45 | user_data_job_mongodb_store: USCID | UI 6 
+INFO | 2022-08-24 16:09:39 | Job_store_mongodb_store: USCID | UI 6 
+INFO | 2022-08-24 16:29:14 | Job_store_mongodb_store: USCID | UI 6 

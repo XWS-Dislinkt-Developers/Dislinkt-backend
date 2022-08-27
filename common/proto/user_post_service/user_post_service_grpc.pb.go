@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: user_post_service/user_post_service.proto
+// source: user_post_service.proto
 
 package user_post_service
 
@@ -31,6 +31,7 @@ type UserPostServiceClient interface {
 	AddComment(ctx context.Context, in *AddCommentRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	Like(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
 	Dislike(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+	GetAllNotifications(ctx context.Context, in *GetAllNotificationRequest, opts ...grpc.CallOption) (*GetAllNotificationResponse, error)
 }
 
 type userPostServiceClient struct {
@@ -122,6 +123,15 @@ func (c *userPostServiceClient) Dislike(ctx context.Context, in *GetRequest, opt
 	return out, nil
 }
 
+func (c *userPostServiceClient) GetAllNotifications(ctx context.Context, in *GetAllNotificationRequest, opts ...grpc.CallOption) (*GetAllNotificationResponse, error) {
+	out := new(GetAllNotificationResponse)
+	err := c.cc.Invoke(ctx, "/user_post_service.UserPostService/GetAllNotifications", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserPostServiceServer is the server API for UserPostService service.
 // All implementations must embed UnimplementedUserPostServiceServer
 // for forward compatibility
@@ -135,6 +145,7 @@ type UserPostServiceServer interface {
 	AddComment(context.Context, *AddCommentRequest) (*GetResponse, error)
 	Like(context.Context, *GetRequest) (*GetResponse, error)
 	Dislike(context.Context, *GetRequest) (*GetResponse, error)
+	GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error)
 	mustEmbedUnimplementedUserPostServiceServer()
 }
 
@@ -168,6 +179,9 @@ func (UnimplementedUserPostServiceServer) Like(context.Context, *GetRequest) (*G
 }
 func (UnimplementedUserPostServiceServer) Dislike(context.Context, *GetRequest) (*GetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Dislike not implemented")
+}
+func (UnimplementedUserPostServiceServer) GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllNotifications not implemented")
 }
 func (UnimplementedUserPostServiceServer) mustEmbedUnimplementedUserPostServiceServer() {}
 
@@ -344,6 +358,24 @@ func _UserPostService_Dislike_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserPostService_GetAllNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllNotificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserPostServiceServer).GetAllNotifications(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_post_service.UserPostService/GetAllNotifications",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserPostServiceServer).GetAllNotifications(ctx, req.(*GetAllNotificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserPostService_ServiceDesc is the grpc.ServiceDesc for UserPostService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -387,7 +419,11 @@ var UserPostService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Dislike",
 			Handler:    _UserPostService_Dislike_Handler,
 		},
+		{
+			MethodName: "GetAllNotifications",
+			Handler:    _UserPostService_GetAllNotifications_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user_post_service/user_post_service.proto",
+	Metadata: "user_post_service.proto",
 }

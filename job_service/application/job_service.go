@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/logger"
+	"math/rand"
 )
 
 type JobService struct {
@@ -39,13 +40,18 @@ func (service *JobService) InsertUserData(userData *domain.UserData) error {
 
 func (service *JobService) AddToken(id int64) (string, error) {
 
-	//domain.UserData{UserId: id,Id: 1,Token: "newToken"} data
-	//err := service.InsertUserData(data)
-	return "", nil
+	var data = domain.UserData{UserId: int(id), Id: 0, Token: randSeq(10)}
+	err := service.InsertUserData(&data)
+
+	return data.Token, err
 }
 
 func (service *JobService) GetAllJobData() ([]*domain.JobOffer, error) {
 	return service.jobstore.GetAll()
+}
+
+func (service *JobService) GetJobDataByCompany(company string) ([]*domain.JobOffer, error) {
+	return service.jobstore.GetByCompany(company)
 }
 
 func (service *JobService) GetJobDataById(idUser int) (*domain.JobOffer, error) {
@@ -54,4 +60,14 @@ func (service *JobService) GetJobDataById(idUser int) (*domain.JobOffer, error) 
 
 func (service *JobService) InsertJobData(jobData *domain.JobOffer) error {
 	return service.jobstore.Insert(jobData)
+}
+
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }

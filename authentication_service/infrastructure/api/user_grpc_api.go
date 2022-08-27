@@ -2,12 +2,13 @@ package api
 
 import (
 	"context"
+	"net/http"
+	"strings"
+
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
 	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
-	"net/http"
-	"strings"
 )
 
 type UserHandler struct {
@@ -26,6 +27,13 @@ func NewUserHandler(auth_service *application.AuthService, loggerInfo *logg.Logg
 }
 
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
 
 	var user domain.User
 	user.Username = request.User.Username
@@ -78,8 +86,15 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 	//		Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
 	//	}, nil
 	//}
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
 
-	registeredUser := handler.auth_service.Create(&user)
+	println("[auth_service][UserHandler]Prosledjen name")
+	println(request.User.Name)
+	registeredUser := handler.auth_service.Create(&user, request.User.Gender, request.User.DateOfBirth, request.User.Name)
 
 	handler.auth_service.SendEmailForUserAuthentication(&user)
 
