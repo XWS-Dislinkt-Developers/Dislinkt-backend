@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.20.1
-// source: user_connection_service/user_connection_service.proto
+// source: user_connection_service.proto
 
 package user_connection_service
 
@@ -34,6 +34,7 @@ type UserConnectionServiceClient interface {
 	BlockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	UnblockUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ConnectionsResponse, error)
 	GetAllNotifications(ctx context.Context, in *GetAllNotificationRequest, opts ...grpc.CallOption) (*GetAllNotificationResponse, error)
+	ChangePrivate(ctx context.Context, in *ChangePrivateRequest, opts ...grpc.CallOption) (*ChangePrivateResponse, error)
 }
 
 type userConnectionServiceClient struct {
@@ -152,6 +153,15 @@ func (c *userConnectionServiceClient) GetAllNotifications(ctx context.Context, i
 	return out, nil
 }
 
+func (c *userConnectionServiceClient) ChangePrivate(ctx context.Context, in *ChangePrivateRequest, opts ...grpc.CallOption) (*ChangePrivateResponse, error) {
+	out := new(ChangePrivateResponse)
+	err := c.cc.Invoke(ctx, "/user_connection_service.UserConnectionService/ChangePrivate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserConnectionServiceServer is the server API for UserConnectionService service.
 // All implementations must embed UnimplementedUserConnectionServiceServer
 // for forward compatibility
@@ -168,6 +178,7 @@ type UserConnectionServiceServer interface {
 	BlockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	UnblockUser(context.Context, *UserIdRequest) (*ConnectionsResponse, error)
 	GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error)
+	ChangePrivate(context.Context, *ChangePrivateRequest) (*ChangePrivateResponse, error)
 	mustEmbedUnimplementedUserConnectionServiceServer()
 }
 
@@ -210,6 +221,9 @@ func (UnimplementedUserConnectionServiceServer) UnblockUser(context.Context, *Us
 }
 func (UnimplementedUserConnectionServiceServer) GetAllNotifications(context.Context, *GetAllNotificationRequest) (*GetAllNotificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllNotifications not implemented")
+}
+func (UnimplementedUserConnectionServiceServer) ChangePrivate(context.Context, *ChangePrivateRequest) (*ChangePrivateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangePrivate not implemented")
 }
 func (UnimplementedUserConnectionServiceServer) mustEmbedUnimplementedUserConnectionServiceServer() {}
 
@@ -440,6 +454,24 @@ func _UserConnectionService_GetAllNotifications_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserConnectionService_ChangePrivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePrivateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserConnectionServiceServer).ChangePrivate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_connection_service.UserConnectionService/ChangePrivate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserConnectionServiceServer).ChangePrivate(ctx, req.(*ChangePrivateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserConnectionService_ServiceDesc is the grpc.ServiceDesc for UserConnectionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -495,7 +527,11 @@ var UserConnectionService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetAllNotifications",
 			Handler:    _UserConnectionService_GetAllNotifications_Handler,
 		},
+		{
+			MethodName: "ChangePrivate",
+			Handler:    _UserConnectionService_ChangePrivate_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "user_connection_service/user_connection_service.proto",
+	Metadata: "user_connection_service.proto",
 }

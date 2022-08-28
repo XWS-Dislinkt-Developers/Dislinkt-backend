@@ -18,4 +18,6 @@ type GraphConnectionStore interface {
 	//GetMyContacts(ctx context.Context, request *pb.GetMyContactsRequest) (*pb.ContactsResponse, error)
 	DeleteUser(userID string) error
 	IsUserPrivateDB(userID string) bool
+	GetWaitingRequests(userID string) ([]UserConn, error)
+	CancelRequestFromSomeone(userIDa string, userIDb string) error
 }

@@ -3,7 +3,6 @@ package application
 import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"strconv"
 )
 
@@ -66,11 +65,30 @@ func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.Us
 
 	}
 
+	waiting, err := service.graphstore.GetWaitingRequests(s)
+	if err != nil {
+
+		println("[USETCONNECTION_SERVICE]:TRAZI GRESKA4")
+		println(err.Error())
+	}
+
+	var tempwaiting []int
 	var tempblocked []int
 	var tempconnection []int
 	var temprequests []int
 
 	isPrivate := service.graphstore.IsUserPrivateDB(s)
+	if isPrivate {
+		println("[USERCONNECITON_SERVICE]Za profil vraceno da je true")
+	} else {
+		println("[USERCONNECITON_SERVICE]Za profil vraceno da je false")
+	}
+
+	for _, s := range waiting {
+		intVar, _ := strconv.Atoi(s.UserID)
+		println("[USETCONNECTION_SERVICE]:Iterira waiting")
+		tempwaiting = append(tempwaiting, intVar)
+	}
 
 	for _, s := range blocke {
 		intVar, _ := strconv.Atoi(s.UserID)
@@ -95,7 +113,7 @@ func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.Us
 		Private:         isPrivate,
 		Connections:     tempconnection,
 		Requests:        temprequests,
-		WaitingResponse: nil, //TODO: what is this?
+		WaitingResponse: tempwaiting, //TODO: what is this?
 		Blocked:         tempblocked,
 	}
 
@@ -103,7 +121,10 @@ func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.Us
 }
 
 func (service *UserConnectionService) RegisterUserConnection(connection *domain.UserConnection) error {
-	err := service.store.Insert(connection)
+	s := strconv.Itoa(connection.UserId)
+	err := service.graphstore.Register(s, true)
+
+	//err := service.store.Insert(connection)
 	if err != nil {
 		service.loggerError.Logger.Error("User_connection_service: CNSU ")
 		println("Error in create method")
@@ -111,7 +132,26 @@ func (service *UserConnectionService) RegisterUserConnection(connection *domain.
 	}
 	return nil
 }
+func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
 
+	if service.graphstore.IsUserPrivateDB(userToFollows) { //ako je privatan profil onda posalji sahtev
+		err := service.graphstore.SendFriendRequest(logedUser, userToFollows)
+		if err != nil {
+			println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri slanju zahteva za prijateljstvo")
+		}
+	} else {
+		err := service.graphstore.AddFriend(logedUser, userToFollows)
+		if err != nil {
+			println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri postajanju prijatelja")
+			println(err)
+		}
+
+	}
+}
+
+/*
 func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
@@ -189,15 +229,43 @@ func (service *UserConnectionService) Follow(idLoggedUser int, idUser int) {
 		}
 	}
 }
-func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
-	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
-	UserConnection, _ := service.store.GetByUserId(idUser)
 
-	UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
-	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
-	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+*/
+//func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
+//	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+//	UserConnection, _ := service.store.GetByUserId(idUser)
+//
+//	UserConnection.Connections = findAndDelete(UserConnection.Connections, idLoggedUser)
+//	LoggedUserConnection.Connections = findAndDelete(LoggedUserConnection.Connections, idUser)
+//	service.store.UpdateConnections(UserConnection, LoggedUserConnection)
+//}
+
+func (service *UserConnectionService) Unfollow(idLoggedUser int, idUser int) {
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	err := service.graphstore.RemoveFriend(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri uklanjanju prijatelja")
+		println(err)
+	}
 }
+
 func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, idUser int) {
+
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	err := service.graphstore.AddFriend(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri prihvatanju prijatelja")
+		println(err.Error())
+		return
+	}
+
+}
+
+/*func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
 
@@ -227,28 +295,52 @@ func (service *UserConnectionService) AcceptConnectionRequest(idLoggedUser int, 
 	service.store.InsertNotification(&temp)
 	service.store.InsertNotification(&temp2)
 
-}
+}*/
 func (service *UserConnectionService) DeclineConnectionRequest(idLoggedUser int, idUser int) {
-	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
-	UserConnection, _ := service.store.GetByUserId(idUser)
+	//LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	//UserConnection, _ := service.store.GetByUserId(idUser)
+	//
+	//LoggedUserConnection.Requests = findAndDelete(LoggedUserConnection.Requests, idUser)
+	//service.store.UpdateRequestConnection(LoggedUserConnection)
+	//UserConnection.WaitingResponse = findAndDelete(UserConnection.WaitingResponse, idLoggedUser)
+	//service.store.UpdateWaitingResponseConnection(UserConnection)
 
-	LoggedUserConnection.Requests = findAndDelete(LoggedUserConnection.Requests, idUser)
-	service.store.UpdateRequestConnection(LoggedUserConnection)
-	UserConnection.WaitingResponse = findAndDelete(UserConnection.WaitingResponse, idLoggedUser)
-	service.store.UpdateWaitingResponseConnection(UserConnection)
+	//TODO: ?
+
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	err := service.graphstore.CancelRequestFromSomeone(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri odbijanju prijateljstva")
+		println(err.Error())
+		return
+	}
 
 }
 func (service *UserConnectionService) CancelConnectionRequest(idLoggedUser int, idUser int) {
-	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
-	UserConnection, _ := service.store.GetByUserId(idUser)
 
-	LoggedUserConnection.WaitingResponse = findAndDelete(LoggedUserConnection.WaitingResponse, idUser)
-	service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
-	UserConnection.Requests = findAndDelete(UserConnection.Requests, idLoggedUser)
-	service.store.UpdateRequestConnection(UserConnection)
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	//LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	//UserConnection, _ := service.store.GetByUserId(idUser)
+
+	//LoggedUserConnection.WaitingResponse = findAndDelete(LoggedUserConnection.WaitingResponse, idUser)
+	//service.store.UpdateWaitingResponseConnection(LoggedUserConnection)
+	//UserConnection.Requests = findAndDelete(UserConnection.Requests, idLoggedUser)
+	//service.store.UpdateRequestConnection(UserConnection)
+
+	err := service.graphstore.UnsendFriendRequest(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri otkazivanju zahteva za prijateljstvo")
+		println(err.Error())
+		return
+	}
 
 }
-func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
+
+/*func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
 	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
 	UserConnection, _ := service.store.GetByUserId(idUser)
 
@@ -273,12 +365,49 @@ func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
 		LoggedUserConnection.Blocked = append(LoggedUserConnection.Blocked, idUser)
 		service.store.UpdateBlockedConnection(LoggedUserConnection)
 	}
-}
-func (service *UserConnectionService) UnblockUser(idLoggedUser int, idUser int) {
-	LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+}*/
 
-	LoggedUserConnection.Blocked = findAndDelete(LoggedUserConnection.Blocked, idUser)
-	service.store.UpdateBlockedConnection(LoggedUserConnection)
+func (service *UserConnectionService) BlockUser(idLoggedUser int, idUser int) {
+
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	err := service.graphstore.AddBlockUser(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri blokiranju ljudi")
+		println(err.Error())
+	}
+
+}
+
+func (service *UserConnectionService) UnblockUser(idLoggedUser int, idUser int) {
+	//LoggedUserConnection, _ := service.store.GetByUserId(idLoggedUser)
+	//
+	//LoggedUserConnection.Blocked = findAndDelete(LoggedUserConnection.Blocked, idUser)
+	//service.store.UpdateBlockedConnection(LoggedUserConnection)
+
+	logedUser := strconv.Itoa(idLoggedUser)
+	userToFollows := strconv.Itoa(idUser)
+
+	err := service.graphstore.UnblockUser(logedUser, userToFollows)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri odblokiranju ljudi")
+		println(err.Error())
+	}
+
+}
+
+func (service *UserConnectionService) ChangePrivcy(idLoggedUser int, private bool) error {
+	logedUser := strconv.Itoa(idLoggedUser)
+
+	err := service.graphstore.ChangePrivacy(logedUser, private)
+	if err != nil {
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri menjenju privatnosti")
+		println(err.Error())
+	}
+
+	return err
+
 }
 
 func (service *UserConnectionService) connectionDoesntExist(LoggedUserConnection *domain.UserConnection, UserConnection *domain.UserConnection) bool {

@@ -164,6 +164,34 @@ func (store *ConnectionDBStore) Register(userID string, isPrivate bool) error {
 	}
 }
 
+func (store *ConnectionDBStore) GetRequests(userID string) ([]domain.UserConn, error) {
+
+	session := (*store.connectionDB).NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	friends, err := session.ReadTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(
+			"MATCH (this_user:USER) -[:FRIEND]-> (my_friend:USER) WHERE this_user.userID=$uID RETURN my_friend.userID, my_friend.isPrivate",
+			map[string]interface{}{"uID": userID})
+
+		if err != nil {
+			return nil, err
+		}
+
+		var friends []domain.UserConn
+		for result.Next() {
+			friends = append(friends, domain.UserConn{UserID: result.Record().Values[0].(string), IsPrivate: result.Record().Values[1].(bool)})
+		}
+		return friends, nil
+
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return friends.([]domain.UserConn), nil
+}
+
 func (store *ConnectionDBStore) DeleteUser(userID string) error {
 
 	session := (*store.connectionDB).NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
@@ -277,7 +305,7 @@ func (store *ConnectionDBStore) AddBlockUser(userIDa string, userIDb string) err
 			UserA moze da blokira UserB ako:
 			 - UserA nije vec blokirao UserB
 		     - UserB vec nije blokirao prvi UserA
-		  	Uspesno blokiranje rezultuje raskidanjem FRIEND veza izmedju ova dva cvora :(
+		  	Uspesno blokiranje rezultuje raskidanjem FRIEND veza izmedju ova dva cvora
 	*/
 
 	if userIDa == userIDb {
@@ -376,19 +404,28 @@ func (store *ConnectionDBStore) UnblockUser(userIDa string, userIDb string) erro
 	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
 
 		if checkIfUserExist(userIDa, transaction) && checkIfUserExist(userIDb, transaction) {
+			println("[UserConnection_service][store][unblock]:Korisnici postoje")
 			if checkIfBlockExist(userIDb, userIDa, transaction) {
-				return nil, errors.New("Users are blocked")
+				//actionResult.Msg = "UserB:" + userIDb + " first block UserA:" + userIDa
+				//actionResult.Status = 400 //bad request
+				return nil, errors.New("You were first blocked")
 			} else {
 				if checkIfBlockExist(userIDa, userIDb, transaction) {
 					if unblockUser(userIDa, userIDb, transaction) {
+						//actionResult.Msg = "successfully user IDa:" + userIDa + " unblock user IDb:" + userIDb
+						//actionResult.Status = 200
 						return nil, nil
 					}
 				} else {
-					return nil, errors.New("User  are no blocked")
+					//actionResult.Msg = "UserA:" + userIDa + " and UserB:" + userIDb + " are nod blocked"
+					//actionResult.Status = 400 //bad request
+					return nil, errors.New("Users are not blocked")
 				}
 			}
 		} else {
-			return nil, errors.New("user does not exist")
+			//actionResult.Msg = "user does not exist"
+			//actionResult.Status = 400 //bad request
+			return nil, errors.New("Users dot exit")
 		}
 
 		return nil, nil
@@ -397,6 +434,7 @@ func (store *ConnectionDBStore) UnblockUser(userIDa string, userIDb string) erro
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -562,6 +600,82 @@ func (store *ConnectionDBStore) UnsendFriendRequest(userIDa string, userIDb stri
 	return nil
 }
 
+func (store *ConnectionDBStore) CancelRequestFromSomeone(userIDa string, userIDb string) error {
+	/*
+		UserA moze da ne prihvati zahtev za prijateljstvo
+	*/
+
+	if userIDa == userIDb {
+		return errors.New("User id are same")
+	}
+
+	session := (*store.connectionDB).NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+
+		_, err := transaction.Run(
+			"MATCH (u1:USER{userID: $uIDa})<-[r:REQUEST]-(u2:USER{userID: $uIDb}) DELETE r RETURN u1.userID",
+			map[string]interface{}{"uIDa": userIDa, "uIDb": userIDb})
+
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//dodatno za getovanje zahteva koje sam poslao sto su na pendingu
+//func removeFriendRequest(userIDa, userIDb string, transaction neo4j.Transaction) bool {
+//	result, err := transaction.Run(
+//		"MATCH (u1:USER{userID: $uIDa})-[r:REQUEST]->(u2:USER{userID: $uIDb}) DELETE r RETURN u1.userID",
+//		map[string]interface{}{"uIDa": userIDa, "uIDb": userIDb})
+//
+//	if err != nil {
+//		fmt.Println(err)
+//		return false
+//	}
+//	if result != nil && result.Next() {
+//		return true
+//	}
+//	return false
+//}
+
+func (store *ConnectionDBStore) GetWaitingRequests(userID string) ([]domain.UserConn, error) {
+	session := (*store.connectionDB).NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	friendsRequest, err := session.ReadTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(
+			"MATCH (this_user:USER) -[:REQUEST]-> (user_requester:USER) WHERE this_user.userID=$uID RETURN user_requester.userID, user_requester.isPrivate",
+			map[string]interface{}{"uID": userID})
+
+		if err != nil {
+			return nil, err
+		}
+
+		var friendsRequest []domain.UserConn
+		for result.Next() {
+			friendsRequest = append(friendsRequest, domain.UserConn{UserID: result.Record().Values[0].(string), IsPrivate: result.Record().Values[1].(bool)})
+		}
+		return friendsRequest, nil
+
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return friendsRequest.([]domain.UserConn), nil
+}
+
+//kraj zahteva za pending
+
 //func (store *ConnectionDBStore) GetConnectionDetail(userIDa, userIDb string) (*pb.ConnectionDetail, error) {
 //
 //	/*
@@ -703,7 +817,9 @@ func (store *ConnectionDBStore) IsUserPrivateDB(userID string) bool {
 	})
 
 	if err != nil {
+		println("[USERCONNECITON_SERVICE][GraphStore]Greska pri gledanju privatnosi profila")
 		return false
+
 	}
 	return p.(bool)
 }
@@ -941,8 +1057,8 @@ func clearGraphDB(transaction neo4j.Transaction) error {
 
 func initGraphDB(transaction neo4j.Transaction) error {
 	_, err := transaction.Run(
-		"CREATE  (pera:USER{userID: \"1\", isPrivate : false}),  (marko:USER{userID: \"2\", isPrivate : false}),  (joka:USER{userID: \"3\", isPrivate : true}),   (pera) -[:FRIEND]-> (marko),  (pera) <-[:FRIEND]- (marko),  (pera) -[:FRIEND]-> (joka),  (pera) <-[:FRIEND]- (joka),       (marko) -[:BLOCK]-> (joka),  (joka) -[:BLOCK]-> (marko)  ",
+		"CREATE  (pera:USER{userID: \"1\", isPrivate : false}),  (joka:USER{userID: \"2\", isPrivate : false}),  (marko:USER{userID: \"3\", isPrivate : false}),(zeksa:USER{userID: \"4\", isPrivate : false}),(sanja:USER{userID: \"5\", isPrivate : false}),(tanja:USER{userID: \"6\", isPrivate : true}),(lale:USER{userID: \"7\", isPrivate : false}),(nena:USER{userID: \"8\", isPrivate : false}),(admin:USER{userID: \"9\", isPrivate : false}),   (pera) -[:FRIEND]-> (marko),  (pera) <-[:FRIEND]- (marko),  (pera) -[:FRIEND]-> (joka),  (pera) <-[:FRIEND]- (joka), (marko) -[:BLOCK]-> (joka),  (joka) -[:BLOCK]-> (marko)  ",
 		map[string]interface{}{})
-	
+
 	return err
 }

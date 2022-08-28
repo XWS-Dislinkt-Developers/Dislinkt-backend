@@ -95,6 +95,33 @@ func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, 
 	return response, nil
 }
 
+func (handler *UserConnectionHandler) ChangePrivate(ctx context.Context, request *pb_connection.ChangePrivateRequest) (*pb_connection.ChangePrivateResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_connection.ChangePrivateResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_connection.ChangePrivateResponse{}, err2
+	}
+
+	err = handler.connection_service.ChangePrivcy(claims.Id, request.Change.Change)
+	if err != nil {
+		return nil, err
+	}
+
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA")
+
+	response := &pb_connection.ChangePrivateResponse{
+		Newprivate: request.Change.Change,
+	}
+	return response, nil
+
+}
+
 func (handler *UserConnectionHandler) RegisterUserConnection(ctx context.Context, request *pb_connection.RegisterRequest) (*pb_connection.RegisterResponse, error) {
 	var userConnection domain.UserConnection
 	userConnection.UserId = int(request.IdUser)
