@@ -8,6 +8,12 @@ import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
 service JobService {
+  rpc GetAllJobOffers(GetAllJobOffersRequest) returns(GetAllJobOffersResponse) {
+    option (google.api.http) = {
+      get: "/jobOffers"
+    };
+  };
+
   rpc GetAll(GetAllRequest) returns(GetAllResponse) {
     option (google.api.http) = {
       get: "/userData"
@@ -47,6 +53,11 @@ message GetAllRequest {
 
 message GetAllResponse {
   repeated UserData userData = 1;
+}
+
+message GetAllJobOffersRequest{}
+message GetAllJobOffersResponse{
+  repeated JobOffersResponse jobOffers= 1;
 }
 
 message UserData {
