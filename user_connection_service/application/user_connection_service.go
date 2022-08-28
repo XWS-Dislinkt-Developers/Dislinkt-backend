@@ -4,17 +4,20 @@ import (
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"strconv"
 )
 
 type UserConnectionService struct {
 	store       domain.UserConnectionStore
+	graphstore  domain.GraphConnectionStore
 	loggerInfo  *logg.Logger
 	loggerError *logg.Logger
 }
 
-func NewUserConnectionService(store domain.UserConnectionStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionService {
+func NewUserConnectionService(store domain.UserConnectionStore, graphstore domain.GraphConnectionStore, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserConnectionService {
 	return &UserConnectionService{
 		store:       store,
+		graphstore:  graphstore,
 		loggerInfo:  loggerInfo,
 		loggerError: loggerError,
 	}
@@ -24,7 +27,79 @@ func (service *UserConnectionService) GetAll() ([]*domain.UserConnection, error)
 	return service.store.GetAll()
 }
 func (service *UserConnectionService) GetConnectionsById(idUser int) (*domain.UserConnection, error) {
-	return service.store.GetByUserId(idUser)
+	//return service.store.GetByUserId(idUser)
+	s := strconv.Itoa(idUser)
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA, u metodi get conn by id: ", s)
+	blocke, err := service.graphstore.GetBlockeds(s)
+
+	if blocke == nil {
+		println("[USETCONNECTION_SERVICE]:NEMA BLOCKE")
+
+	}
+
+	println("[USETCONNECTION_SERVICE]:TRAZI")
+	if err != nil {
+		println("[USETCONNECTION_SERVICE]:TRAZI GRESKA1")
+		return nil, err
+	}
+
+	friends, err := service.graphstore.GetFriends(s)
+
+	if friends == nil {
+		println("[USETCONNECTION_SERVICE]:NEMA friends")
+
+	}
+
+	if err != nil {
+		println("[USETCONNECTION_SERVICE]:TRAZI GRESKA2")
+		return nil, err
+	}
+
+	requests, err := service.graphstore.GetFriendRequests(s)
+	if err != nil {
+		println("[USETCONNECTION_SERVICE]:TRAZI GRESKA3")
+		return nil, err
+	}
+
+	if requests == nil {
+		println("[USETCONNECTION_SERVICE]:NEMA requests")
+
+	}
+
+	var tempblocked []int
+	var tempconnection []int
+	var temprequests []int
+
+	isPrivate := service.graphstore.IsUserPrivateDB(s)
+
+	for _, s := range blocke {
+		intVar, _ := strconv.Atoi(s.UserID)
+		println("[USETCONNECTION_SERVICE]:Iterira 1")
+		tempblocked = append(tempblocked, intVar)
+	}
+
+	for _, s := range friends {
+		intVar, _ := strconv.Atoi(s.UserID)
+		println("[USETCONNECTION_SERVICE]:Iterira2")
+		tempconnection = append(tempconnection, intVar)
+	}
+
+	for _, s := range requests {
+		intVar, _ := strconv.Atoi(s.UserID)
+		println("[USETCONNECTION_SERVICE]:Iterira3")
+		temprequests = append(temprequests, intVar)
+	}
+
+	var conn = domain.UserConnection{
+		UserId:          idUser,
+		Private:         isPrivate,
+		Connections:     tempconnection,
+		Requests:        temprequests,
+		WaitingResponse: nil, //TODO: what is this?
+		Blocked:         tempblocked,
+	}
+
+	return &conn, nil
 }
 
 func (service *UserConnectionService) RegisterUserConnection(connection *domain.UserConnection) error {

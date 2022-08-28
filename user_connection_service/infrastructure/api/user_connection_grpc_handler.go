@@ -71,6 +71,14 @@ func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context
 }
 func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.Connections, error) {
 
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA")
+	println("[USETCONNECTION_SERVICE]:za korisnika se traze konekcije, id:")
+	temp2 := int(request.IdUser)
+	s := strconv.Itoa(temp2)
+	println("[USETCONNECTION_SERVICE]:Evo sto je konvertovao")
+	println(s)
+
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA", string(int(request.IdUser)))
 	UserConnection, _ := handler.connection_service.GetConnectionsById(int(request.IdUser))
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(int(request.IdUser)))
 
