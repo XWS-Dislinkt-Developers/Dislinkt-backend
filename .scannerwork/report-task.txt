@@ -1,0 +1,6 @@
+projectKey=bsep_proj10
+serverUrl=http://localhost:9000
+serverVersion=9.5.0.56709
+dashboardUrl=http://localhost:9000/dashboard?id=bsep_proj10
+ceTaskId=AYFphLF0puf26dIcbC32
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYFphLF0puf26dIcbC32

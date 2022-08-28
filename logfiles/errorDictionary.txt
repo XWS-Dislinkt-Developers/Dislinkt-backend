@@ -1,0 +1,47 @@
+UIx : user id x
+FLI : failed to log in
+TCBG : token cannot be generated
+TINV : token is not valid
+CNPC : could not parse claims
+JWTEX : jwt expired
+FSEFA : failed to sent email for authentication
+EINSRC  :email isn't sent for recovery code
+EINSPSWL  :email isn't sent for passwordless login 
+CPSWLRE : code for passwordless recovery expired
+CLIW : code for login is wrong
+CNSU: can't save user
+USNAT : username is already taken
+
+NUUI : there is no user with user id x
+TIN : token is null
+NT : there is no token
+CNFUT : can't find user with this token 
+CNSCTD : can't save confirmation token in database
+
+CNRDD : can't read data from database
+NUWC : there is no user with this code
+PSWRCNSD: password recovery can't be saved in database
+CNSPSWL: can't save passwordles login 
+NU : no users
+CNFUWU: Can't find user with this username
+CNFUWE :  Can't find user with this email
+UAR : User is already registred! 
+UCNBS: user can't be saved
+FTFU : failed to follow user 
+FTUFU: failed to unfollow user 
+FTACCR : failed to accept connection request
+FTDCR : failed to decline connection request
+UFTSCIDD: user failed to save connection in database
+FTUCID : user failed to update his connnection in database 
+UFACID : user failed to add connection in database
+UFCNP : user failed to create new post
+FGAP : failed to get all posts
+UDNHC: user doesnt have connections
+FTFCFU : failed to fetch connections for user
+FWDJ : failed while decoding json
+FGAPU : failed to get all posts for user
+UFSNPD : user failed to save new post in database
+UFSNCOPID : user failed to save new comment on post in database 
+UFSNROPID : user failed to save new reaction on post in database 
+
+

@@ -2,71 +2,48 @@ package api
 
 import (
 	"context"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
-	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
-	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 	"net/http"
 	"strings"
-	"time"
+
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
+	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/domain"
+	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/logger"
+	pb "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 )
 
 type UserHandler struct {
-	service *application.UserService
 	pb.UnimplementedAuthenticationServiceServer
 	auth_service *application.AuthService
+	loggerInfo   *logg.Logger
+	loggerError  *logg.Logger
 }
 
-func NewUserHandler(service *application.UserService) *UserHandler {
+func NewUserHandler(auth_service *application.AuthService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserHandler {
 	return &UserHandler{
-		service: service,
+		auth_service: auth_service,
+		loggerInfo:   loggerInfo,
+		loggerError:  loggerError,
 	}
-}
-
-func (handler *UserHandler) GetAll(ctx context.Context, request *pb.GetAllRequest) (*pb.GetAllResponse, error) {
-
-	//header, _ := extractHeader(ctx, "authorization")
-	//var prefix = "Bearer "
-	//var token = strings.TrimPrefix(header, prefix)
-	//claims, _ := handler.auth_service.ValidateToken(token)
-	//println("id je :", claims.Id)
-
-	users, err := handler.service.GetAll()
-	if err != nil || *users == nil {
-		return nil, err
-	}
-	response := &pb.GetAllResponse{
-		Users: []*pb.User{},
-	}
-	for _, user := range *users {
-		current := mapUser(&user)
-		response.Users = append(response.Users, current)
-	}
-	return response, nil
 }
 
 func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 
-	var user domain.User
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
+	println("[handler *UserHandler]Register")
 
+	var user domain.User
 	user.Username = request.User.Username
-	user.Name = request.User.Name
 	user.Email = request.User.Email
-	user.Password = request.User.Password
-	user.Gender = request.User.Gender
-	user.IsPrivateProfile = false
+	user.Password = handler.auth_service.HashPassword(request.User.Password)
+	user.Role = "user"
 	if len(strings.TrimSpace(user.Username)) == 0 {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
 			Error:  "Username can't be empty.",
-		}, nil
-	}
-	if len(strings.TrimSpace(user.Name)) == 0 {
-		return &pb.RegisterResponse{
-			Status: http.StatusBadRequest,
-			Error:  "Name can't be empty.",
 		}, nil
 	}
 	if len(strings.TrimSpace(user.Email)) == 0 {
@@ -81,39 +58,184 @@ func (handler *UserHandler) Register(ctx context.Context, request *pb.RegisterRe
 			Error:  "Password can't be empty.",
 		}, nil
 	}
-	if len(strings.TrimSpace(user.Gender)) == 0 {
-		return &pb.RegisterResponse{
-			Status: http.StatusBadRequest,
-			Error:  "Gender can't be empty.",
-		}, nil
-	}
 	if request.User.Password != request.User.ConfirmPassword {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
 			Error:  "Password mismatch",
 		}, nil
 	}
-
-	println("[UserHandler]Register:Username " + request.User.Username)
-	_, err := handler.service.GetByUsername(user.Username)
+	_, err := handler.auth_service.GetByUsername(user.Username)
 	if err == nil {
 		return &pb.RegisterResponse{
 			Status: http.StatusBadRequest,
 			Error:  "Username is already taken",
 		}, nil
 	}
-	handler.service.Create(&user)
+
+	if !handler.auth_service.IsPasswordValid(strings.TrimSpace(user.Password)) {
+		return &pb.RegisterResponse{
+			Status: http.StatusBadRequest,
+			Error: "Your password must be at least 10 characters long, containing at least 1 lowercase and 1 uppercase letter," +
+				" at least 1 special character(~`!@#$%^&* etc.) and a number.",
+		}, nil
+	}
+
+	//if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(user.Password)) {
+	//	return &pb.RegisterResponse{
+	//		Status: http.StatusBadRequest,
+	//		Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
+	//	}, nil
+	//}
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+	println("[auth_service][UserHandler]Register  zove create")
+
+	println("[auth_service][UserHandler]Prosledjen name")
+	println(request.User.Name)
+	registeredUser := handler.auth_service.Create(&user, request.User.Gender, request.User.DateOfBirth, request.User.Name)
+
+	handler.auth_service.SendEmailForUserAuthentication(&user)
 
 	return &pb.RegisterResponse{
 		Status: http.StatusCreated,
+		UserId: int64(registeredUser.ID),
 	}, nil
 
 }
 
+func (handler *UserHandler) ConfirmAccount(ctx context.Context, req *pb.ConfirmAccountRequest) (*pb.ConfirmAccountResponse, error) {
+
+	user, _ := handler.auth_service.ConfirmAccount(req.Token)
+
+	return &pb.ConfirmAccountResponse{
+		Email:    user.Email,
+		Response: "Posetite nas sajt i ulogujte se: http://localhost:4200",
+	}, nil
+}
+
+func (handler *UserHandler) PasswordRecoveryRequest(ctx context.Context, req *pb.PasswordRecoveryReq) (*pb.PasswordRecoveryResponse, error) {
+
+	err := handler.auth_service.PasswordRecoveryRequest(req.Email.Email)
+
+	if err != nil {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "",
+	}, nil
+
+}
+
+func (handler *UserHandler) PasswordRecovery(ctx context.Context, req *pb.ChangePasswordWithCodeRequest) (*pb.PasswordRecoveryResponse, error) {
+
+	if len(strings.TrimSpace(req.ChangePassword.Code)) == 0 {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Code can't be empty.",
+		}, nil
+	}
+
+	if len(strings.TrimSpace(req.ChangePassword.Password)) == 0 {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password can't be empty.",
+		}, nil
+	}
+
+	if req.ChangePassword.Password != req.ChangePassword.ConfirmPassword {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Password mismatch",
+		}, nil
+	}
+
+	if !handler.auth_service.IsPasswordValid(strings.TrimSpace(req.ChangePassword.Password)) {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error: "Your password must be at least 10 characters long, containing at least 1 lowercase and 1 uppercase letter," +
+				" at least 1 special character(~`!@#$%^&* etc.) and a number.",
+		}, nil
+	}
+
+	if !handler.auth_service.CheckForCommonPasswords(strings.TrimSpace(req.ChangePassword.Password)) {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  "Your password is on the list of most commonly used passwords. Please, pick another, more complex password.",
+		}, nil
+	}
+
+	err, user := handler.auth_service.PasswordRecovery(req.ChangePassword.Code, req.ChangePassword.Password)
+
+	if err != "" {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err,
+		}, nil
+	}
+
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "Password successfully changed.",
+		Email:  user.Email,
+	}, nil
+}
+
+func (handler *UserHandler) PasswordlessLoginRequest(ctx context.Context, req *pb.PasswordlessLoginReq) (*pb.PasswordRecoveryResponse, error) {
+
+	user, _ := handler.auth_service.GetByEmail(req.Email.Email)
+	err := handler.auth_service.PasswordlessLoginRequest(user)
+
+	if err != nil {
+		return &pb.PasswordRecoveryResponse{
+			Status: http.StatusBadRequest,
+			Error:  err.Error(),
+		}, nil
+	}
+	return &pb.PasswordRecoveryResponse{
+		Status: http.StatusOK,
+		Error:  "Email sent successfully!",
+	}, nil
+}
+
+func (handler *UserHandler) PasswordlessLogin(ctx context.Context, req *pb.PasswordlessLogRequest) (*pb.LoginResponse, error) {
+
+	user, res := handler.auth_service.PasswordlessLogin(req.Code.Code)
+
+	if user != nil {
+		token, _ := handler.auth_service.GenerateToken(user)
+
+		return &pb.LoginResponse{
+			Status:   http.StatusOK,
+			Token:    token,
+			Error:    res,
+			Username: user.Username,
+			Id:       int64(user.ID),
+			Role:     user.Role,
+		}, nil
+	}
+
+	return &pb.LoginResponse{
+		Status:   http.StatusBadRequest,
+		Token:    "",
+		Error:    res,
+		Username: "",
+		Id:       0,
+		Role:     "",
+	}, nil
+}
+
 func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 
-	user, err := handler.service.GetByUsername(req.UserData.Username)
+	user, err := handler.auth_service.GetByUsername(req.UserData.Username)
 	println("[handler *UserHandler]Login")
+
 	if err != nil {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
@@ -121,12 +243,19 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		}, nil
 	}
 
-	match := req.UserData.Password == user.Password
+	if user.IsItConfirmed == false {
+		return &pb.LoginResponse{
+			Status: http.StatusNotFound,
+			Error:  "User's account is not confirmed!",
+		}, nil
+	}
+
+	match := handler.auth_service.CheckPasswordHash(req.UserData.Password, user.Password)
 
 	if !match {
 		return &pb.LoginResponse{
 			Status: http.StatusNotFound,
-			Error:  "User not found",
+			Error:  "Password is wrong!",
 		}, nil
 	}
 
@@ -136,121 +265,23 @@ func (handler *UserHandler) Login(ctx context.Context, req *pb.LoginRequest) (*p
 		Status:   http.StatusOK,
 		Token:    token,
 		Username: user.Username,
+		Id:       int64(user.ID),
+		Role:     user.Role,
 	}, nil
 }
 
-func (handler *UserHandler) UpdatePersonalData(ctx context.Context, request *pb.UpdatePersonalDataRequest) (*pb.UpdatePersonalDataResponse, error) {
-
-	print("ucitava se sendler")
-	header, err := extractHeader(ctx, "authorization")
-	if err != nil {
-		return &pb.UpdatePersonalDataResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
+func (handler *UserHandler) FindUser(ctx context.Context, request *pb.FindUserRequest) (*pb.FindUserResponse, error) {
+	User, err := handler.auth_service.GetByUsername(request.FindUser.Username)
+	if err != nil || User == nil {
+		return nil, err
 	}
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, err := handler.auth_service.ValidateToken(token)
-	if err != nil {
-		return &pb.UpdatePersonalDataResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-	println("id je :", claims.Id)
+	UserPb := mapUser(User)
 
-	var dto domain.UpdateUserDto
-	dto.Username = request.UpdateUserData.Username
-	dto.Email = request.UpdateUserData.Email
-	dto.Gender = request.UpdateUserData.Gender
-	dto.Biography = request.UpdateUserData.Biography
-	dto.PhoneNumber = request.UpdateUserData.Biography
-	dto.Name = request.UpdateUserData.Name
-	//dto.DateOfBirth = request.UpdateUserData.DateOfBirth
-	myDate, err := time.Parse("2006-01-02", request.UpdateUserData.DateOfBirth)
-	if err == nil {
-		dto.DateOfBirth = myDate
+	response := &pb.FindUserResponse{
+		User: UserPb,
 	}
 
-	_, err = handler.service.UpdateUser(dto, claims.Id)
-	if err != nil {
-		return &pb.UpdatePersonalDataResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-
-	return &pb.UpdatePersonalDataResponse{
-		Status: http.StatusOK,
-		Error:  "",
-	}, nil
-}
-
-func (handler *UserHandler) UpdateUserWorkEducation(ctx context.Context, request *pb.UpdateUserWAERequest) (*pb.UpdateUserWAEResponse, error) {
-
-	print("ucitava se sendler")
-	header, err := extractHeader(ctx, "authorization")
-	if err != nil {
-		return &pb.UpdateUserWAEResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, err := handler.auth_service.ValidateToken(token)
-	if err != nil {
-		return &pb.UpdateUserWAEResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-	println("id je :", claims.Id)
-
-	var dto domain.UpdateUserWAEDto
-	dto.Work = request.UpdateUserData.Work
-	dto.Education = request.UpdateUserData.Education
-
-	handler.service.UpdateUserWAE(dto, claims.Id)
-
-	return &pb.UpdateUserWAEResponse{
-		Status: http.StatusOK,
-		Error:  "",
-	}, nil
-}
-
-func (handler *UserHandler) UpdateUserSkillsInterests(ctx context.Context, request *pb.UpdateUserSAIRequest) (*pb.UpdateUserSAIResponse, error) {
-
-	print("ucitava se sendler")
-	header, err := extractHeader(ctx, "authorization")
-	if err != nil {
-		return &pb.UpdateUserSAIResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-	var prefix = "Bearer "
-	var token = strings.TrimPrefix(header, prefix)
-	claims, err := handler.auth_service.ValidateToken(token)
-	if err != nil {
-		return &pb.UpdateUserSAIResponse{
-			Status: http.StatusBadRequest,
-			Error:  err.Error(),
-		}, nil
-	}
-	println("id je :", claims.Id)
-
-	var dto domain.UpdateUserSAIDto
-	dto.Skills = request.UpdateUserData.Skills
-	dto.Interests = request.UpdateUserData.Interests
-
-	handler.service.UpdateUserSAI(dto, claims.Id)
-
-	return &pb.UpdateUserSAIResponse{
-		Status: http.StatusOK,
-		Error:  "",
-	}, nil
+	return response, nil
 }
 
 func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
@@ -263,7 +294,7 @@ func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateReques
 		}, nil
 	}
 
-	user, err := handler.service.Get(claims.Id) //TODO GET USER
+	user, err := handler.auth_service.Get(claims.Id)
 	if err != nil {
 		return &pb.ValidateResponse{
 			Status: http.StatusNotFound,
@@ -275,22 +306,4 @@ func (handler *UserHandler) Validate(ctx context.Context, req *pb.ValidateReques
 		Status: http.StatusOK,
 		UserId: int64(user.ID),
 	}, nil
-}
-
-func extractHeader(ctx context.Context, header string) (string, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no headers in request")
-	}
-
-	authHeaders, ok := md[header]
-	if !ok {
-		return "", status.Error(codes.Unauthenticated, "no header in request")
-	}
-
-	if len(authHeaders) != 1 {
-		return "", status.Error(codes.Unauthenticated, "more than 1 header in request")
-	}
-
-	return authHeaders[0], nil
 }

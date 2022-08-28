@@ -13,38 +13,62 @@ service UserConnectionService {
       get: "/userConnections"
     };
   };
-  rpc Follow(FollowRequest) returns (FollowResponse){
+  rpc RegisterUserConnection(RegisterRequest) returns (RegisterResponse){
+    option (google.api.http) = {
+      put: "/register/{idUser}"
+    };
+  };
+  rpc GetById(UserIdRequest) returns (UserConnection){
+    option (google.api.http) = {
+      get: "/getConnectionForUser/{idUser}"
+    };
+  }
+  rpc Follow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/follow/{idUser}"
     };
   };
-  rpc Unfollow(FollowRequest) returns (FollowResponse){
+  rpc Unfollow(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/unfollow/{idUser}"
     };
   };
-
-  //TODO: acceptConnectionRequest(izbrise iz liste request-ova, i doda u obe liste connection-a)
-  rpc AcceptConnectionRequest(FollowRequest) returns (FollowResponse){
+  rpc AcceptConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/accept/{idUser}"
     };
   };
-
-  //TODO: declineConnectionRequest(izbrise iz liste request-ova)
-  rpc DeclineConnectionRequest(FollowRequest) returns (FollowResponse){
+  rpc DeclineConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
     option (google.api.http) = {
       put: "/decline/{idUser}"
     };
   };
-}
+  rpc CancelConnectionRequest(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/cancel/{idUser}"
+    };
+  };
+  rpc GetConnectionsByUser(UserIdRequest) returns (Connections){
+    option (google.api.http) = {
+      get: "/connections/{idUser}"
+    };
+  }
+  rpc BlockUser(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/block/{idUser}"
+    };
+  }
+  rpc UnblockUser(UserIdRequest) returns (ConnectionsResponse){
+    option (google.api.http) = {
+      put: "/unblock/{idUser}"
+    };
+  }
+  rpc GetAllNotifications(GetAllNotificationRequest) returns(GetAllNotificationResponse) {
+    option (google.api.http) = {
+      get: "/con_notifications"
+    };
+  };
 
-message FollowRequest{
-  int64 idUser = 1;
-}
-
-message FollowResponse{
-  repeated UserConnection userConnections = 1;
 }
 
 message GetAllRequest {
@@ -54,9 +78,54 @@ message GetAllResponse {
   repeated UserConnection userConnections = 1;
 }
 
+message UserIdRequest{
+  int64 idUser = 1;
+}
+
+message RegisterRequest{
+  int64 idUser = 1;
+  bool isItPrivate = 2;
+}
+
+message RegisterResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+message ConnectionsResponse{
+  repeated UserConnection userConnections = 1;
+}
+
 message UserConnection {
   int64 userId = 1;
   bool private = 2;
   repeated int64 connections = 3;
   repeated int64 requests = 4;
+  repeated int64 waitingResponse = 5;
+  repeated int64 blocked = 6;
+}
+
+message Connections {
+   Connection connections = 1;
+}
+
+message Connection {
+  repeated int64 connections = 1;
+}
+
+message GetAllNotificationRequest {
+
+}
+
+message NotificationResponse {
+  string content = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  int64 senderId = 3;
+
+}
+
+message GetAllNotificationResponse {
+
+  repeated NotificationResponse response = 1;
+
 }

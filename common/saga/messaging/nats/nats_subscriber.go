@@ -15,6 +15,10 @@ func NewNATSSubscriber(host, port, user, password, subject, queueGroup string) (
 	conn, err := getConnection(host, port, user, password)
 	if err != nil {
 		return nil, err
+		println("Greska kod subscribera za user service")
+		println(err.Error())
+		println(err.Error())
+		println(err.Error())
 	}
 	encConn, err := nats.NewEncodedConn(conn, nats.JSON_ENCODER)
 	if err != nil {

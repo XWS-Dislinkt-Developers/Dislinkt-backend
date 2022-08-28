@@ -1,0 +1,351 @@
+
+INFO | 2022-06-18 03:13:32 | Auth_service: ULI 9 
+INFO | 2022-06-23 21:49:04 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:02 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:05 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:06 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:06 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:07 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:08 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:08 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:09 | Auth_service: ULI 2 
+INFO | 2022-06-23 21:51:21 | User_postgres_store: UIR  
+INFO | 2022-06-23 21:51:21 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-23 21:51:23 | Auth_service: EFAS 
+INFO | 2022-06-24 12:43:46 | Auth_service: ULI 2 
+INFO | 2022-06-24 12:43:53 | Auth_service: ULI 2 
+INFO | 2022-06-25 12:47:41 | User_postgres_store: UIR  
+INFO | 2022-06-25 12:47:41 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 12:47:45 | Auth_service: EFAS 
+INFO | 2022-06-25 12:51:46 | User_postgres_store: UIR  
+INFO | 2022-06-25 12:51:46 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 12:51:49 | Auth_service: EFAS 
+INFO | 2022-06-25 13:24:46 | User_postgres_store: UIR  
+INFO | 2022-06-25 13:24:46 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 13:24:48 | Auth_service: EFAS 
+INFO | 2022-06-25 13:49:07 | User_postgres_store: UIR  
+INFO | 2022-06-25 13:49:07 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 13:49:08 | Auth_service: EFAS 
+INFO | 2022-06-25 13:53:29 | User_postgres_store: UCA | UI  7 
+INFO | 2022-06-25 13:53:29 | Confirmation_token_postgres_store: Delete - CTDFD | UI 7 
+INFO | 2022-06-25 13:53:29 | Auth_service: UCA | UI 7 
+INFO | 2022-06-25 14:00:09 | User_postgres_store: UIR  
+INFO | 2022-06-25 14:00:09 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 14:00:10 | Auth_service: EFAS 
+INFO | 2022-06-25 14:00:24 | User_postgres_store: UCA | UI  1 
+INFO | 2022-06-25 14:00:24 | Confirmation_token_postgres_store: Delete - CTDFD | UI 1 
+INFO | 2022-06-25 14:00:24 | Auth_service: UCA | UI 1 
+INFO | 2022-06-25 14:02:10 | User_postgres_store: UIR  
+INFO | 2022-06-25 14:02:10 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 14:02:12 | Auth_service: EFAS 
+INFO | 2022-06-25 14:02:19 | User_postgres_store: UCA | UI  1 
+INFO | 2022-06-25 14:02:19 | Confirmation_token_postgres_store: Delete - CTDFD | UI 1 
+INFO | 2022-06-25 14:02:19 | Auth_service: UCA | UI 1 
+INFO | 2022-06-25 15:17:54 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:17:54 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:17:55 | Auth_service: EFAS 
+INFO | 2022-06-25 15:18:28 | User_postgres_store: UCA | UI  2 
+INFO | 2022-06-25 15:18:28 | Confirmation_token_postgres_store: Delete - CTDFD | UI 2 
+INFO | 2022-06-25 15:18:28 | Auth_service: UCA | UI 2 
+INFO | 2022-06-25 15:21:22 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:21:22 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:21:23 | Auth_service: EFAS 
+INFO | 2022-06-25 15:22:04 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:22:04 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:22:05 | Auth_service: EFAS 
+INFO | 2022-06-25 15:22:18 | User_postgres_store: UCA | UI  4 
+INFO | 2022-06-25 15:22:18 | Confirmation_token_postgres_store: Delete - CTDFD | UI 4 
+INFO | 2022-06-25 15:22:18 | Auth_service: UCA | UI 4 
+INFO | 2022-06-25 15:24:03 | User_postgres_store: UIR  
+INFO | 2022-06-25 15:24:03 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-25 15:24:04 | Auth_service: EFAS 
+INFO | 2022-06-25 15:24:18 | User_postgres_store: UCA | UI  5 
+INFO | 2022-06-25 15:24:18 | Confirmation_token_postgres_store: Delete - CTDFD | UI 5 
+INFO | 2022-06-25 15:24:18 | Auth_service: UCA | UI 5 
+INFO | 2022-06-25 15:24:50 | Auth_service: ULI 5 
+INFO | 2022-06-25 15:26:04 | Auth_service: ULI 5 
+INFO | 2022-06-25 15:29:09 | Auth_service: ULI 5 
+INFO | 2022-06-26 17:27:05 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:27:05 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:27:06 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:29:08 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:29:08 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:29:09 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:31:59 | Password_recovery_postgres_store: NPSWRS  
+INFO | 2022-06-26 17:31:59 | Auth_service: PSWRR | UI  5 
+INFO | 2022-06-26 17:32:01 | Auth_service: ERCIS  | UI 5 
+INFO | 2022-06-26 17:33:16 | User_postgres_store: UCPSW | UI  5 
+INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5 
+INFO | 2022-06-26 17:34:26 | Auth_service: ULI 5 
+INFO | 2022-06-26 18:55:54 | Auth_service: ULI 5 
+INFO | 2022-06-26 18:58:54 | Auth_service: ULI 1 
+INFO | 2022-06-27 12:59:09 | User_postgres_store: UIR  
+INFO | 2022-06-27 12:59:09 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-06-27 12:59:10 | Auth_service: EFAS 
+INFO | 2022-07-03 18:16:29 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:16:29 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:16:33 | Auth_service: EFAS 
+INFO | 2022-07-03 18:17:19 | User_postgres_store: UCA | UI  2 
+INFO | 2022-07-03 18:17:19 | Confirmation_token_postgres_store: Delete - CTDFD | UI 2 
+INFO | 2022-07-03 18:17:19 | Auth_service: UCA | UI 2 
+INFO | 2022-07-03 18:32:27 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:32:27 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:32:30 | Auth_service: EFAS 
+INFO | 2022-07-03 18:34:30 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:34:30 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:34:32 | Auth_service: EFAS 
+INFO | 2022-07-03 18:34:57 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:34:57 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:34:58 | Auth_service: EFAS 
+INFO | 2022-07-03 18:53:18 | User_postgres_store: UIR  
+INFO | 2022-07-03 18:53:18 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 18:53:21 | Auth_service: EFAS 
+INFO | 2022-07-03 18:59:41 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:01:25 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:26:40 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:26:40 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:28:27 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:28:27 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:29:38 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:29:38 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:29:39 | Auth_service: EFAS 
+INFO | 2022-07-03 19:36:11 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:36:11 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:36:13 | Auth_service: EFAS 
+INFO | 2022-07-03 19:38:41 | User_postgres_store: UIR  
+INFO | 2022-07-03 19:38:41 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-03 19:38:43 | Auth_service: EFAS 
+INFO | 2022-07-05 17:09:05 | Auth_service: ULI 3 
+INFO | 2022-07-05 17:09:05 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:28:18 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:28:18 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:30:23 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:30:23 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:35:28 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:35:28 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:41:37 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:41:37 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:56:00 | Auth_service: ULI 3 
+INFO | 2022-07-05 18:56:00 | Auth_service: ULI 3 
+INFO | 2022-07-05 21:29:17 | Auth_service: ULI 3 
+INFO | 2022-07-05 21:29:17 | Auth_service: ULI 3 
+INFO | 2022-07-05 21:41:10 | Auth_service: ULI 3 
+INFO | 2022-07-05 21:41:10 | Auth_service: ULI 3 
+INFO | 2022-07-07 13:41:37 | Auth_service: ULI 13 
+INFO | 2022-07-07 22:15:38 | Auth_service: ULI 13 
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:13:41 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:15:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:16:05 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:17:34 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:29 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:19:34 | Auth_service: ULI 1 
+INFO | 2022-07-08 01:36:27 | Auth_service: ULI 1 
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 01:43:31 | User_postgres_store: UIR  
+INFO | 2022-07-08 02:07:29 | Auth_service: ULI 1 
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:23:49 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:25:30 | User_postgres_store: UIR  
+INFO | 2022-07-09 03:25:30 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 03:25:31 | Auth_service: EFAS 
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:05:54 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 07:11:27 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:54:22 | User_postgres_store: UIR  
+INFO | 2022-07-09 10:55:01 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 10:55:03 | Auth_service: EFAS 
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:44:40 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:58:31 | User_postgres_store: UIR  
+INFO | 2022-07-09 12:58:31 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 12:58:33 | Auth_service: EFAS 
+INFO | 2022-07-09 12:59:00 | User_postgres_store: UCA | UI  5 
+INFO | 2022-07-09 12:59:00 | Confirmation_token_postgres_store: Delete - CTDFD | UI 5 
+INFO | 2022-07-09 12:59:00 | Auth_service: UCA | UI 5 
+INFO | 2022-07-09 12:59:17 | Auth_service: ULI 5 
+INFO | 2022-07-09 12:59:17 | Auth_service: ULI 5 
+INFO | 2022-07-09 13:02:59 | User_postgres_store: UIR  
+INFO | 2022-07-09 13:02:59 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 13:03:01 | Auth_service: EFAS 
+INFO | 2022-07-09 13:03:39 | User_postgres_store: UCA | UI  1 
+INFO | 2022-07-09 13:03:39 | Confirmation_token_postgres_store: Delete - CTDFD | UI 1 
+INFO | 2022-07-09 13:03:39 | Auth_service: UCA | UI 1 
+INFO | 2022-07-09 13:03:52 | Auth_service: ULI 1 
+INFO | 2022-07-09 13:03:52 | Auth_service: ULI 1 
+INFO | 2022-07-09 14:05:55 | User_postgres_store: UIR  
+INFO | 2022-07-09 14:05:57 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 14:05:58 | Auth_service: EFAS 
+INFO | 2022-07-09 14:10:04 | User_postgres_store: UIR  
+INFO | 2022-07-09 14:10:04 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 14:10:05 | Auth_service: EFAS 
+INFO | 2022-07-09 14:10:22 | User_postgres_store: UCA | UI  3 
+INFO | 2022-07-09 14:10:22 | Confirmation_token_postgres_store: Delete - CTDFD | UI 3 
+INFO | 2022-07-09 14:10:22 | Auth_service: UCA | UI 3 
+INFO | 2022-07-09 14:13:53 | User_postgres_store: UIR  
+INFO | 2022-07-09 14:13:53 | Confirmation_token_postgres_store: CTSD  
+INFO | 2022-07-09 14:13:54 | Auth_service: EFAS 
+INFO | 2022-07-09 14:16:07 | User_postgres_store: UCA | UI  4 
+INFO | 2022-07-09 14:16:34 | Confirmation_token_postgres_store: Delete - CTDFD | UI 4 
+INFO | 2022-07-09 14:16:37 | Auth_service: UCA | UI 4 
+INFO | 2022-07-09 14:18:40 | Auth_service: ULI 4 
+INFO | 2022-07-09 14:18:40 | Auth_service: ULI 4 
+INFO | 2022-07-09 14:36:59 | Auth_service: ULI 4 
+INFO | 2022-07-09 14:36:59 | Auth_service: ULI 4 
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:17:52 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:18:24 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:18:24 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:18:46 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:18:46 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:19:23 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:19:23 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:20:11 | User_postgres_store: UIR  
+INFO | 2022-07-09 16:21:40 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:21:57 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:26:09 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:26:20 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:27:37 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:27:37 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:29:02 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:29:02 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:30:01 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:30:01 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:31:01 | Auth_service: ULI 1 
+INFO | 2022-07-09 16:31:01 | Auth_service: ULI 1 
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 18:17:10 | User_postgres_store: UIR  
+INFO | 2022-07-09 19:19:13 | Auth_service: ULI 1 
+INFO | 2022-07-09 19:19:13 | Auth_service: ULI 1 
+INFO | 2022-07-09 20:16:28 | Auth_service: ULI 1 
+INFO | 2022-07-09 20:16:28 | Auth_service: ULI 1 
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:20:20 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:41:18 | User_postgres_store: UIR  
+INFO | 2022-07-09 20:49:13 | Auth_service: ULI 1 
+INFO | 2022-07-09 20:49:13 | Auth_service: ULI 1 
+INFO | 2022-07-09 21:07:54 | Auth_service: ULI 1 
+INFO | 2022-07-09 21:07:54 | Auth_service: ULI 1 
+INFO | 2022-07-09 21:09:51 | Auth_service: ULI 1 
+INFO | 2022-07-09 21:09:51 | Auth_service: ULI 1 
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 18:48:12 | User_postgres_store: UIR  
+INFO | 2022-08-14 19:33:06 | Auth_service: ULI 1 

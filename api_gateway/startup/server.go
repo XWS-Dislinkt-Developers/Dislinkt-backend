@@ -3,18 +3,23 @@ package startup
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/handlers"
-
+	apiAuth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/authentication_service"
+	apiConnection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/connection_service"
+	apiPost "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/post_service"
+	apiUsers "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/infrastructure/api/user_service"
 	cfg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/api_gateway/startup/config"
 	authenticationGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
+	jobServiceApi "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/job_service"
+	userMessageGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/message_service"
 	userConnectionGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_connection_service"
 	userPostGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_post_service"
+	userGw "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
+	"github.com/gorilla/handlers"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"log"
+	"net/http"
 )
 
 type Server struct {
@@ -54,49 +59,130 @@ func (server *Server) initHandlers() {
 	if err3 != nil {
 		panic(err3)
 	}
+
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	err4 := userGw.RegisterUserServiceHandlerFromEndpoint(context.TODO(), server.mux, userEndpoint, opts)
+	if err4 != nil {
+		panic(err4)
+	}
+
+	userMessageEndpoint := fmt.Sprintf("%s:%s", server.config.MessageHost, server.config.MessagePort)
+	err5 := userMessageGw.RegisterMessageServiceHandlerFromEndpoint(context.TODO(), server.mux, userMessageEndpoint, opts)
+	if err5 != nil {
+		panic(err5)
+	}
+
+	jobServiceEndpoint := fmt.Sprintf("%s:%s", server.config.JobServiceHost, server.config.JobServicePort)
+	err6 := jobServiceApi.RegisterJobServiceHandlerFromEndpoint(context.TODO(), server.mux, jobServiceEndpoint, opts)
+	if err6 != nil {
+		panic(err6)
+	}
+
 }
 
 func (server *Server) initCustomHandlers() {
-
-	// authEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
-
-	// catalogueEmdpoint := fmt.Sprintf("%s:%s", server.config.CatalogueHost, server.config.CataloguePort)
-	// orderingEmdpoint := fmt.Sprintf("%s:%s", server.config.OrderingHost, server.config.OrderingPort)
-	// shippingEmdpoint := fmt.Sprintf("%s:%s", server.config.ShippingHost, server.config.ShippingPort)
-	// orderingHandler := api.NewOrderingHandler(orderingEmdpoint, catalogueEmdpoint, shippingEmdpoint)
-	// orderingHandler.Init(server.mux)
+	server.initAccountActivationHandler()
+	//server.initRegistrationHandler()
+	server.initPasswordRecoveryHandler()
+	server.initUserFeedHandler()
+	server.initUserFeedForPublicProfilesHandler()
+	server.initUserConnectionsHandler()
+	server.initUserRequestsHandler()
+	server.initUserWaitingResponsesHandler()
+	server.initUserBlockedHandler()
+	server.initUserPostsForProfile()
+	server.initSearchForLoggedUserHandler()
 }
 
-// func allowedOrigin(origin string) bool {
-// 	if viper.GetString("cors") == "*" {
-// 		return true
-// 	}
-// 	if matched, _ := regexp.MatchString(viper.GetString("cors"), origin); matched {
-// 		return true
-// 	}
-// 	return false
-// }
+func (server *Server) initAccountActivationHandler() {
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	accountActivationHandler := apiAuth.NewAccountActivationHandler(authEndpoint, userEndpoint)
+	accountActivationHandler.Init(server.mux)
+}
 
-// func cors(h http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		if allowedOrigin(r.Header.Get("Origin")) {
-// 			w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
-// 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
-// 			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
-// 		}
-// 		if r.Method == "OPTIONS" {
-// 			return
-// 		}
-// 		h.ServeHTTP(w, r)
-// 	})
-// }
+func (server *Server) initRegistrationHandler() {
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	userConnectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	registrationHandler := apiAuth.NewRegisterUserHandler(authEndpoint, userEndpoint, userConnectionEndpoint)
+	registrationHandler.Init(server.mux)
+}
+
+func (server *Server) initPasswordRecoveryHandler() {
+	authEndpoint := fmt.Sprintf("%s:%s", server.config.AuthenticationHost, server.config.AuthenticationPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	passwordReqHandler := apiAuth.NewPasswordRecoveryHandler(authEndpoint, userEndpoint)
+	passwordReqHandler.Init(server.mux)
+}
+
+func (server *Server) initUserFeedHandler() {
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	feedHandler := apiPost.NewUserFeedHandler(postEndpoint, connectionEndpoint)
+	feedHandler.Init(server.mux)
+}
+
+func (server *Server) initUserFeedForPublicProfilesHandler() {
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	feedUsersHandler := apiPost.NewUserFeedForPublicProfilesHandler(postEndpoint, userEndpoint)
+	feedUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserConnectionsHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	connectionUsersHandler := apiConnection.NewUserConnectionsHandler(userEndpoint, connectionEndpoint)
+	connectionUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserRequestsHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	requestsUsersHandler := apiConnection.NewUserRequestHandler(userEndpoint, connectionEndpoint)
+	requestsUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserWaitingResponsesHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	connectionUsersHandler := apiConnection.NewUserWaitingResponseHandler(userEndpoint, connectionEndpoint)
+	connectionUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserBlockedHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	requestsUsersHandler := apiConnection.NewUserBlockedHandler(userEndpoint, connectionEndpoint)
+	requestsUsersHandler.Init(server.mux)
+}
+
+func (server *Server) initUserPostsForProfile() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	postEndpoint := fmt.Sprintf("%s:%s", server.config.UserPostHost, server.config.UserPostPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	userPostsProfileHandler := apiPost.NewUserPostsProfileHandler(userEndpoint, postEndpoint, connectionEndpoint)
+	userPostsProfileHandler.Init(server.mux)
+}
+
+func (server *Server) initSearchForLoggedUserHandler() {
+	userEndpoint := fmt.Sprintf("%s:%s", server.config.UserHost, server.config.UserPort)
+	connectionEndpoint := fmt.Sprintf("%s:%s", server.config.UserConnectionHost, server.config.UserConnectionPort)
+	searchUsersHandler := apiUsers.NewUserSearchForLoggedUserHandler(userEndpoint, connectionEndpoint)
+	searchUsersHandler.Init(server.mux)
+}
 
 func (server *Server) Start() {
 
-	ch := handlers.CORS(handlers.AllowedOrigins([]string{"*"}),
+	ch := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"}),
-		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin"}),
+		handlers.AllowedHeaders([]string{"Accept", "Accept-Language", "Content-Type", "Content-Language", "Origin", "Authorization"}),
 	)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
+	//HTTPS
+	log.Fatal(http.ListenAndServeTLS(fmt.Sprintf(":%s", server.config.Port), server.config.HTTPSServerCertificate, server.config.HTTPSServerKey, ch(server.mux)))
+	//HTTP
+	//log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", server.config.Port), ch(server.mux)))
 }

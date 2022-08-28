@@ -7,16 +7,17 @@ package authentication;
 import "google/api/annotations.proto";
 
 service AuthenticationService{
-        rpc GetAll(GetAllRequest) returns(GetAllResponse) {
-        	option (google.api.http) = {
-			get: "/users"
-		};
-        }
         rpc Register(RegisterRequest) returns (RegisterResponse) {
                 option (google.api.http) = {
                         post: "/register"
                         body:"user"
               };
+        }
+        rpc FindUser(FindUserRequest) returns (FindUserResponse) {
+                option (google.api.http) = {
+                        post: "/user"
+                        body:"findUser"
+                };
         }
         rpc Login(LoginRequest) returns (LoginResponse) {
                 option (google.api.http) = {
@@ -25,28 +26,85 @@ service AuthenticationService{
                 };
         }
         rpc Validate(ValidateRequest) returns (ValidateResponse) {}
-        rpc UpdatePersonalData(UpdatePersonalDataRequest) returns (UpdatePersonalDataResponse) {
+        rpc ConfirmAccount(ConfirmAccountRequest) returns (ConfirmAccountResponse){
                 option (google.api.http) = {
-                        post: "/updatePersonalData"
-                        body:"updateUserData"
+                        get: "/confirmAccount/{token}"
                 };
         }
-        rpc UpdateUserWorkEducation(UpdateUserWAERequest) returns (UpdateUserWAEResponse) {
+        rpc PasswordRecoveryRequest(PasswordRecoveryReq) returns (PasswordRecoveryResponse) {
                 option (google.api.http) = {
-                        post: "/updateWorkAndEducation"
-                        body:"updateUserData"
+                        post: "/passwordRecoveryRequest"
+                        body: "email"
                 };
         }
-        rpc UpdateUserSkillsInterests(UpdateUserSAIRequest) returns (UpdateUserSAIResponse) {
+        rpc PasswordRecovery(ChangePasswordWithCodeRequest) returns (PasswordRecoveryResponse) {
                 option (google.api.http) = {
-                        post: "/updateSkillsInterests"
-                        body:"updateUserData"
+                        post: "/passwordRecovery"
+                        body: "changePassword"
+                };
+        }
+        rpc PasswordlessLoginRequest(PasswordlessLoginReq) returns (PasswordRecoveryResponse) {
+                option (google.api.http) = {
+                        post: "/passwordlessLoginRequest"
+                        body: "email"
+                };
+        }
+        rpc PasswordlessLogin(PasswordlessLogRequest) returns (LoginResponse) {
+                option (google.api.http) = {
+                        post: "/passwordlessLogin"
+                        body: "code"
                 };
         }
 }
 
+message Email {
+        string email = 1;
+}
 
-// Register
+message Code {
+        string code = 1;
+}
+
+message PasswordlessLoginReq {
+        Email email = 1;
+}
+
+message PasswordlessLogRequest {
+        Code code = 1;
+}
+
+message PasswordRecoveryResponse {
+        int64 status = 1;
+        string error = 2;
+        string email = 3;
+}
+
+message  ChangePasswordWithCodeRequest{
+        ChangePassword changePassword = 1;
+}
+
+message ChangePassword {
+        string code = 1;
+        string password = 2;
+        string confirmPassword = 3;
+}
+
+message PasswordRecoveryReq {
+        PasswordRecovery email = 1;
+}
+
+message PasswordRecovery{
+        string email = 1;
+}
+
+message  ConfirmAccountRequest {
+        string token = 1;
+}
+
+message  ConfirmAccountResponse {
+        string email = 1;
+        string response = 2;
+}
 
 message UserData{
         string username = 1;
@@ -100,15 +158,14 @@ message UpdatePersonalDataResponse {
         string error = 2;
 }
 
-
-
 message UserRegistrationData{
         string username = 1;
         string name = 2;
         string email = 3;
         string gender = 4;
-        string password = 5;
-        string confirmPassword = 6;
+        string dateOfBirth = 5;
+        string password = 6;
+        string confirmPassword = 7;
 }
 
 message RegisterRequest {
@@ -118,10 +175,9 @@ message RegisterRequest {
 message RegisterResponse {
         int64 status = 1;
         string error = 2;
+        int64  userId = 3;
 }
-      
-// Login
-      
+
 message LoginRequest {
         UserData userData = 1;
 }
@@ -131,10 +187,10 @@ message LoginResponse {
         string error = 2;
         string token = 3;
         string username=4;
+        int64 id = 5;
+        string role = 6;
 }
-      
-// Validate
-      
+
 message ValidateRequest {
          string token = 1;
 }
@@ -145,7 +201,6 @@ message ValidateResponse {
         int64 userId = 3;
 }
 
-//Test
 message GetAllRequest {
 }
 
@@ -161,4 +216,16 @@ message User {
         string email = 5;
         string address = 6;
         string gender = 7;
+}
+
+message FindUserRequest {
+        FindUser findUser = 1;
+}
+
+message  FindUser {
+        string username = 1;
+}
+
+message FindUserResponse {
+        User user = 1;
 }

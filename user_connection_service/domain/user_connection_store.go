@@ -6,5 +6,10 @@ type UserConnectionStore interface {
 	Insert(userConnection *UserConnection) error
 	DeleteAll()
 	UpdateRequestConnection(userConnection *UserConnection)
-	AddConnections(userConnection *UserConnection, loggedUserConnection *UserConnection)
+	UpdateConnections(userConnection *UserConnection, loggedUserConnection *UserConnection)
+	UpdateBlockedConnection(connection *UserConnection)
+	UpdateWaitingResponseConnection(connection *UserConnection)
+
+	GetAllUserNotificationsByUserId(id int) ([]*Notification, error)
+	InsertNotification(notification *Notification) error
 }

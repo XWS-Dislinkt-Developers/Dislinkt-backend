@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option go_package = "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/message_service";
+
+package message_service;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service MessageService {
+  rpc GetAll(GetAllRequest) returns(MessagesResponse) {
+    option (google.api.http) = {
+      get: "/messages"
+    };
+  };
+  rpc GetAllUsersMessagesByUserId(GetAllUsersMessagesRequest) returns(MessagesResponse) {
+    option (google.api.http) = {
+      get: "/messages/{idUser}"
+    };
+  };
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse){
+    option (google.api.http) = {
+      post: "/sendMessage"
+      body: "message"
+    };
+  };
+  rpc GetAllNotifications(GetAllNotificationRequest) returns(GetAllNotificationResponse) {
+    option (google.api.http) = {
+      get: "/notifications"
+    };
+  };
+}
+
+// Requests
+message GetAllRequest {} // empty
+message GetAllUsersMessagesRequest{
+  int64 idUser = 1;
+}
+message SendMessageRequest {
+  Message message = 1;
+}
+
+// Responses
+message MessagesResponse {
+  repeated Message messages = 1;
+}
+message SendMessageResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+// Helper structs
+message Message {
+  int64 senderId = 1;
+  int64 receiverId = 2;
+  string content = 3;
+  google.protobuf.Timestamp createdAt = 4;
+}
+
+message GetAllNotificationRequest {
+
+}
+
+message NotificationResponse {
+  string content = 1;
+  google.protobuf.Timestamp createdAt = 2;
+  int64 senderId = 3;
+
+}
+
+message GetAllNotificationResponse {
+
+  repeated NotificationResponse response = 1;
+
+}

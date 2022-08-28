@@ -49,8 +49,130 @@ func local_request_UserConnectionService_GetAll_0(ctx context.Context, marshaler
 
 }
 
+var (
+	filter_UserConnectionService_RegisterUserConnection_0 = &utilities.DoubleArray{Encoding: map[string]int{"idUser": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+)
+
+func request_UserConnectionService_RegisterUserConnection_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RegisterRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UserConnectionService_RegisterUserConnection_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.RegisterUserConnection(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_RegisterUserConnection_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RegisterRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_UserConnectionService_RegisterUserConnection_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.RegisterUserConnection(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_GetById_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := client.GetById(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_GetById_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := server.GetById(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 func request_UserConnectionService_Follow_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -76,7 +198,7 @@ func request_UserConnectionService_Follow_0(ctx context.Context, marshaler runti
 }
 
 func local_request_UserConnectionService_Follow_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -102,7 +224,7 @@ func local_request_UserConnectionService_Follow_0(ctx context.Context, marshaler
 }
 
 func request_UserConnectionService_Unfollow_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -128,7 +250,7 @@ func request_UserConnectionService_Unfollow_0(ctx context.Context, marshaler run
 }
 
 func local_request_UserConnectionService_Unfollow_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -154,7 +276,7 @@ func local_request_UserConnectionService_Unfollow_0(ctx context.Context, marshal
 }
 
 func request_UserConnectionService_AcceptConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -180,7 +302,7 @@ func request_UserConnectionService_AcceptConnectionRequest_0(ctx context.Context
 }
 
 func local_request_UserConnectionService_AcceptConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -206,7 +328,7 @@ func local_request_UserConnectionService_AcceptConnectionRequest_0(ctx context.C
 }
 
 func request_UserConnectionService_DeclineConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -232,7 +354,7 @@ func request_UserConnectionService_DeclineConnectionRequest_0(ctx context.Contex
 }
 
 func local_request_UserConnectionService_DeclineConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq FollowRequest
+	var protoReq UserIdRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -253,6 +375,232 @@ func local_request_UserConnectionService_DeclineConnectionRequest_0(ctx context.
 	}
 
 	msg, err := server.DeclineConnectionRequest(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_CancelConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := client.CancelConnectionRequest(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_CancelConnectionRequest_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := server.CancelConnectionRequest(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_GetConnectionsByUser_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := client.GetConnectionsByUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_GetConnectionsByUser_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := server.GetConnectionsByUser(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_BlockUser_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := client.BlockUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_BlockUser_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := server.BlockUser(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_UnblockUser_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := client.UnblockUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_UnblockUser_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UserIdRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["idUser"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "idUser")
+	}
+
+	protoReq.IdUser, err = runtime.Int64(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "idUser", err)
+	}
+
+	msg, err := server.UnblockUser(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_UserConnectionService_GetAllNotifications_0(ctx context.Context, marshaler runtime.Marshaler, client UserConnectionServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetAllNotificationRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := client.GetAllNotifications(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_UserConnectionService_GetAllNotifications_0(ctx context.Context, marshaler runtime.Marshaler, server UserConnectionServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetAllNotificationRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := server.GetAllNotifications(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -284,6 +632,54 @@ func RegisterUserConnectionServiceHandlerServer(ctx context.Context, mux *runtim
 		}
 
 		forward_UserConnectionService_GetAll_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_RegisterUserConnection_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/RegisterUserConnection", runtime.WithHTTPPathPattern("/register/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_RegisterUserConnection_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_RegisterUserConnection_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetById_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetById", runtime.WithHTTPPathPattern("/getConnectionForUser/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_GetById_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetById_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -383,6 +779,126 @@ func RegisterUserConnectionServiceHandlerServer(ctx context.Context, mux *runtim
 
 	})
 
+	mux.Handle("PUT", pattern_UserConnectionService_CancelConnectionRequest_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/CancelConnectionRequest", runtime.WithHTTPPathPattern("/cancel/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_CancelConnectionRequest_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_CancelConnectionRequest_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetConnectionsByUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetConnectionsByUser", runtime.WithHTTPPathPattern("/connections/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_GetConnectionsByUser_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetConnectionsByUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_BlockUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/BlockUser", runtime.WithHTTPPathPattern("/block/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_BlockUser_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_BlockUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_UnblockUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/UnblockUser", runtime.WithHTTPPathPattern("/unblock/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_UnblockUser_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_UnblockUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetAllNotifications_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetAllNotifications", runtime.WithHTTPPathPattern("/con_notifications"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_UserConnectionService_GetAllNotifications_0(ctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetAllNotifications_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -442,6 +958,48 @@ func RegisterUserConnectionServiceHandlerClient(ctx context.Context, mux *runtim
 		}
 
 		forward_UserConnectionService_GetAll_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_RegisterUserConnection_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/RegisterUserConnection", runtime.WithHTTPPathPattern("/register/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_RegisterUserConnection_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_RegisterUserConnection_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetById_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetById", runtime.WithHTTPPathPattern("/getConnectionForUser/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_GetById_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetById_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -529,11 +1087,120 @@ func RegisterUserConnectionServiceHandlerClient(ctx context.Context, mux *runtim
 
 	})
 
+	mux.Handle("PUT", pattern_UserConnectionService_CancelConnectionRequest_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/CancelConnectionRequest", runtime.WithHTTPPathPattern("/cancel/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_CancelConnectionRequest_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_CancelConnectionRequest_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetConnectionsByUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetConnectionsByUser", runtime.WithHTTPPathPattern("/connections/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_GetConnectionsByUser_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetConnectionsByUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_BlockUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/BlockUser", runtime.WithHTTPPathPattern("/block/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_BlockUser_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_BlockUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("PUT", pattern_UserConnectionService_UnblockUser_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/UnblockUser", runtime.WithHTTPPathPattern("/unblock/{idUser}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_UnblockUser_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_UnblockUser_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_UserConnectionService_GetAllNotifications_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/user_connection_service.UserConnectionService/GetAllNotifications", runtime.WithHTTPPathPattern("/con_notifications"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_UserConnectionService_GetAllNotifications_0(ctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_UserConnectionService_GetAllNotifications_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 var (
 	pattern_UserConnectionService_GetAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"userConnections"}, ""))
+
+	pattern_UserConnectionService_RegisterUserConnection_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"register", "idUser"}, ""))
+
+	pattern_UserConnectionService_GetById_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"getConnectionForUser", "idUser"}, ""))
 
 	pattern_UserConnectionService_Follow_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"follow", "idUser"}, ""))
 
@@ -542,10 +1209,24 @@ var (
 	pattern_UserConnectionService_AcceptConnectionRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"accept", "idUser"}, ""))
 
 	pattern_UserConnectionService_DeclineConnectionRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"decline", "idUser"}, ""))
+
+	pattern_UserConnectionService_CancelConnectionRequest_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"cancel", "idUser"}, ""))
+
+	pattern_UserConnectionService_GetConnectionsByUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"connections", "idUser"}, ""))
+
+	pattern_UserConnectionService_BlockUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"block", "idUser"}, ""))
+
+	pattern_UserConnectionService_UnblockUser_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"unblock", "idUser"}, ""))
+
+	pattern_UserConnectionService_GetAllNotifications_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"con_notifications"}, ""))
 )
 
 var (
 	forward_UserConnectionService_GetAll_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_RegisterUserConnection_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_GetById_0 = runtime.ForwardResponseMessage
 
 	forward_UserConnectionService_Follow_0 = runtime.ForwardResponseMessage
 
@@ -554,4 +1235,14 @@ var (
 	forward_UserConnectionService_AcceptConnectionRequest_0 = runtime.ForwardResponseMessage
 
 	forward_UserConnectionService_DeclineConnectionRequest_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_CancelConnectionRequest_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_GetConnectionsByUser_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_BlockUser_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_UnblockUser_0 = runtime.ForwardResponseMessage
+
+	forward_UserConnectionService_GetAllNotifications_0 = runtime.ForwardResponseMessage
 )

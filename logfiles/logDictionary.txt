@@ -1,0 +1,34 @@
+UIx : User id x
+UCA : user confirmed his account.
+TV: token is valid
+EFAS : email for autentication is sent
+ERCIS : email for recovery code is sent to user
+EPSWLIS : email for passwordless login is sent to user 
+ULI : user is logged in.
+PSWLR : passwordless login request
+PSWRR: password recovery request is send
+CTSD: new confirmation token is saved in database
+CTDFD : confirmation token is deleted from database
+FUWRC: found user with recovery code
+NPSWRS: new password recovery is saved!
+UF:  user is found"
+PSWLSD: passwordles login is saved in database
+UCDD: user  changed data in database!
+UCPSW: user changed password
+UIR: user is registred
+GAC : get all connections
+SFU: successfuly followed user 
+SUFU: successfully unfollowed user
+SACCR : successfully accepted connection request
+SDCR : successfully declined connection request
+USCID : user saved his connection in database
+USUCID : user successfully updated his connection in database
+USSACID : user successfully added connection in database
+USCNP : user successfully created new post
+USANCTP : user successfully added new comment on  post
+USANRTP : user successfully added new reaction  on  post
+UGP : user get posts
+UGHP : user get his posts
+USSNPD : user successfully to save new post in database
+USSNCOPID : user successfully saved new comment on post in database 
+USSNROPID : user successfully saved new reaction on post in database 
