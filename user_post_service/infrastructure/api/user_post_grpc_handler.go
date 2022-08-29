@@ -191,8 +191,8 @@ func (handler *UserPostHandler) CreateUserPost(ctx context.Context, request *pb_
 	var token = strings.TrimPrefix(header, prefix)
 	claims, _ := handler.auth_service.ValidateToken(token)
 
-	newReaction := mapNewReactionToUserPost(request, claims.Id)
-	postId, _ := primitive.ObjectIDFromHex(request.AddReaction.PostId)
+	userPost := mapNewUserPost(request.UserPost, claims.Id)
+	err := handler.post_service.Create(userPost)
 
 	if err != nil {
 		handler.loggerError.Logger.Errorf("User_post_grpc_handler: UFCNP | UI  " + strconv.Itoa(claims.Id))
