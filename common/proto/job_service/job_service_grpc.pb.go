@@ -25,7 +25,7 @@ type JobServiceClient interface {
 	GetAllJobOffers(ctx context.Context, in *GetAllJobOffersRequest, opts ...grpc.CallOption) (*GetAllJobOffersResponse, error)
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	GetToken(ctx context.Context, in *GetTokenRequest, opts ...grpc.CallOption) (*GetTokenResponse, error)
-	PostJob(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error)
+	PostJobByUser(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error)
 	PostJobCompany(ctx context.Context, in *PostJobCompanyRequest, opts ...grpc.CallOption) (*PostJobCompanyResponse, error)
 	GetJobOffers(ctx context.Context, in *GetJobOffersRequest, opts ...grpc.CallOption) (*GetJobOffersResponse, error)
 }
@@ -65,9 +65,9 @@ func (c *jobServiceClient) GetToken(ctx context.Context, in *GetTokenRequest, op
 	return out, nil
 }
 
-func (c *jobServiceClient) PostJob(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error) {
+func (c *jobServiceClient) PostJobByUser(ctx context.Context, in *PostJobRequest, opts ...grpc.CallOption) (*PostJobResponse, error) {
 	out := new(PostJobResponse)
-	err := c.cc.Invoke(ctx, "/job_service.JobService/PostJob", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/job_service.JobService/PostJobByUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ type JobServiceServer interface {
 	GetAllJobOffers(context.Context, *GetAllJobOffersRequest) (*GetAllJobOffersResponse, error)
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error)
-	PostJob(context.Context, *PostJobRequest) (*PostJobResponse, error)
+	PostJobByUser(context.Context, *PostJobRequest) (*PostJobResponse, error)
 	PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error)
 	GetJobOffers(context.Context, *GetJobOffersRequest) (*GetJobOffersResponse, error)
 	mustEmbedUnimplementedJobServiceServer()
@@ -118,8 +118,8 @@ func (UnimplementedJobServiceServer) GetAll(context.Context, *GetAllRequest) (*G
 func (UnimplementedJobServiceServer) GetToken(context.Context, *GetTokenRequest) (*GetTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetToken not implemented")
 }
-func (UnimplementedJobServiceServer) PostJob(context.Context, *PostJobRequest) (*PostJobResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostJob not implemented")
+func (UnimplementedJobServiceServer) PostJobByUser(context.Context, *PostJobRequest) (*PostJobResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostJobByUser not implemented")
 }
 func (UnimplementedJobServiceServer) PostJobCompany(context.Context, *PostJobCompanyRequest) (*PostJobCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PostJobCompany not implemented")
@@ -194,20 +194,20 @@ func _JobService_GetToken_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JobService_PostJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _JobService_PostJobByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JobServiceServer).PostJob(ctx, in)
+		return srv.(JobServiceServer).PostJobByUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/job_service.JobService/PostJob",
+		FullMethod: "/job_service.JobService/PostJobByUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobServiceServer).PostJob(ctx, req.(*PostJobRequest))
+		return srv.(JobServiceServer).PostJobByUser(ctx, req.(*PostJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -268,8 +268,8 @@ var JobService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _JobService_GetToken_Handler,
 		},
 		{
-			MethodName: "PostJob",
-			Handler:    _JobService_PostJob_Handler,
+			MethodName: "PostJobByUser",
+			Handler:    _JobService_PostJobByUser_Handler,
 		},
 		{
 			MethodName: "PostJobCompany",
