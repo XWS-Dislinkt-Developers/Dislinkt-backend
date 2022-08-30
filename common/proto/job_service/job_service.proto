@@ -26,7 +26,7 @@ service JobService {
     };
   };
 
-  rpc PostJob(PostJobRequest) returns(PostJobResponse) {
+  rpc PostJobByUser(PostJobRequest) returns(PostJobResponse) {
     option (google.api.http) = {
       post: "/postJob"
       body: "proposal"
@@ -75,9 +75,12 @@ message GetTokenResponse {
 }
 
 message JobProposal {
-  string position = 1;
-  string description = 2;
-  string experienceLevel = 3;
+  string username = 1;
+  string position = 2;
+  string description = 3;
+  string experienceLevel = 4;
+  repeated string requirements = 5;
+  // string token = 6;
 }
 
 message PostJobRequest {

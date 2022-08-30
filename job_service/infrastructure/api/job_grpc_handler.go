@@ -6,9 +6,11 @@ import (
 	app_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/authentication_service/application"
 	pb_auth "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/authentication_service"
 	pb_job "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/job_service"
-	app_connection "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/application"
+	pb_user "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/proto/user_service"
+	app_job "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/application"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/domain"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/job_service/logger"
+	app_user "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_service/application"
 	"github.com/golang-jwt/jwt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -23,13 +25,16 @@ type UserDataHandler struct {
 	auth_service *app_auth.AuthService
 
 	pb_job.UnimplementedJobServiceServer
-	job_service *app_connection.JobService
+	job_service *app_job.JobService
+
+	pb_user.UnimplementedUserServiceServer
+	user_service *app_user.UserService
 
 	loggerInfo  *logg.Logger
 	loggerError *logg.Logger
 }
 
-func NewUserDataHandler(job_service *app_connection.JobService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserDataHandler {
+func NewUserDataHandler(job_service *app_job.JobService, loggerInfo *logg.Logger, loggerError *logg.Logger) *UserDataHandler {
 	return &UserDataHandler{
 		job_service: job_service,
 		loggerInfo:  loggerInfo,
@@ -150,7 +155,6 @@ func (handler *UserDataHandler) GetJobOffers(ctx context.Context, request *pb_jo
 }
 
 func (handler *UserDataHandler) PostJobCompany(ctx context.Context, request *pb_job.PostJobCompanyRequest) (*pb_job.PostJobCompanyResponse, error) {
-
 	UsersData, err1 := handler.job_service.GetByUserToken(request.Data.Token)
 	if err1 != nil {
 		return &pb_job.PostJobCompanyResponse{
@@ -180,6 +184,35 @@ func (handler *UserDataHandler) PostJobCompany(ctx context.Context, request *pb_
 	return &pb_job.PostJobCompanyResponse{
 		Response: "ok",
 	}, nil
+}
+
+func (handler *UserDataHandler) PostJobByUser(ctx context.Context, request *pb_job.PostJobRequest) (*pb_job.PostJobResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_job.PostJobResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_job.PostJobResponse{}, err2
+	}
+
+	var temp = domain.JobOffer{
+		UserId:          claims.Id,
+		Company:         request.Proposal.Username + " - Company",
+		Position:        request.Proposal.Position,
+		Description:     request.Proposal.Description,
+		ExperienceLevel: request.Proposal.ExperienceLevel,
+		Requirements:    request.Proposal.Requirements,
+	}
+	err3 := handler.job_service.InsertJobData(&temp)
+	if err3 != nil {
+		return &pb_job.PostJobResponse{Response: err3.Error(),}, nil
+	}
+
+	return &pb_job.PostJobResponse{Response: "ok",}, nil
 }
 
 func extractHeader(ctx context.Context, header string) (string, error) {
