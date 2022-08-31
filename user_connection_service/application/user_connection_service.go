@@ -461,11 +461,12 @@ func (service *UserConnectionService) GetRecommendation(idLoggedUser int) ([]*do
 
 	userConnection, err := service.graphstore.GetRecommendation(userId)
 	if err != nil {
-		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri menjenju privatnosti")
+		println("[USERCONNECTION_SERVICE][ucs.go]:Greska pri - GetRecommendation")
 		println(err.Error())
+		return nil, err
+	} else {
+		return userConnection, err
 	}
-
-	return userConnection, err
 
 }
 
