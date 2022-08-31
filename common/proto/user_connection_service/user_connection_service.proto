@@ -68,8 +68,26 @@ service UserConnectionService {
       get: "/con_notifications"
     };
   };
+  rpc ChangePrivate(ChangePrivateRequest) returns (ChangePrivateResponse){
+    option (google.api.http) = {
+      post: "/changeprivate"
+      body: "change"
+    };
+  };
 
 }
+
+message ChangePrivateRequest{
+    Change change = 1;
+}
+message ChangePrivateResponse{
+    bool newprivate = 1;
+}
+message Change {
+  bool change = 1;
+}
+
+
 
 message GetAllRequest {
 }

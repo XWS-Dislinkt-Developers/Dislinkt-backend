@@ -71,6 +71,14 @@ func (handler *UserConnectionHandler) GetConnectionsByUserId(ctx context.Context
 }
 func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, request *pb_connection.UserIdRequest) (*pb_connection.Connections, error) {
 
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA")
+	println("[USETCONNECTION_SERVICE]:za korisnika se traze konekcije, id:")
+	temp2 := int(request.IdUser)
+	s := strconv.Itoa(temp2)
+	println("[USETCONNECTION_SERVICE]:Evo sto je konvertovao")
+	println(s)
+
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA", string(int(request.IdUser)))
 	UserConnection, _ := handler.connection_service.GetConnectionsById(int(request.IdUser))
 	handler.loggerInfo.Logger.Infof("User_connection_grpc_handler: GAC | UI " + strconv.Itoa(int(request.IdUser)))
 
@@ -85,6 +93,33 @@ func (handler *UserConnectionHandler) GetConnectionsByUser(ctx context.Context, 
 	}
 
 	return response, nil
+}
+
+func (handler *UserConnectionHandler) ChangePrivate(ctx context.Context, request *pb_connection.ChangePrivateRequest) (*pb_connection.ChangePrivateResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_connection.ChangePrivateResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_connection.ChangePrivateResponse{}, err2
+	}
+
+	err = handler.connection_service.ChangePrivcy(claims.Id, request.Change.Change)
+	if err != nil {
+		return nil, err
+	}
+
+	println("[USETCONNECTION_SERVICE]:TRAZI KONEKCIJE KORISNIKA")
+
+	response := &pb_connection.ChangePrivateResponse{
+		Newprivate: request.Change.Change,
+	}
+	return response, nil
+
 }
 
 func (handler *UserConnectionHandler) RegisterUserConnection(ctx context.Context, request *pb_connection.RegisterRequest) (*pb_connection.RegisterResponse, error) {

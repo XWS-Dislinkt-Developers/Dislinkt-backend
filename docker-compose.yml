@@ -71,8 +71,14 @@ services:
       USER_CONNECTION_DB_HOST: ${USER_CONNECTION_DB_HOST}
       MONGO_DB_PORT: ${MONGO_DB_PORT}
       USER_CONNECTION_SERVICE_PORT: ${USER_CONNECTION_SERVICE_PORT}
+      NEO4J_URI: ${NEO4J_URI}
+      NEO4J_HOST: ${NEO4J_HOST_DOCKER}
+      NEO4J_PORT: ${NEO4J_PORT}
+      NEO4J_USERNAME: ${NEO4J_USERNAME}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
     depends_on:
       - connection_mongo_db
+      - neo4j
     networks:
       - network
 
@@ -191,6 +197,20 @@ services:
     image: mongo
     container_name: message_mongo_db
     restart: on-failure
+    networks:
+      - network
+
+  neo4j:
+    image: neo4j:4.3.3
+    container_name: neo4j
+    hostname: neo4j
+    restart: on-failure
+    environment:
+      NEO4J_AUTH: none
+      NEO4J_dbms_allow__upgrade: "true"
+    ports:
+      - ${NEO4J_PORT}:${NEO4J_PORT}
+      - ${NEO4J_PORT_2}:${NEO4J_PORT_2}
     networks:
       - network
 
