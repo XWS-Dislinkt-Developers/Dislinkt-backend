@@ -68,8 +68,39 @@ service UserConnectionService {
       get: "/con_notifications"
     };
   };
+  rpc ChangePrivate(ChangePrivateRequest) returns (ChangePrivateResponse){
+    option (google.api.http) = {
+      post: "/changeprivate"
+      body: "change"
+    };
+  };
+  rpc GetRecommendation(GetRecommendationRequest) returns (GetRecommendationResponse){
+    option (google.api.http) = {
+      get: "/userRecommendation"
+    };
+  };
 
 }
+
+message ChangePrivateRequest{
+    Change change = 1;
+}
+message ChangePrivateResponse{
+    bool newprivate = 1;
+}
+message Change {
+  bool change = 1;
+}
+
+message GetRecommendationRequest{}
+message GetRecommendationResponse{
+  repeated UserConn userConnections = 1;
+}
+message UserConn{
+  string UserId = 1;
+  bool IsPrivate = 2;
+}
+
 
 message GetAllRequest {
 }
