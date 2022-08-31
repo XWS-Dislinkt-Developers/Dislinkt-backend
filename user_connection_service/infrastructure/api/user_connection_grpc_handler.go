@@ -108,7 +108,7 @@ func (handler *UserConnectionHandler) ChangePrivate(ctx context.Context, request
 		return &pb_connection.ChangePrivateResponse{}, err2
 	}
 
-	err = handler.connection_service.ChangePrivcy(claims.Id, request.Change.Change)
+	err = handler.connection_service.ChangePrivacy(claims.Id, request.Change.Change)
 	if err != nil {
 		return nil, err
 	}
@@ -117,6 +117,38 @@ func (handler *UserConnectionHandler) ChangePrivate(ctx context.Context, request
 
 	response := &pb_connection.ChangePrivateResponse{
 		Newprivate: request.Change.Change,
+	}
+	return response, nil
+
+}
+
+func (handler *UserConnectionHandler) GetRecommendation(ctx context.Context, request *pb_connection.GetRecommendationRequest) (*pb_connection.GetRecommendationResponse, error) {
+
+	header, err := extractHeader(ctx, "authorization")
+	if err != nil {
+		return &pb_connection.GetRecommendationResponse{}, err
+	}
+	var prefix = "Bearer "
+	var token = strings.TrimPrefix(header, prefix)
+	claims, err2 := validateToken(token)
+	if err2 != nil {
+		return &pb_connection.GetRecommendationResponse{}, err2
+	}
+
+	var recommendedUserConnections []*domain.UserConn
+	recommendedUserConnections, err = handler.connection_service.GetRecommendation(claims.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	println("[USETCONNECTION_SERVICE]:GET RECOMMENDED USER")
+
+	response := &pb_connection.GetRecommendationResponse{
+		UserConnections: []*pb_connection.UserConn{},
+	}
+	for _, recommendedUserConn := range recommendedUserConnections {
+		current := mapRecommendedUserConnection(recommendedUserConn)
+		response.UserConnections = append(response.UserConnections, current)
 	}
 	return response, nil
 

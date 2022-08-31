@@ -74,6 +74,11 @@ service UserConnectionService {
       body: "change"
     };
   };
+  rpc GetRecommendation(GetRecommendationRequest) returns (GetRecommendationResponse){
+    option (google.api.http) = {
+      get: "/userRecommendation"
+    };
+  };
 
 }
 
@@ -87,6 +92,14 @@ message Change {
   bool change = 1;
 }
 
+message GetRecommendationRequest{}
+message GetRecommendationResponse{
+  repeated UserConn userConnections = 1;
+}
+message UserConn{
+  string UserId = 1;
+  bool IsPrivate = 2;
+}
 
 
 message GetAllRequest {

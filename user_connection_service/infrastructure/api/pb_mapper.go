@@ -28,3 +28,11 @@ func mapUserConnection(userConnection *domain.UserConnection) *pb_connection.Use
 	}
 	return userConnectionPb
 }
+
+func mapRecommendedUserConnection(recommendedUserConnection *domain.UserConn) *pb_connection.UserConn {
+	recommendedUserConnectionPb := &pb_connection.UserConn{
+		UserId:    recommendedUserConnection.UserID,
+		IsPrivate: recommendedUserConnection.IsPrivate,
+	}
+	return recommendedUserConnectionPb
+}

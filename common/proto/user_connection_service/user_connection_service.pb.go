@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.0
 // 	protoc        v3.20.1
-// source: user_connection_service.proto
+// source: user_connection_service/user_connection_service.proto
 
 package user_connection_service
 
@@ -33,7 +33,7 @@ type ChangePrivateRequest struct {
 func (x *ChangePrivateRequest) Reset() {
 	*x = ChangePrivateRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[0]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -46,7 +46,7 @@ func (x *ChangePrivateRequest) String() string {
 func (*ChangePrivateRequest) ProtoMessage() {}
 
 func (x *ChangePrivateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[0]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *ChangePrivateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePrivateRequest.ProtoReflect.Descriptor instead.
 func (*ChangePrivateRequest) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{0}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *ChangePrivateRequest) GetChange() *Change {
@@ -80,7 +80,7 @@ type ChangePrivateResponse struct {
 func (x *ChangePrivateResponse) Reset() {
 	*x = ChangePrivateResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[1]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -93,7 +93,7 @@ func (x *ChangePrivateResponse) String() string {
 func (*ChangePrivateResponse) ProtoMessage() {}
 
 func (x *ChangePrivateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[1]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -106,7 +106,7 @@ func (x *ChangePrivateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangePrivateResponse.ProtoReflect.Descriptor instead.
 func (*ChangePrivateResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{1}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ChangePrivateResponse) GetNewprivate() bool {
@@ -127,7 +127,7 @@ type Change struct {
 func (x *Change) Reset() {
 	*x = Change{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[2]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -140,7 +140,7 @@ func (x *Change) String() string {
 func (*Change) ProtoMessage() {}
 
 func (x *Change) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[2]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -153,12 +153,152 @@ func (x *Change) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Change.ProtoReflect.Descriptor instead.
 func (*Change) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{2}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Change) GetChange() bool {
 	if x != nil {
 		return x.Change
+	}
+	return false
+}
+
+type GetRecommendationRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetRecommendationRequest) Reset() {
+	*x = GetRecommendationRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetRecommendationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRecommendationRequest) ProtoMessage() {}
+
+func (x *GetRecommendationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRecommendationRequest.ProtoReflect.Descriptor instead.
+func (*GetRecommendationRequest) Descriptor() ([]byte, []int) {
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{3}
+}
+
+type GetRecommendationResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserConnections []*UserConn `protobuf:"bytes,1,rep,name=userConnections,proto3" json:"userConnections,omitempty"`
+}
+
+func (x *GetRecommendationResponse) Reset() {
+	*x = GetRecommendationResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetRecommendationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRecommendationResponse) ProtoMessage() {}
+
+func (x *GetRecommendationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRecommendationResponse.ProtoReflect.Descriptor instead.
+func (*GetRecommendationResponse) Descriptor() ([]byte, []int) {
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetRecommendationResponse) GetUserConnections() []*UserConn {
+	if x != nil {
+		return x.UserConnections
+	}
+	return nil
+}
+
+type UserConn struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId    string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	IsPrivate bool   `protobuf:"varint,2,opt,name=IsPrivate,proto3" json:"IsPrivate,omitempty"`
+}
+
+func (x *UserConn) Reset() {
+	*x = UserConn{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UserConn) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserConn) ProtoMessage() {}
+
+func (x *UserConn) ProtoReflect() protoreflect.Message {
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserConn.ProtoReflect.Descriptor instead.
+func (*UserConn) Descriptor() ([]byte, []int) {
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UserConn) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *UserConn) GetIsPrivate() bool {
+	if x != nil {
+		return x.IsPrivate
 	}
 	return false
 }
@@ -172,7 +312,7 @@ type GetAllRequest struct {
 func (x *GetAllRequest) Reset() {
 	*x = GetAllRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[3]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -185,7 +325,7 @@ func (x *GetAllRequest) String() string {
 func (*GetAllRequest) ProtoMessage() {}
 
 func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[3]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -198,7 +338,7 @@ func (x *GetAllRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllRequest.ProtoReflect.Descriptor instead.
 func (*GetAllRequest) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{3}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{6}
 }
 
 type GetAllResponse struct {
@@ -212,7 +352,7 @@ type GetAllResponse struct {
 func (x *GetAllResponse) Reset() {
 	*x = GetAllResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[4]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -225,7 +365,7 @@ func (x *GetAllResponse) String() string {
 func (*GetAllResponse) ProtoMessage() {}
 
 func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[4]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -238,7 +378,7 @@ func (x *GetAllResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllResponse.ProtoReflect.Descriptor instead.
 func (*GetAllResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{4}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetAllResponse) GetUserConnections() []*UserConnection {
@@ -259,7 +399,7 @@ type UserIdRequest struct {
 func (x *UserIdRequest) Reset() {
 	*x = UserIdRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[5]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -272,7 +412,7 @@ func (x *UserIdRequest) String() string {
 func (*UserIdRequest) ProtoMessage() {}
 
 func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[5]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -285,7 +425,7 @@ func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserIdRequest.ProtoReflect.Descriptor instead.
 func (*UserIdRequest) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{5}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UserIdRequest) GetIdUser() int64 {
@@ -307,7 +447,7 @@ type RegisterRequest struct {
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[6]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -320,7 +460,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[6]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -333,7 +473,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{6}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RegisterRequest) GetIdUser() int64 {
@@ -362,7 +502,7 @@ type RegisterResponse struct {
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[7]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -375,7 +515,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[7]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -388,7 +528,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{7}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RegisterResponse) GetStatus() int64 {
@@ -416,7 +556,7 @@ type ConnectionsResponse struct {
 func (x *ConnectionsResponse) Reset() {
 	*x = ConnectionsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[8]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -429,7 +569,7 @@ func (x *ConnectionsResponse) String() string {
 func (*ConnectionsResponse) ProtoMessage() {}
 
 func (x *ConnectionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[8]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -442,7 +582,7 @@ func (x *ConnectionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectionsResponse.ProtoReflect.Descriptor instead.
 func (*ConnectionsResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{8}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ConnectionsResponse) GetUserConnections() []*UserConnection {
@@ -468,7 +608,7 @@ type UserConnection struct {
 func (x *UserConnection) Reset() {
 	*x = UserConnection{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[9]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -481,7 +621,7 @@ func (x *UserConnection) String() string {
 func (*UserConnection) ProtoMessage() {}
 
 func (x *UserConnection) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[9]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -494,7 +634,7 @@ func (x *UserConnection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserConnection.ProtoReflect.Descriptor instead.
 func (*UserConnection) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{9}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UserConnection) GetUserId() int64 {
@@ -550,7 +690,7 @@ type Connections struct {
 func (x *Connections) Reset() {
 	*x = Connections{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[10]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -563,7 +703,7 @@ func (x *Connections) String() string {
 func (*Connections) ProtoMessage() {}
 
 func (x *Connections) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[10]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -576,7 +716,7 @@ func (x *Connections) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Connections.ProtoReflect.Descriptor instead.
 func (*Connections) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{10}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Connections) GetConnections() *Connection {
@@ -597,7 +737,7 @@ type Connection struct {
 func (x *Connection) Reset() {
 	*x = Connection{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[11]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -610,7 +750,7 @@ func (x *Connection) String() string {
 func (*Connection) ProtoMessage() {}
 
 func (x *Connection) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[11]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -623,7 +763,7 @@ func (x *Connection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Connection.ProtoReflect.Descriptor instead.
 func (*Connection) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{11}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Connection) GetConnections() []int64 {
@@ -642,7 +782,7 @@ type GetAllNotificationRequest struct {
 func (x *GetAllNotificationRequest) Reset() {
 	*x = GetAllNotificationRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[12]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -655,7 +795,7 @@ func (x *GetAllNotificationRequest) String() string {
 func (*GetAllNotificationRequest) ProtoMessage() {}
 
 func (x *GetAllNotificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[12]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -668,7 +808,7 @@ func (x *GetAllNotificationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllNotificationRequest.ProtoReflect.Descriptor instead.
 func (*GetAllNotificationRequest) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{12}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{15}
 }
 
 type NotificationResponse struct {
@@ -684,7 +824,7 @@ type NotificationResponse struct {
 func (x *NotificationResponse) Reset() {
 	*x = NotificationResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[13]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -697,7 +837,7 @@ func (x *NotificationResponse) String() string {
 func (*NotificationResponse) ProtoMessage() {}
 
 func (x *NotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[13]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -710,7 +850,7 @@ func (x *NotificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NotificationResponse.ProtoReflect.Descriptor instead.
 func (*NotificationResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{13}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *NotificationResponse) GetContent() string {
@@ -745,7 +885,7 @@ type GetAllNotificationResponse struct {
 func (x *GetAllNotificationResponse) Reset() {
 	*x = GetAllNotificationResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_user_connection_service_proto_msgTypes[14]
+		mi := &file_user_connection_service_user_connection_service_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -758,7 +898,7 @@ func (x *GetAllNotificationResponse) String() string {
 func (*GetAllNotificationResponse) ProtoMessage() {}
 
 func (x *GetAllNotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_connection_service_proto_msgTypes[14]
+	mi := &file_user_connection_service_user_connection_service_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -771,7 +911,7 @@ func (x *GetAllNotificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllNotificationResponse.ProtoReflect.Descriptor instead.
 func (*GetAllNotificationResponse) Descriptor() ([]byte, []int) {
-	return file_user_connection_service_proto_rawDescGZIP(), []int{14}
+	return file_user_connection_service_user_connection_service_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetAllNotificationResponse) GetResponse() []*NotificationResponse {
@@ -781,28 +921,42 @@ func (x *GetAllNotificationResponse) GetResponse() []*NotificationResponse {
 	return nil
 }
 
-var File_user_connection_service_proto protoreflect.FileDescriptor
+var File_user_connection_service_user_connection_service_proto protoreflect.FileDescriptor
 
-var file_user_connection_service_proto_rawDesc = []byte{
-	0x0a, 0x1d, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
-	0x17, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
-	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74,
-	0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
-	0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x4f, 0x0a, 0x14, 0x43, 0x68, 0x61, 0x6e, 0x67,
-	0x65, 0x50, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x37, 0x0a, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x1f, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65,
-	0x52, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x22, 0x37, 0x0a, 0x15, 0x43, 0x68, 0x61, 0x6e,
-	0x67, 0x65, 0x50, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x6e, 0x65, 0x77, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0a, 0x6e, 0x65, 0x77, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74,
-	0x65, 0x22, 0x20, 0x0a, 0x06, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x63,
-	0x68, 0x61, 0x6e, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x63, 0x68, 0x61,
-	0x6e, 0x67, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71,
+var file_user_connection_service_user_connection_service_proto_rawDesc = []byte{
+	0x0a, 0x35, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f,
+	0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63,
+	0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x17, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f,
+	0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e,
+	0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
+	0x4f, 0x0a, 0x14, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x37, 0x0a, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63,
+	0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x52, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65,
+	0x22, 0x37, 0x0a, 0x15, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x72, 0x69, 0x76, 0x61, 0x74,
+	0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x6e, 0x65, 0x77,
+	0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0a, 0x6e,
+	0x65, 0x77, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x22, 0x20, 0x0a, 0x06, 0x43, 0x68, 0x61,
+	0x6e, 0x67, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x08, 0x52, 0x06, 0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x22, 0x1a, 0x0a, 0x18, 0x47,
+	0x65, 0x74, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x68, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x52, 0x65,
+	0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4b, 0x0a, 0x0f, 0x75, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x6e,
+	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x6e,
+	0x52, 0x0f, 0x75, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x22, 0x40, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x43, 0x6f, 0x6e, 0x6e, 0x12, 0x16, 0x0a,
+	0x06, 0x55, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x55,
+	0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x49, 0x73, 0x50, 0x72, 0x69, 0x76, 0x61,
+	0x74, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x49, 0x73, 0x50, 0x72, 0x69, 0x76,
+	0x61, 0x74, 0x65, 0x22, 0x0f, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x22, 0x63, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x51, 0x0a, 0x0f, 0x75, 0x73, 0x65, 0x72, 0x43, 0x6f,
 	0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
@@ -865,7 +1019,7 @@ var file_user_connection_service_proto_rawDesc = []byte{
 	0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
 	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x69, 0x63,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x08, 0x72,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xeb, 0x0d, 0x0a, 0x15, 0x55, 0x73, 0x65, 0x72,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x85, 0x0f, 0x0a, 0x15, 0x55, 0x73, 0x65, 0x72,
 	0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x12, 0x73, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x26, 0x2e, 0x75, 0x73,
 	0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65,
@@ -976,93 +1130,108 @@ var file_user_connection_service_proto_rawDesc = []byte{
 	0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x50, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x1e, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x22, 0x0e, 0x2f,
 	0x63, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x70, 0x72, 0x69, 0x76, 0x61, 0x74, 0x65, 0x3a, 0x06, 0x63,
-	0x68, 0x61, 0x6e, 0x67, 0x65, 0x42, 0x54, 0x5a, 0x52, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
-	0x63, 0x6f, 0x6d, 0x2f, 0x58, 0x57, 0x53, 0x2d, 0x44, 0x69, 0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74,
-	0x2d, 0x44, 0x65, 0x76, 0x65, 0x6c, 0x6f, 0x70, 0x65, 0x72, 0x73, 0x2f, 0x44, 0x69, 0x73, 0x6c,
-	0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x62, 0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x63, 0x6f, 0x6d,
-	0x6d, 0x6f, 0x6e, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74,
-	0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x68, 0x61, 0x6e, 0x67, 0x65, 0x12, 0x97, 0x01, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x52, 0x65, 0x63,
+	0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x31, 0x2e, 0x75, 0x73,
+	0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65,
+	0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x32,
+	0x2e, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x63, 0x6f,
+	0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x22, 0x1b, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x15, 0x12, 0x13, 0x2f, 0x75, 0x73, 0x65,
+	0x72, 0x52, 0x65, 0x63, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x42,
+	0x54, 0x5a, 0x52, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x58, 0x57,
+	0x53, 0x2d, 0x44, 0x69, 0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x44, 0x65, 0x76, 0x65, 0x6c,
+	0x6f, 0x70, 0x65, 0x72, 0x73, 0x2f, 0x44, 0x69, 0x73, 0x6c, 0x69, 0x6e, 0x6b, 0x74, 0x2d, 0x62,
+	0x61, 0x63, 0x6b, 0x65, 0x6e, 0x64, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x75, 0x73,
+	0x65, 0x72, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_user_connection_service_proto_rawDescOnce sync.Once
-	file_user_connection_service_proto_rawDescData = file_user_connection_service_proto_rawDesc
+	file_user_connection_service_user_connection_service_proto_rawDescOnce sync.Once
+	file_user_connection_service_user_connection_service_proto_rawDescData = file_user_connection_service_user_connection_service_proto_rawDesc
 )
 
-func file_user_connection_service_proto_rawDescGZIP() []byte {
-	file_user_connection_service_proto_rawDescOnce.Do(func() {
-		file_user_connection_service_proto_rawDescData = protoimpl.X.CompressGZIP(file_user_connection_service_proto_rawDescData)
+func file_user_connection_service_user_connection_service_proto_rawDescGZIP() []byte {
+	file_user_connection_service_user_connection_service_proto_rawDescOnce.Do(func() {
+		file_user_connection_service_user_connection_service_proto_rawDescData = protoimpl.X.CompressGZIP(file_user_connection_service_user_connection_service_proto_rawDescData)
 	})
-	return file_user_connection_service_proto_rawDescData
+	return file_user_connection_service_user_connection_service_proto_rawDescData
 }
 
-var file_user_connection_service_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
-var file_user_connection_service_proto_goTypes = []interface{}{
+var file_user_connection_service_user_connection_service_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_user_connection_service_user_connection_service_proto_goTypes = []interface{}{
 	(*ChangePrivateRequest)(nil),       // 0: user_connection_service.ChangePrivateRequest
 	(*ChangePrivateResponse)(nil),      // 1: user_connection_service.ChangePrivateResponse
 	(*Change)(nil),                     // 2: user_connection_service.Change
-	(*GetAllRequest)(nil),              // 3: user_connection_service.GetAllRequest
-	(*GetAllResponse)(nil),             // 4: user_connection_service.GetAllResponse
-	(*UserIdRequest)(nil),              // 5: user_connection_service.UserIdRequest
-	(*RegisterRequest)(nil),            // 6: user_connection_service.RegisterRequest
-	(*RegisterResponse)(nil),           // 7: user_connection_service.RegisterResponse
-	(*ConnectionsResponse)(nil),        // 8: user_connection_service.ConnectionsResponse
-	(*UserConnection)(nil),             // 9: user_connection_service.UserConnection
-	(*Connections)(nil),                // 10: user_connection_service.Connections
-	(*Connection)(nil),                 // 11: user_connection_service.Connection
-	(*GetAllNotificationRequest)(nil),  // 12: user_connection_service.GetAllNotificationRequest
-	(*NotificationResponse)(nil),       // 13: user_connection_service.NotificationResponse
-	(*GetAllNotificationResponse)(nil), // 14: user_connection_service.GetAllNotificationResponse
-	(*timestamppb.Timestamp)(nil),      // 15: google.protobuf.Timestamp
+	(*GetRecommendationRequest)(nil),   // 3: user_connection_service.GetRecommendationRequest
+	(*GetRecommendationResponse)(nil),  // 4: user_connection_service.GetRecommendationResponse
+	(*UserConn)(nil),                   // 5: user_connection_service.UserConn
+	(*GetAllRequest)(nil),              // 6: user_connection_service.GetAllRequest
+	(*GetAllResponse)(nil),             // 7: user_connection_service.GetAllResponse
+	(*UserIdRequest)(nil),              // 8: user_connection_service.UserIdRequest
+	(*RegisterRequest)(nil),            // 9: user_connection_service.RegisterRequest
+	(*RegisterResponse)(nil),           // 10: user_connection_service.RegisterResponse
+	(*ConnectionsResponse)(nil),        // 11: user_connection_service.ConnectionsResponse
+	(*UserConnection)(nil),             // 12: user_connection_service.UserConnection
+	(*Connections)(nil),                // 13: user_connection_service.Connections
+	(*Connection)(nil),                 // 14: user_connection_service.Connection
+	(*GetAllNotificationRequest)(nil),  // 15: user_connection_service.GetAllNotificationRequest
+	(*NotificationResponse)(nil),       // 16: user_connection_service.NotificationResponse
+	(*GetAllNotificationResponse)(nil), // 17: user_connection_service.GetAllNotificationResponse
+	(*timestamppb.Timestamp)(nil),      // 18: google.protobuf.Timestamp
 }
-var file_user_connection_service_proto_depIdxs = []int32{
+var file_user_connection_service_user_connection_service_proto_depIdxs = []int32{
 	2,  // 0: user_connection_service.ChangePrivateRequest.change:type_name -> user_connection_service.Change
-	9,  // 1: user_connection_service.GetAllResponse.userConnections:type_name -> user_connection_service.UserConnection
-	9,  // 2: user_connection_service.ConnectionsResponse.userConnections:type_name -> user_connection_service.UserConnection
-	11, // 3: user_connection_service.Connections.connections:type_name -> user_connection_service.Connection
-	15, // 4: user_connection_service.NotificationResponse.createdAt:type_name -> google.protobuf.Timestamp
-	13, // 5: user_connection_service.GetAllNotificationResponse.response:type_name -> user_connection_service.NotificationResponse
-	3,  // 6: user_connection_service.UserConnectionService.GetAll:input_type -> user_connection_service.GetAllRequest
-	6,  // 7: user_connection_service.UserConnectionService.RegisterUserConnection:input_type -> user_connection_service.RegisterRequest
-	5,  // 8: user_connection_service.UserConnectionService.GetById:input_type -> user_connection_service.UserIdRequest
-	5,  // 9: user_connection_service.UserConnectionService.Follow:input_type -> user_connection_service.UserIdRequest
-	5,  // 10: user_connection_service.UserConnectionService.Unfollow:input_type -> user_connection_service.UserIdRequest
-	5,  // 11: user_connection_service.UserConnectionService.AcceptConnectionRequest:input_type -> user_connection_service.UserIdRequest
-	5,  // 12: user_connection_service.UserConnectionService.DeclineConnectionRequest:input_type -> user_connection_service.UserIdRequest
-	5,  // 13: user_connection_service.UserConnectionService.CancelConnectionRequest:input_type -> user_connection_service.UserIdRequest
-	5,  // 14: user_connection_service.UserConnectionService.GetConnectionsByUser:input_type -> user_connection_service.UserIdRequest
-	5,  // 15: user_connection_service.UserConnectionService.BlockUser:input_type -> user_connection_service.UserIdRequest
-	5,  // 16: user_connection_service.UserConnectionService.UnblockUser:input_type -> user_connection_service.UserIdRequest
-	12, // 17: user_connection_service.UserConnectionService.GetAllNotifications:input_type -> user_connection_service.GetAllNotificationRequest
-	0,  // 18: user_connection_service.UserConnectionService.ChangePrivate:input_type -> user_connection_service.ChangePrivateRequest
-	4,  // 19: user_connection_service.UserConnectionService.GetAll:output_type -> user_connection_service.GetAllResponse
-	7,  // 20: user_connection_service.UserConnectionService.RegisterUserConnection:output_type -> user_connection_service.RegisterResponse
-	9,  // 21: user_connection_service.UserConnectionService.GetById:output_type -> user_connection_service.UserConnection
-	8,  // 22: user_connection_service.UserConnectionService.Follow:output_type -> user_connection_service.ConnectionsResponse
-	8,  // 23: user_connection_service.UserConnectionService.Unfollow:output_type -> user_connection_service.ConnectionsResponse
-	8,  // 24: user_connection_service.UserConnectionService.AcceptConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
-	8,  // 25: user_connection_service.UserConnectionService.DeclineConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
-	8,  // 26: user_connection_service.UserConnectionService.CancelConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
-	10, // 27: user_connection_service.UserConnectionService.GetConnectionsByUser:output_type -> user_connection_service.Connections
-	8,  // 28: user_connection_service.UserConnectionService.BlockUser:output_type -> user_connection_service.ConnectionsResponse
-	8,  // 29: user_connection_service.UserConnectionService.UnblockUser:output_type -> user_connection_service.ConnectionsResponse
-	14, // 30: user_connection_service.UserConnectionService.GetAllNotifications:output_type -> user_connection_service.GetAllNotificationResponse
-	1,  // 31: user_connection_service.UserConnectionService.ChangePrivate:output_type -> user_connection_service.ChangePrivateResponse
-	19, // [19:32] is the sub-list for method output_type
-	6,  // [6:19] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	5,  // 1: user_connection_service.GetRecommendationResponse.userConnections:type_name -> user_connection_service.UserConn
+	12, // 2: user_connection_service.GetAllResponse.userConnections:type_name -> user_connection_service.UserConnection
+	12, // 3: user_connection_service.ConnectionsResponse.userConnections:type_name -> user_connection_service.UserConnection
+	14, // 4: user_connection_service.Connections.connections:type_name -> user_connection_service.Connection
+	18, // 5: user_connection_service.NotificationResponse.createdAt:type_name -> google.protobuf.Timestamp
+	16, // 6: user_connection_service.GetAllNotificationResponse.response:type_name -> user_connection_service.NotificationResponse
+	6,  // 7: user_connection_service.UserConnectionService.GetAll:input_type -> user_connection_service.GetAllRequest
+	9,  // 8: user_connection_service.UserConnectionService.RegisterUserConnection:input_type -> user_connection_service.RegisterRequest
+	8,  // 9: user_connection_service.UserConnectionService.GetById:input_type -> user_connection_service.UserIdRequest
+	8,  // 10: user_connection_service.UserConnectionService.Follow:input_type -> user_connection_service.UserIdRequest
+	8,  // 11: user_connection_service.UserConnectionService.Unfollow:input_type -> user_connection_service.UserIdRequest
+	8,  // 12: user_connection_service.UserConnectionService.AcceptConnectionRequest:input_type -> user_connection_service.UserIdRequest
+	8,  // 13: user_connection_service.UserConnectionService.DeclineConnectionRequest:input_type -> user_connection_service.UserIdRequest
+	8,  // 14: user_connection_service.UserConnectionService.CancelConnectionRequest:input_type -> user_connection_service.UserIdRequest
+	8,  // 15: user_connection_service.UserConnectionService.GetConnectionsByUser:input_type -> user_connection_service.UserIdRequest
+	8,  // 16: user_connection_service.UserConnectionService.BlockUser:input_type -> user_connection_service.UserIdRequest
+	8,  // 17: user_connection_service.UserConnectionService.UnblockUser:input_type -> user_connection_service.UserIdRequest
+	15, // 18: user_connection_service.UserConnectionService.GetAllNotifications:input_type -> user_connection_service.GetAllNotificationRequest
+	0,  // 19: user_connection_service.UserConnectionService.ChangePrivate:input_type -> user_connection_service.ChangePrivateRequest
+	3,  // 20: user_connection_service.UserConnectionService.GetRecommendation:input_type -> user_connection_service.GetRecommendationRequest
+	7,  // 21: user_connection_service.UserConnectionService.GetAll:output_type -> user_connection_service.GetAllResponse
+	10, // 22: user_connection_service.UserConnectionService.RegisterUserConnection:output_type -> user_connection_service.RegisterResponse
+	12, // 23: user_connection_service.UserConnectionService.GetById:output_type -> user_connection_service.UserConnection
+	11, // 24: user_connection_service.UserConnectionService.Follow:output_type -> user_connection_service.ConnectionsResponse
+	11, // 25: user_connection_service.UserConnectionService.Unfollow:output_type -> user_connection_service.ConnectionsResponse
+	11, // 26: user_connection_service.UserConnectionService.AcceptConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
+	11, // 27: user_connection_service.UserConnectionService.DeclineConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
+	11, // 28: user_connection_service.UserConnectionService.CancelConnectionRequest:output_type -> user_connection_service.ConnectionsResponse
+	13, // 29: user_connection_service.UserConnectionService.GetConnectionsByUser:output_type -> user_connection_service.Connections
+	11, // 30: user_connection_service.UserConnectionService.BlockUser:output_type -> user_connection_service.ConnectionsResponse
+	11, // 31: user_connection_service.UserConnectionService.UnblockUser:output_type -> user_connection_service.ConnectionsResponse
+	17, // 32: user_connection_service.UserConnectionService.GetAllNotifications:output_type -> user_connection_service.GetAllNotificationResponse
+	1,  // 33: user_connection_service.UserConnectionService.ChangePrivate:output_type -> user_connection_service.ChangePrivateResponse
+	4,  // 34: user_connection_service.UserConnectionService.GetRecommendation:output_type -> user_connection_service.GetRecommendationResponse
+	21, // [21:35] is the sub-list for method output_type
+	7,  // [7:21] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
-func init() { file_user_connection_service_proto_init() }
-func file_user_connection_service_proto_init() {
-	if File_user_connection_service_proto != nil {
+func init() { file_user_connection_service_user_connection_service_proto_init() }
+func file_user_connection_service_user_connection_service_proto_init() {
+	if File_user_connection_service_user_connection_service_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_user_connection_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ChangePrivateRequest); i {
 			case 0:
 				return &v.state
@@ -1074,7 +1243,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ChangePrivateResponse); i {
 			case 0:
 				return &v.state
@@ -1086,7 +1255,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Change); i {
 			case 0:
 				return &v.state
@@ -1098,7 +1267,43 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetRecommendationRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_connection_service_user_connection_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetRecommendationResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_connection_service_user_connection_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UserConn); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_user_connection_service_user_connection_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAllRequest); i {
 			case 0:
 				return &v.state
@@ -1110,7 +1315,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAllResponse); i {
 			case 0:
 				return &v.state
@@ -1122,7 +1327,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserIdRequest); i {
 			case 0:
 				return &v.state
@@ -1134,7 +1339,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RegisterRequest); i {
 			case 0:
 				return &v.state
@@ -1146,7 +1351,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RegisterResponse); i {
 			case 0:
 				return &v.state
@@ -1158,7 +1363,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ConnectionsResponse); i {
 			case 0:
 				return &v.state
@@ -1170,7 +1375,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserConnection); i {
 			case 0:
 				return &v.state
@@ -1182,7 +1387,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Connections); i {
 			case 0:
 				return &v.state
@@ -1194,7 +1399,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Connection); i {
 			case 0:
 				return &v.state
@@ -1206,7 +1411,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAllNotificationRequest); i {
 			case 0:
 				return &v.state
@@ -1218,7 +1423,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NotificationResponse); i {
 			case 0:
 				return &v.state
@@ -1230,7 +1435,7 @@ func file_user_connection_service_proto_init() {
 				return nil
 			}
 		}
-		file_user_connection_service_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_user_connection_service_user_connection_service_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetAllNotificationResponse); i {
 			case 0:
 				return &v.state
@@ -1247,18 +1452,18 @@ func file_user_connection_service_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_user_connection_service_proto_rawDesc,
+			RawDescriptor: file_user_connection_service_user_connection_service_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_user_connection_service_proto_goTypes,
-		DependencyIndexes: file_user_connection_service_proto_depIdxs,
-		MessageInfos:      file_user_connection_service_proto_msgTypes,
+		GoTypes:           file_user_connection_service_user_connection_service_proto_goTypes,
+		DependencyIndexes: file_user_connection_service_user_connection_service_proto_depIdxs,
+		MessageInfos:      file_user_connection_service_user_connection_service_proto_msgTypes,
 	}.Build()
-	File_user_connection_service_proto = out.File
-	file_user_connection_service_proto_rawDesc = nil
-	file_user_connection_service_proto_goTypes = nil
-	file_user_connection_service_proto_depIdxs = nil
+	File_user_connection_service_user_connection_service_proto = out.File
+	file_user_connection_service_user_connection_service_proto_rawDesc = nil
+	file_user_connection_service_user_connection_service_proto_goTypes = nil
+	file_user_connection_service_user_connection_service_proto_depIdxs = nil
 }
