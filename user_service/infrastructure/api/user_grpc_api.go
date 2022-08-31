@@ -59,7 +59,10 @@ func (handler *UsersHandler) UpdatePersonalData(ctx context.Context, request *pb
 		dto.DateOfBirth = myDate
 	}
 
-	_, err = handler.service.UpdateUser(dto, claims.Id)
+	currentUserData, _ := handler.service.GetById(claims.Id)
+	currenUsername := currentUserData.Username
+
+	_, err = handler.service.UpdateUser(dto, currenUsername, claims.Id)
 	if err != nil {
 		return &pb.UpdatePersonalDataResponse{
 			Status: http.StatusBadRequest,

@@ -28,3 +28,16 @@ type JwtClaims struct {
 	Role     string
 	jwt.StandardClaims
 }
+
+type UserConn struct {
+	UserID    string
+	IsPrivate bool
+}
+
+type UserConnDetail struct {
+	MyUserID  string
+	UserID    string
+	IsPrivate bool
+	Relation  string
+	MsgID     string
+}

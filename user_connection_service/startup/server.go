@@ -6,6 +6,8 @@ import (
 	saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	logg "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/logger"
+	"github.com/neo4j/neo4j-go-driver/v4/neo4j"
+
 	//saga "github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging"
 	//"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/common/saga/messaging/nats"
 	"github.com/XWS-Dislinkt-Developers/Dislinkt-backend/user_connection_service/application"
@@ -41,8 +43,10 @@ func (server *Server) Start() {
 	loggerInfo := logger.InitializeLogger("connection-service", "INFO")
 	loggerError := logger.InitializeLogger("connection-service", "ERROR")
 	mongoClient := server.initMongoClient()
+	neo4jClient := server.initNeo4J()
+	userConnectionGraphStore := server.initConnectionStore(neo4jClient, loggerInfo, loggerError)
 	userConnectionStore := server.initUserConnectionStore(mongoClient, loggerInfo, loggerError)
-	userConnectionService := server.initUserConnectionService(userConnectionStore, loggerInfo, loggerError)
+	userConnectionService := server.initUserConnectionService(userConnectionStore, userConnectionGraphStore, loggerInfo, loggerError)
 	userNotificationService := server.initNotificationService(userConnectionStore, loggerInfo, loggerError)
 
 	println("[USERSERVICE]Start():init user service")
@@ -76,8 +80,14 @@ func (server *Server) initUserConnectionStore(client *mongo.Client, loggerInfo *
 	return store
 }
 
-func (server *Server) initUserConnectionService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserConnectionService {
-	return application.NewUserConnectionService(store, loggerInfo, loggerError)
+func (server *Server) initConnectionStore(client *neo4j.Driver, loggerInfo *logg.Logger, loggerError *logg.Logger) domain.GraphConnectionStore {
+	store := persistence.NewConnectionGraphDBStore(client, loggerInfo, loggerError)
+	store.Init()
+	return store
+}
+
+func (server *Server) initUserConnectionService(store domain.UserConnectionStore, graphstore domain.GraphConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.UserConnectionService {
+	return application.NewUserConnectionService(store, graphstore, loggerInfo, loggerError)
 }
 func (server *Server) initNotificationService(store domain.UserConnectionStore, loggerInfo *logger.Logger, loggerError *logger.Logger) *application.NotificationService {
 	return application.NewNotificationService(store, loggerInfo, loggerError)
@@ -150,4 +160,15 @@ func (server *Server) initSubscriber(subject, queueGroup string) saga.Subscriber
 	println("[UserConnectionService][server.go]Subscriber radi")
 
 	return subscriber
+}
+
+func (server *Server) initNeo4J() *neo4j.Driver {
+	fmt.Println(fmt.Sprintf("%s://%s:%s", server.config.Neo4jUri, server.config.Neo4jHost, server.config.Neo4jPort))
+	neo4jServer := fmt.Sprintf("%s://%s:%s", server.config.Neo4jUri, server.config.Neo4jHost, server.config.Neo4jPort)
+
+	client, err := persistence.GetGraphDatabaseClient(neo4jServer, server.config.Neo4jUsername, server.config.Neo4jPassword)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return client
 }
