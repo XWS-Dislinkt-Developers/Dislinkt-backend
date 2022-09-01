@@ -1057,7 +1057,7 @@ func clearGraphDB(transaction neo4j.Transaction) error {
 
 func initGraphDB(transaction neo4j.Transaction) error {
 	_, err := transaction.Run(
-		"CREATE  (pera:USER{userID: \"1\", isPrivate : false}),  (joka:USER{userID: \"2\", isPrivate : false}),  (marko:USER{userID: \"3\", isPrivate : false}),(zeksa:USER{userID: \"4\", isPrivate : false}),(sanja:USER{userID: \"5\", isPrivate : false}),(tanja:USER{userID: \"6\", isPrivate : true}),(lale:USER{userID: \"7\", isPrivate : false}),(nena:USER{userID: \"8\", isPrivate : false}),(admin:USER{userID: \"9\", isPrivate : false}),   (pera) -[:FRIEND]-> (marko),  (pera) <-[:FRIEND]- (marko),  (pera) -[:FRIEND]-> (joka),  (pera) <-[:FRIEND]- (joka), (marko) -[:BLOCK]-> (joka),  (joka) -[:BLOCK]-> (marko)  ",
+		"CREATE  (pera:USER{userID: \"1\", isPrivate : false}),  (joka:USER{userID: \"2\", isPrivate : false}),  (marko:USER{userID: \"3\", isPrivate : false}),(zeksa:USER{userID: \"4\", isPrivate : false}),(sanja:USER{userID: \"5\", isPrivate : false}),(tanja:USER{userID: \"6\", isPrivate : true}),(lale:USER{userID: \"7\", isPrivate : false}),(nena:USER{userID: \"8\", isPrivate : false}),(admin:USER{userID: \"9\", isPrivate : false}),   (pera) -[:FRIEND]-> (marko),  (pera) <-[:FRIEND]- (marko),  (pera) -[:FRIEND]-> (joka),  (pera) <-[:FRIEND]- (joka),  (joka) -[:BLOCK]-> (marko)  ",
 		map[string]interface{}{})
 
 	return err
